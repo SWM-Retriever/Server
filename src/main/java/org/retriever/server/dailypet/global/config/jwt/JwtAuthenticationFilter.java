@@ -1,4 +1,4 @@
-package org.retriever.server.dailypet.global.config.security;
+package org.retriever.server.dailypet.global.config.jwt;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
