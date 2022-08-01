@@ -1,4 +1,4 @@
-package org.retriever.server.dailypet.user;
+package org.retriever.server.dailypet.domain.user;
 
 import lombok.Getter;
 

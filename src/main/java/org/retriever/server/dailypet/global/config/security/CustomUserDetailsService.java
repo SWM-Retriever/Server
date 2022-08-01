@@ -1,8 +1,8 @@
 package org.retriever.server.dailypet.global.config.security;
 
 import lombok.RequiredArgsConstructor;
-import org.retriever.server.dailypet.user.User;
-import org.retriever.server.dailypet.user.UserRepository;
+import org.retriever.server.dailypet.domain.user.User;
+import org.retriever.server.dailypet.domain.user.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
