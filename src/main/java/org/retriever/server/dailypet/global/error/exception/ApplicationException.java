@@ -1,6 +1,5 @@
-package org.retriever.server.dailypet.exception;
+package org.retriever.server.dailypet.global.error.exception;
 
-import lombok.Builder;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 

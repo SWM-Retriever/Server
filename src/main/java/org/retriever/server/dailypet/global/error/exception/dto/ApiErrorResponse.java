@@ -1,4 +1,4 @@
-package org.retriever.server.dailypet.exception.dto;
+package org.retriever.server.dailypet.global.error.exception.dto;
 
 import lombok.AccessLevel;
 import lombok.Getter;

@@ -1,7 +1,7 @@
-package org.retriever.server.dailypet.exception;
+package org.retriever.server.dailypet.global.error.exception;
 
 import lombok.extern.slf4j.Slf4j;
-import org.retriever.server.dailypet.exception.dto.ApiErrorResponse;
+import org.retriever.server.dailypet.global.error.exception.dto.ApiErrorResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
