@@ -44,19 +44,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .accessDeniedHandler(jwtAccessDeniedHandler)
                 .and()
                     .authorizeRequests()
-                    .antMatchers(HttpMethod.POST, "/api/v1/test").permitAll()
-//                    .antMatchers(HttpMethod.GET, "").permitAll()
+                    .antMatchers(HttpMethod.POST, "/api/v1/auth/login").permitAll()
+                    .antMatchers(HttpMethod.GET, "/api/v1/auth/test").permitAll()
                     .anyRequest().authenticated();
     }
 
     @Override
     public void configure(WebSecurity web) {
         web
-                .ignoring()
-                .antMatchers(
-                        "/h2-console/**"
-                        , "/favicon.ico"
-                );
+            .ignoring()
+            .antMatchers(
+                    "/h2-console/**"
+                    , "/favicon.ico"
+            );
     }
 
     /*
