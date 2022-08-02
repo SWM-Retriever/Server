@@ -13,29 +13,26 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Base64;
+import java.security.Key;
 import java.util.Date;
 
 @RequiredArgsConstructor
 @Component
 @Slf4j
-public class JwtTokenProvider {
+public class JwtTokenProvider{
 
-    @Value("jwt.secret")
+    @Value("${jwt.secret}")
     private String secretKey;
 
-    //@Value("jwt.expire")
     private final Long expiredTime = 1000L * 60 * 60 * 24; // 1 day
 
-    private SecretKey key;
+    private Key key;
 
     private final UserDetailsService userDetailsService;
 
     @PostConstruct
     protected void init() {
-        secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
         key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
     }
 
@@ -43,11 +40,17 @@ public class JwtTokenProvider {
         Date now = new Date();
         return Jwts.builder()
                 .setSubject(userId)
-                .signWith(key, SignatureAlgorithm.HS256)
+                .signWith(key)
                 .setExpiration(new Date(now.getTime() + expiredTime))
                 .compact();
     }
 
+    /**
+     *
+     * @param token
+     * @return Authentication
+     * token에 담겨있는 정보들을 통해서 Authentication 객체를 반환한다.
+     */
     public Authentication getAuthentication(String token) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserId(token));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
