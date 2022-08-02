@@ -1,8 +1,8 @@
 package org.retriever.server.dailypet.global.config.security;
 
 import lombok.RequiredArgsConstructor;
-import org.retriever.server.dailypet.domain.user.User;
-import org.retriever.server.dailypet.domain.user.UserRepository;
+import org.retriever.server.dailypet.domain.member.Member;
+import org.retriever.server.dailypet.domain.member.MemberRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
@@ -11,11 +11,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
 
     @Override
     public UserDetails loadUserByUsername(String userId) {
-        User user = userRepository.findById(Long.valueOf(userId)).orElseThrow(IllegalArgumentException::new);
-        return new CustomUserDetails(user);
+        Member member = memberRepository.findById(Long.valueOf(userId)).orElseThrow(IllegalArgumentException::new);
+        return new CustomUserDetails(member);
     }
 }

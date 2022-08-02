@@ -1,6 +1,6 @@
 package org.retriever.server.dailypet.global.config.security;
 
-import org.retriever.server.dailypet.domain.user.User;
+import org.retriever.server.dailypet.domain.member.Member;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -10,20 +10,20 @@ import java.util.Collection;
 
 public class CustomUserDetails implements UserDetails {
 
-    private User user;
+    private Member member;
 
-    public CustomUserDetails(User user) {
-        this.user = user;
+    public CustomUserDetails(Member member) {
+        this.member = member;
     }
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return member.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return user.getNickName();
+        return member.getNickName();
     }
 
     @Override
@@ -50,7 +50,7 @@ public class CustomUserDetails implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(() -> {
-            return user.getRoleType().toString();});
+            return member.getRoleType().toString();});
 
         return authorities;
     }
