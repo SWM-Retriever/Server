@@ -1,6 +1,9 @@
-package org.retriever.server.dailypet.domain.oauth;
+package org.retriever.server.dailypet.domain.member.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.retriever.server.dailypet.domain.member.dto.request.KakaoLoginRequestDto;
+import org.retriever.server.dailypet.domain.member.dto.response.KakaoLoginResponse;
+import org.retriever.server.dailypet.domain.member.service.KakaoOauthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

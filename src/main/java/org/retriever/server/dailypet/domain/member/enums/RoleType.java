@@ -1,4 +1,4 @@
-package org.retriever.server.dailypet.domain.member;
+package org.retriever.server.dailypet.domain.member.enums;
 
 import lombok.ToString;
 

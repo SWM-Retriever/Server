@@ -1,6 +1,7 @@
-package org.retriever.server.dailypet.domain.member;
+package org.retriever.server.dailypet.domain.member.entity;
 
 import lombok.Getter;
+import org.retriever.server.dailypet.domain.member.enums.RoleType;
 
 import javax.persistence.*;
 

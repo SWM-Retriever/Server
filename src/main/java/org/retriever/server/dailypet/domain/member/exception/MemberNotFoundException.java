@@ -1,5 +1,6 @@
-package org.retriever.server.dailypet.domain.oauth;
+package org.retriever.server.dailypet.domain.member.exception;
 
+import org.retriever.server.dailypet.domain.member.exception.MemberException;
 import org.springframework.http.HttpStatus;
 
 public class MemberNotFoundException extends MemberException {

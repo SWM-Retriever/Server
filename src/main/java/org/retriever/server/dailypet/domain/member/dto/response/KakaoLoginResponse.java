@@ -1,6 +1,6 @@
-package org.retriever.server.dailypet.domain.oauth;
+package org.retriever.server.dailypet.domain.member.dto.response;
 
-import org.retriever.server.dailypet.domain.member.Member;
+import org.retriever.server.dailypet.domain.member.entity.Member;
 
 public class KakaoLoginResponse {
 
