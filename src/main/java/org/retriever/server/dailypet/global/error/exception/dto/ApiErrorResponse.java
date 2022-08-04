@@ -10,7 +10,10 @@ public class ApiErrorResponse {
 
     private String errorCode;
 
-    public ApiErrorResponse(String errorCode) {
+    private String message;
+
+    public ApiErrorResponse(String errorCode, String message) {
         this.errorCode = errorCode;
+        this.message = message;
     }
 }
