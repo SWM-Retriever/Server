@@ -1,7 +1,9 @@
 package org.retriever.server.dailypet.domain.member.service;
 
 import lombok.RequiredArgsConstructor;
+import org.retriever.server.dailypet.domain.member.dto.request.ValidateMemberNicknameRequest;
 import org.retriever.server.dailypet.domain.member.entity.Member;
+import org.retriever.server.dailypet.domain.member.exception.DuplicateMemberNicknameException;
 import org.retriever.server.dailypet.domain.member.repository.MemberRepository;
 import org.retriever.server.dailypet.domain.member.exception.MemberNotFoundException;
 import org.retriever.server.dailypet.domain.member.dto.request.SnsLoginRequest;
@@ -26,5 +28,11 @@ public class MemberService {
                 .email(dto.getEmail())
                 .jwtToken(token)
                 .build();
+    }
+
+    public void validateMemberNickName(ValidateMemberNicknameRequest dto) {
+        if (memberRepository.findByNickName(dto.getNickName()).isPresent()) {
+            throw new DuplicateMemberNicknameException();
+        }
     }
 }
