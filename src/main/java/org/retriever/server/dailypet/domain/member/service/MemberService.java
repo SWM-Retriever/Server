@@ -24,7 +24,7 @@ public class MemberService {
         String token = jwtTokenProvider.createToken(String.valueOf(member.getId()));
 
         return SnsLoginResponse.builder()
-                .name(dto.getName())
+                .snsNickName(dto.getSnsNickName())
                 .email(dto.getEmail())
                 .jwtToken(token)
                 .build();

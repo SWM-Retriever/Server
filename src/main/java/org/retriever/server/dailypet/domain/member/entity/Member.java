@@ -44,4 +44,6 @@ public class Member extends BaseTimeEntity {
     private RoleType roleType;
 
     private String deviceToken;
+
+    private String password;
 }
