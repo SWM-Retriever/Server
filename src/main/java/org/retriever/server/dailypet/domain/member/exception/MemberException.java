@@ -1,4 +1,4 @@
-package org.retriever.server.dailypet.domain.oauth;
+package org.retriever.server.dailypet.domain.member.exception;
 
 import org.retriever.server.dailypet.global.error.exception.ApplicationException;
 import org.springframework.http.HttpStatus;

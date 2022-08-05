@@ -1,6 +1,6 @@
 package org.retriever.server.dailypet.global.config.security;
 
-import org.retriever.server.dailypet.domain.member.Member;
+import org.retriever.server.dailypet.domain.member.entity.Member;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

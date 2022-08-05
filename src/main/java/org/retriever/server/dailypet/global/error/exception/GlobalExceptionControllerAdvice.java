@@ -17,6 +17,6 @@ public class GlobalExceptionControllerAdvice {
                 exception.getClass().getSimpleName(), errorCode,  exception.getMessage());
         return ResponseEntity
                 .status(exception.getHttpStatus())
-                .body(new ApiErrorResponse(errorCode));
+                .body(new ApiErrorResponse(errorCode, exception.getMessage()));
     }
 }

@@ -1,5 +1,6 @@
-package org.retriever.server.dailypet.domain.member;
+package org.retriever.server.dailypet.domain.member.repository;
 
+import org.retriever.server.dailypet.domain.member.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
