@@ -1,6 +1,6 @@
 package org.retriever.server.dailypet.domain.member.entity;
 
-import lombok.Getter;
+import lombok.*;
 import org.retriever.server.dailypet.domain.member.enums.RoleType;
 import org.retriever.server.dailypet.domain.member.enums.AccountStatus;
 import org.retriever.server.dailypet.domain.model.BaseTimeEntity;
@@ -10,6 +10,8 @@ import javax.persistence.*;
 
 @Entity
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class Member extends BaseTimeEntity {
 
     @Id
@@ -46,4 +48,29 @@ public class Member extends BaseTimeEntity {
     private String deviceToken;
 
     private String password;
+
+    @Builder
+    public Member(String email, String nickName, String profileImageUrl, ProviderType type, String deviceToken) {
+        this.isPersonalInformationAgree = true;
+        this.isToSAgree = true;
+        this.isPushAgree = false;
+        this.accountStatus = AccountStatus.ACTIVE;
+        this.email = email;
+        this.nickName = nickName;
+        this.profileImageUrl = profileImageUrl;
+        this.familyRoleName = "별명을 입력해주세요!";
+        this.providerType = type;
+        this.roleType = RoleType.MEMBER;
+        this.deviceToken = deviceToken;
+    }
+
+    public static Member createNewMember(String email, String nickName, String profileImageUrl, ProviderType type, String deviceToken) {
+        return Member.builder()
+                .email(email)
+                .nickName(nickName)
+                .profileImageUrl(profileImageUrl)
+                .type(type)
+                .deviceToken(deviceToken)
+                .build();
+    }
 }
