@@ -12,6 +12,8 @@ import org.retriever.server.dailypet.domain.member.service.MemberService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
@@ -28,7 +30,7 @@ public class MemberController {
             @ApiResponse(responseCode = "500", description = "내부 서버 에러")
     })
     @PostMapping("/auth/login")
-    public ResponseEntity<SnsLoginResponse> checkMemberAndLogin(@RequestBody SnsLoginRequest dto) {
+    public ResponseEntity<SnsLoginResponse> checkMemberAndLogin(@RequestBody @Valid SnsLoginRequest dto) {
         SnsLoginResponse snsLoginResponse = memberService.checkMemberAndLogin(dto);
         return ResponseEntity.ok(snsLoginResponse);
     }
@@ -39,8 +41,8 @@ public class MemberController {
             @ApiResponse(responseCode = "401", description = "사용 중인 중복 닉네임"),
             @ApiResponse(responseCode = "500", description = "내부 서버 에러")
     })
-    @PostMapping("/validate/nickname")
-    public ResponseEntity<Void> validateMemberNickName(@RequestBody ValidateMemberNicknameRequest dto) {
+    @PostMapping("/validation/nickname")
+    public ResponseEntity<Void> validateMemberNickName(@RequestBody @Valid ValidateMemberNicknameRequest dto) {
         memberService.validateMemberNickName(dto);
         return ResponseEntity.ok().build();
     }
