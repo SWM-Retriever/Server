@@ -5,11 +5,11 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.retriever.server.dailypet.global.config.security.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -29,17 +29,17 @@ public class JwtTokenProvider{
 
     private Key key;
 
-    private final UserDetailsService userDetailsService;
+    private final CustomUserDetailsService userDetailsService;
 
     @PostConstruct
     protected void init() {
         key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
     }
 
-    public String createToken(String userId) {
+    public String createToken(String email) {
         Date now = new Date();
         return Jwts.builder()
-                .setSubject(userId)
+                .setSubject(email)
                 .signWith(key)
                 .setExpiration(new Date(now.getTime() + expiredTime))
                 .compact();
@@ -52,11 +52,11 @@ public class JwtTokenProvider{
      * token에 담겨있는 정보들을 통해서 Authentication 객체를 반환한다.
      */
     public Authentication getAuthentication(String token) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserId(token));
+        UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserEmail(token));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
-    public String getUserId(String token) {
+    public String getUserEmail(String token) {
         return Jwts.parserBuilder().setSigningKey(secretKey)
                 .build().parseClaimsJws(token).getBody().getSubject();
     }
