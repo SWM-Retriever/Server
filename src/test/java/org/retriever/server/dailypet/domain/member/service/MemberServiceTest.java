@@ -6,13 +6,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.retriever.server.dailypet.domain.factory.MemberFactory;
 import org.retriever.server.dailypet.domain.member.dto.request.SignUpRequest;
 import org.retriever.server.dailypet.domain.member.dto.request.SnsLoginRequest;
 import org.retriever.server.dailypet.domain.member.dto.request.ValidateMemberNicknameRequest;
 import org.retriever.server.dailypet.domain.member.dto.response.SignUpResponse;
 import org.retriever.server.dailypet.domain.member.dto.response.SnsLoginResponse;
 import org.retriever.server.dailypet.domain.member.entity.Member;
-import org.retriever.server.dailypet.domain.member.enums.ProviderType;
 import org.retriever.server.dailypet.domain.member.exception.DuplicateMemberException;
 import org.retriever.server.dailypet.domain.member.exception.DuplicateMemberNicknameException;
 import org.retriever.server.dailypet.domain.member.exception.MemberNotFoundException;
@@ -41,14 +41,14 @@ class MemberServiceTest {
     void check_member_success_and_login() {
 
         // given
-        SnsLoginRequest snsLoginRequest = createSnsLoginRequest();
-        Member member = createTestMember();
+        SnsLoginRequest snsLoginRequest = MemberFactory.createSnsLoginRequest();
+        Member member = MemberFactory.createTestMember();
         String testToken = "jwtToken";
         when(memberRepository.findByEmail(any())).thenReturn(Optional.of(member));
-        when(jwtTokenProvider.createToken(any())).thenReturn(createToken(testToken));
+        when(jwtTokenProvider.createToken(any())).thenReturn(MemberFactory.createToken(testToken));
 
         // when
-        SnsLoginResponse snsLoginResponse = memberService.checkMemberAndLogin(createSnsLoginRequest());
+        SnsLoginResponse snsLoginResponse = memberService.checkMemberAndLogin(snsLoginRequest);
 
         // then
         assertAll(
@@ -63,12 +63,12 @@ class MemberServiceTest {
     void check_member_fail_and_throw_exception() {
 
         // given request 만들고
-        SnsLoginRequest snsLoginRequest = createSnsLoginRequest();
+        SnsLoginRequest snsLoginRequest = MemberFactory.createSnsLoginRequest();
         when(memberRepository.findByEmail(any())).thenReturn(Optional.empty());
 
         // when, then
         assertThrows(MemberNotFoundException.class,
-                () -> memberService.checkMemberAndLogin(createSnsLoginRequest()));
+                () -> memberService.checkMemberAndLogin(snsLoginRequest));
     }
 
     @DisplayName("닉네임 검증 - 프로필 등록에서 닉네임 검증 실패 시 DuplicateMemberNicknameException 예외 발생")
@@ -76,8 +76,8 @@ class MemberServiceTest {
     void validate_nickname_fail_and_throw_exception() {
 
         // given
-        Member member = createTestMember();
-        ValidateMemberNicknameRequest nicknameRequest = createValidateNicknameRequest(member.getNickName());
+        Member member = MemberFactory.createTestMember();
+        ValidateMemberNicknameRequest nicknameRequest = MemberFactory.createValidateNicknameRequest(member.getNickName());
         when(memberRepository.findByNickName(any())).thenReturn(Optional.of(member));
 
         // when, then
@@ -90,8 +90,8 @@ class MemberServiceTest {
     void sign_up_success_and_register_profile() {
 
         // given
-        Member member = createTestMember();
-        SignUpRequest signUpRequest = createSignUpRequest();
+        Member member = MemberFactory.createTestMember();
+        SignUpRequest signUpRequest = MemberFactory.createSignUpRequest();
         String testToken = "jwtToken";
         when(memberRepository.findByEmail(signUpRequest.getEmail())).thenReturn(Optional.empty());
         when(memberRepository.save(any())).thenReturn(member);
@@ -113,48 +113,11 @@ class MemberServiceTest {
     void sign_up_fail_and_throw_exception() {
 
         // given
-        Member member = createTestMember();
-        SignUpRequest signUpRequest = createSignUpRequest();
+        Member member = MemberFactory.createTestMember();
+        SignUpRequest signUpRequest = MemberFactory.createSignUpRequest();
         when(memberRepository.findByEmail(signUpRequest.getEmail())).thenReturn(Optional.of(member));
 
         // when, then
         assertThrows(DuplicateMemberException.class, () -> memberService.signUpAndRegisterProfile(signUpRequest));
-    }
-
-    private Member createTestMember() {
-        return Member.builder()
-                .email("test@naver.com")
-                .nickName("test")
-                .profileImageUrl("abcdefghijk")
-                .type(ProviderType.KAKAO)
-                .deviceToken("abcdefg12345")
-                .build();
-    }
-
-    private SnsLoginRequest createSnsLoginRequest() {
-        return SnsLoginRequest.builder()
-                .snsNickName("test")
-                .email("test@naver.com")
-                .build();
-    }
-
-    private String createToken(String token) {
-        return token;
-    }
-
-    private ValidateMemberNicknameRequest createValidateNicknameRequest(String nickname) {
-        return ValidateMemberNicknameRequest.builder()
-                .nickName(nickname)
-                .build();
-    }
-
-    private SignUpRequest createSignUpRequest() {
-        return SignUpRequest.builder()
-                .email("test@naver.com")
-                .snsNickName("test")
-                .deviceToken("abcde12345")
-                .profileImageUrl("S3URL")
-                .providerType(ProviderType.KAKAO)
-                .build();
     }
 }
