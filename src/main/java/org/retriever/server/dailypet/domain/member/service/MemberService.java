@@ -5,6 +5,7 @@ import org.retriever.server.dailypet.domain.member.dto.request.SignUpRequest;
 import org.retriever.server.dailypet.domain.member.dto.request.ValidateMemberNicknameRequest;
 import org.retriever.server.dailypet.domain.member.dto.response.SignUpResponse;
 import org.retriever.server.dailypet.domain.member.entity.Member;
+import org.retriever.server.dailypet.domain.member.exception.DuplicateMemberException;
 import org.retriever.server.dailypet.domain.member.exception.DuplicateMemberNicknameException;
 import org.retriever.server.dailypet.domain.member.repository.MemberRepository;
 import org.retriever.server.dailypet.domain.member.exception.MemberNotFoundException;
@@ -42,11 +43,17 @@ public class MemberService {
 
     @Transactional
     public SignUpResponse signUpAndRegisterProfile(SignUpRequest dto) {
-        Member signUpMember = Member.createNewMember(dto.getEmail(),
+        if (memberRepository.findByEmail(dto.getEmail()).isPresent()) {
+            throw new DuplicateMemberException();
+        }
+
+        Member signUpMember = Member.createNewMember(
+                dto.getEmail(),
                 dto.getSnsNickName(),
                 dto.getProfileImageUrl(),
                 dto.getProviderType(),
-                dto.getDeviceToken());
+                dto.getDeviceToken()
+        );
 
         memberRepository.save(signUpMember);
 
