@@ -47,13 +47,7 @@ public class MemberService {
             throw new DuplicateMemberException();
         }
 
-        Member signUpMember = Member.createNewMember(
-                dto.getEmail(),
-                dto.getSnsNickName(),
-                dto.getProfileImageUrl(),
-                dto.getProviderType(),
-                dto.getDeviceToken()
-        );
+        Member signUpMember = Member.createNewMember(dto);
 
         memberRepository.save(signUpMember);
 
