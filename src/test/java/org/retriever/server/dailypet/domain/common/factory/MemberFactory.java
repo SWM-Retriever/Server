@@ -3,6 +3,7 @@ package org.retriever.server.dailypet.domain.common.factory;
 import org.retriever.server.dailypet.domain.member.dto.request.SignUpRequest;
 import org.retriever.server.dailypet.domain.member.dto.request.SnsLoginRequest;
 import org.retriever.server.dailypet.domain.member.dto.request.ValidateMemberNicknameRequest;
+import org.retriever.server.dailypet.domain.member.dto.response.SnsLoginResponse;
 import org.retriever.server.dailypet.domain.member.entity.Member;
 import org.retriever.server.dailypet.domain.member.enums.ProviderType;
 
@@ -25,6 +26,14 @@ public class MemberFactory {
         return SnsLoginRequest.builder()
                 .snsNickName("test")
                 .email("test@naver.com")
+                .build();
+    }
+
+    public static SnsLoginResponse createSnsLoginResponse() {
+        return SnsLoginResponse.builder()
+                .snsNickName("test")
+                .email("test@naver.com")
+                .jwtToken("testToken")
                 .build();
     }
 
