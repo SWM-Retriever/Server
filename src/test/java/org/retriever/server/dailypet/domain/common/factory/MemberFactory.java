@@ -1,4 +1,4 @@
-package org.retriever.server.dailypet.domain.factory;
+package org.retriever.server.dailypet.domain.common.factory;
 
 import org.retriever.server.dailypet.domain.member.dto.request.SignUpRequest;
 import org.retriever.server.dailypet.domain.member.dto.request.SnsLoginRequest;

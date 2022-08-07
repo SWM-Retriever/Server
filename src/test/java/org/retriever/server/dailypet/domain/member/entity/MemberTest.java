@@ -2,7 +2,7 @@ package org.retriever.server.dailypet.domain.member.entity;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.retriever.server.dailypet.domain.factory.MemberFactory;
+import org.retriever.server.dailypet.domain.common.factory.MemberFactory;
 import org.retriever.server.dailypet.domain.member.dto.request.SignUpRequest;
 import org.retriever.server.dailypet.domain.member.enums.AccountStatus;
 import org.retriever.server.dailypet.domain.member.enums.RoleType;
