@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.retriever.server.dailypet.domain.enums.FamilyStatus;
+import org.retriever.server.dailypet.domain.family.enums.FamilyStatus;
 import org.retriever.server.dailypet.domain.model.BaseTimeEntity;
 
 import javax.persistence.*;
