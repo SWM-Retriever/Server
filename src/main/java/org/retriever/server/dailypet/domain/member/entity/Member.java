@@ -1,6 +1,7 @@
 package org.retriever.server.dailypet.domain.member.entity;
 
 import lombok.*;
+import org.retriever.server.dailypet.domain.member.dto.request.SignUpRequest;
 import org.retriever.server.dailypet.domain.member.enums.RoleType;
 import org.retriever.server.dailypet.domain.member.enums.AccountStatus;
 import org.retriever.server.dailypet.domain.model.BaseTimeEntity;
@@ -64,13 +65,13 @@ public class Member extends BaseTimeEntity {
         this.deviceToken = deviceToken;
     }
 
-    public static Member createNewMember(String email, String nickName, String profileImageUrl, ProviderType type, String deviceToken) {
+    public static Member createNewMember(SignUpRequest signUpRequest) {
         return Member.builder()
-                .email(email)
-                .nickName(nickName)
-                .profileImageUrl(profileImageUrl)
-                .type(type)
-                .deviceToken(deviceToken)
+                .email(signUpRequest.getEmail())
+                .nickName(signUpRequest.getSnsNickName())
+                .profileImageUrl(signUpRequest.getProfileImageUrl())
+                .type(signUpRequest.getProviderType())
+                .deviceToken(signUpRequest.getDeviceToken())
                 .build();
     }
 }

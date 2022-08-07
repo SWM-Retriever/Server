@@ -1,5 +1,6 @@
 package org.retriever.server.dailypet.domain.member.dto.request;
 
+import lombok.Builder;
 import lombok.Getter;
 
 import javax.validation.constraints.Email;
@@ -7,6 +8,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 @Getter
+@Builder
 public class SnsLoginRequest {
 
     @NotEmpty
