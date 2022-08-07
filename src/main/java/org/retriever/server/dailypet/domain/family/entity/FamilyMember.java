@@ -1,4 +1,4 @@
-package org.retriever.server.dailypet.domain.family.dto;
+package org.retriever.server.dailypet.domain.family.entity;
 
 import lombok.*;
 import org.retriever.server.dailypet.domain.member.entity.Member;

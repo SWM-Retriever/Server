@@ -1,7 +1,7 @@
 package org.retriever.server.dailypet.domain.member.entity;
 
 import lombok.*;
-import org.retriever.server.dailypet.domain.family.dto.FamilyMember;
+import org.retriever.server.dailypet.domain.family.entity.FamilyMember;
 import org.retriever.server.dailypet.domain.member.dto.request.SignUpRequest;
 import org.retriever.server.dailypet.domain.member.enums.RoleType;
 import org.retriever.server.dailypet.domain.member.enums.AccountStatus;

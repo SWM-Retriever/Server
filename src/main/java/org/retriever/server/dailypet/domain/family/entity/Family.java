@@ -1,4 +1,4 @@
-package org.retriever.server.dailypet.domain.family.dto;
+package org.retriever.server.dailypet.domain.family.entity;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
