@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.retriever.server.dailypet.domain.family.dto.request.CreateFamilyRequest;
 import org.retriever.server.dailypet.domain.family.dto.request.ValidateFamilyNameRequest;
 import org.retriever.server.dailypet.domain.family.dto.request.ValidateFamilyRoleNameRequest;
+import org.retriever.server.dailypet.domain.family.dto.response.CreateFamilyResponse;
 import org.retriever.server.dailypet.domain.family.service.FamilyService;
 import org.retriever.server.dailypet.global.config.security.CustomUserDetails;
 import org.springframework.http.ResponseEntity;
@@ -64,9 +65,8 @@ public class FamilyController {
             @ApiResponse(responseCode = "500", description = "내부 서버 에러")
     })
     @PostMapping("/family")
-    public ResponseEntity<Void> createFamily(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                                       @RequestBody @Valid CreateFamilyRequest dto) {
-        familyService.createFamily(userDetails, dto);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<CreateFamilyResponse> createFamily(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                             @RequestBody @Valid CreateFamilyRequest dto) {
+        return ResponseEntity.ok(familyService.createFamily(userDetails, dto));
     }
 }

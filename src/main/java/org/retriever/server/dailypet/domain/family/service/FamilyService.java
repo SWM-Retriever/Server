@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.retriever.server.dailypet.domain.family.dto.request.CreateFamilyRequest;
 import org.retriever.server.dailypet.domain.family.dto.request.ValidateFamilyNameRequest;
 import org.retriever.server.dailypet.domain.family.dto.request.ValidateFamilyRoleNameRequest;
+import org.retriever.server.dailypet.domain.family.dto.response.CreateFamilyResponse;
 import org.retriever.server.dailypet.domain.family.entity.Family;
 import org.retriever.server.dailypet.domain.family.entity.FamilyMember;
 import org.retriever.server.dailypet.domain.family.exception.DuplicateFamilyNameException;
@@ -48,7 +49,7 @@ public class FamilyService {
     }
 
     @Transactional
-    public void createFamily(CustomUserDetails userDetails, CreateFamilyRequest dto) {
+    public CreateFamilyResponse createFamily(CustomUserDetails userDetails, CreateFamilyRequest dto) {
 
         // 멤버 조회 및 권한 지정
         Member member = memberRepository.findById(userDetails.getId())
@@ -63,5 +64,10 @@ public class FamilyService {
         // 연관관계 편의 메서드 - family.familyMemberList에 add & cascade.All 옵션을 통해 familyMember 자동 persist
         newFamily.insertNewMember(familyMember);
         familyRepository.save(newFamily);
+
+        return CreateFamilyResponse.builder()
+                .familyName(newFamily.getFamilyName())
+                .invitationCode(invitationCode)
+                .build();
     }
 }
