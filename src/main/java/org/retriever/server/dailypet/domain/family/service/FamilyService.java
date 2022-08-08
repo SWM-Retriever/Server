@@ -2,6 +2,7 @@ package org.retriever.server.dailypet.domain.family.service;
 
 import lombok.RequiredArgsConstructor;
 import org.retriever.server.dailypet.domain.family.dto.request.CreateFamilyRequest;
+import org.retriever.server.dailypet.domain.family.dto.request.EnterFamilyRequest;
 import org.retriever.server.dailypet.domain.family.dto.request.ValidateFamilyNameRequest;
 import org.retriever.server.dailypet.domain.family.dto.request.ValidateFamilyRoleNameRequest;
 import org.retriever.server.dailypet.domain.family.dto.response.CreateFamilyResponse;
@@ -77,5 +78,19 @@ public class FamilyService {
         Family family = familyRepository.findByInvitationCode(code).orElseThrow(FamilyNotFoundException::new);
 
         return FindFamilyWithInvitationCodeResponse.from(family);
+    }
+
+    @Transactional
+    public void enterFamily(CustomUserDetails userDetails, Long familyId, EnterFamilyRequest dto) {
+        Member member = memberRepository.findById(userDetails.getId())
+                .orElseThrow(MemberNotFoundException::new);
+
+        Family family = familyRepository.findById(familyId).orElseThrow(FamilyNotFoundException::new);
+
+        member.changeFamilyRoleName(dto.getFamilyRoleName());
+
+        FamilyMember familyMember = FamilyMember.createFamilyMember(member, family);
+
+        family.insertNewMember(familyMember);
     }
 }
