@@ -25,7 +25,7 @@ public class FamilyMember extends BaseTimeEntity {
     @JoinColumn(name = "familyId", nullable = false)
     private Family family;
 
-    public static FamilyMember of(Member member, Family family) {
+    public static FamilyMember createFamilyMember(Member member, Family family) {
         return FamilyMember.builder()
                 .member(member)
                 .family(family)
