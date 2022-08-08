@@ -1,6 +1,7 @@
 package org.retriever.server.dailypet.domain.member.entity;
 
 import lombok.*;
+import org.retriever.server.dailypet.domain.family.entity.FamilyMember;
 import org.retriever.server.dailypet.domain.member.dto.request.SignUpRequest;
 import org.retriever.server.dailypet.domain.member.enums.RoleType;
 import org.retriever.server.dailypet.domain.member.enums.AccountStatus;
@@ -8,6 +9,7 @@ import org.retriever.server.dailypet.domain.model.BaseTimeEntity;
 import org.retriever.server.dailypet.domain.member.enums.ProviderType;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
@@ -49,6 +51,9 @@ public class Member extends BaseTimeEntity {
     private String deviceToken;
 
     private String password;
+
+    @OneToMany(mappedBy = "member")
+    private List<FamilyMember> familyMemberList;
 
     @Builder
     public Member(String email, String nickName, String profileImageUrl, ProviderType type, String deviceToken) {

@@ -40,7 +40,7 @@ public class MemberController {
     @Operation(summary = "프로필 닉네임 검증", description = "전체 유저 기준 프로필 닉네임 중복 여부를 검증")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "사용 가능한 닉네임"),
-            @ApiResponse(responseCode = "400", description = "사용 중인 중복 닉네임"),
+            @ApiResponse(responseCode = "409", description = "사용 중인 중복 닉네임"),
             @ApiResponse(responseCode = "500", description = "내부 서버 에러")
     })
     @PostMapping("/validation/nickname")
