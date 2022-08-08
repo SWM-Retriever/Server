@@ -10,14 +10,12 @@ import org.retriever.server.dailypet.domain.family.dto.request.CreateFamilyReque
 import org.retriever.server.dailypet.domain.family.dto.request.ValidateFamilyNameRequest;
 import org.retriever.server.dailypet.domain.family.dto.request.ValidateFamilyRoleNameRequest;
 import org.retriever.server.dailypet.domain.family.dto.response.CreateFamilyResponse;
+import org.retriever.server.dailypet.domain.family.dto.response.FindFamilyWithInvitationCodeResponse;
 import org.retriever.server.dailypet.domain.family.service.FamilyService;
 import org.retriever.server.dailypet.global.config.security.CustomUserDetails;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
@@ -68,5 +66,17 @@ public class FamilyController {
     public ResponseEntity<CreateFamilyResponse> createFamily(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                              @RequestBody @Valid CreateFamilyRequest dto) {
         return ResponseEntity.ok(familyService.createFamily(userDetails, dto));
+    }
+
+    @Parameter(name = "X-AUTH-TOKEN", description = "로그인 성공 후 access_token", required = true)
+    @Operation(summary = "가족 초대 코드 입력", description = "가족을 찾기 위해 초대 코드를 입력하고 가족 정보를 반환한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "가족 검색 성공"),
+            @ApiResponse(responseCode = "400", description = "초대 코드에 해당하는 가족이 없음"),
+            @ApiResponse(responseCode = "500", description = "내부 서버 에러")
+    })
+    @GetMapping("/families/{invitationCode}")
+    public ResponseEntity<FindFamilyWithInvitationCodeResponse> findFamilyWithInvitationCode(@PathVariable String invitationCode) {
+        return ResponseEntity.ok(familyService.findFamilyWithInvitationCode(invitationCode));
     }
 }

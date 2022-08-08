@@ -5,10 +5,12 @@ import org.retriever.server.dailypet.domain.family.dto.request.CreateFamilyReque
 import org.retriever.server.dailypet.domain.family.dto.request.ValidateFamilyNameRequest;
 import org.retriever.server.dailypet.domain.family.dto.request.ValidateFamilyRoleNameRequest;
 import org.retriever.server.dailypet.domain.family.dto.response.CreateFamilyResponse;
+import org.retriever.server.dailypet.domain.family.dto.response.FindFamilyWithInvitationCodeResponse;
 import org.retriever.server.dailypet.domain.family.entity.Family;
 import org.retriever.server.dailypet.domain.family.entity.FamilyMember;
 import org.retriever.server.dailypet.domain.family.exception.DuplicateFamilyNameException;
 import org.retriever.server.dailypet.domain.family.exception.DuplicateFamilyRoleNameException;
+import org.retriever.server.dailypet.domain.family.exception.FamilyNotFoundException;
 import org.retriever.server.dailypet.domain.family.repository.FamilyMemberRepository;
 import org.retriever.server.dailypet.domain.family.repository.FamilyRepository;
 import org.retriever.server.dailypet.domain.member.entity.Member;
@@ -69,5 +71,11 @@ public class FamilyService {
                 .familyName(newFamily.getFamilyName())
                 .invitationCode(invitationCode)
                 .build();
+    }
+
+    public FindFamilyWithInvitationCodeResponse findFamilyWithInvitationCode(String code) {
+        Family family = familyRepository.findByInvitationCode(code).orElseThrow(FamilyNotFoundException::new);
+
+        return FindFamilyWithInvitationCodeResponse.from(family);
     }
 }
