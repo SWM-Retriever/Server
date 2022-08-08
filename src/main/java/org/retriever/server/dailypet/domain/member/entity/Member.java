@@ -79,4 +79,8 @@ public class Member extends BaseTimeEntity {
                 .deviceToken(signUpRequest.getDeviceToken())
                 .build();
     }
+
+    public void setFamilyLeader() {
+        this.roleType = RoleType.FAMILY_LEADER;
+    }
 }
