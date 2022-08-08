@@ -14,7 +14,7 @@ import javax.persistence.*;
 public class FamilyMember extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long familyMemberId;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -25,7 +25,7 @@ public class FamilyMember extends BaseTimeEntity {
     @JoinColumn(name = "familyId", nullable = false)
     private Family family;
 
-    public static FamilyMember of(Member member, Family family) {
+    public static FamilyMember createFamilyMember(Member member, Family family) {
         return FamilyMember.builder()
                 .member(member)
                 .family(family)

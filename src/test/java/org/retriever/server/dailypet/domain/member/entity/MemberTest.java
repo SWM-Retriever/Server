@@ -13,7 +13,7 @@ class MemberTest {
 
     @DisplayName("회원가입 request dto를 받아서 새로운 유저 생성")
     @Test
-    void createNewMember() {
+    void create_new_member() {
 
         // given
         SignUpRequest signUpRequest = MemberFactory.createSignUpRequest();
@@ -37,5 +37,19 @@ class MemberTest {
 
         assertThat(newMember.getFamilyRoleName()).isEqualTo("별명을 입력해주세요!");
         assertThat(newMember.getPassword()).isNull();
+    }
+
+    @DisplayName("멤버 가족 리더 권한으로 변경")
+    @Test
+    void change_family_leader() {
+
+        // given
+        Member testMember = MemberFactory.createTestMember();
+
+        // when
+        testMember.setFamilyLeader();
+
+        // then
+        assertThat(testMember.getRoleType()).isEqualTo(RoleType.FAMILY_LEADER);
     }
 }

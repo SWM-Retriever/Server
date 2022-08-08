@@ -1,9 +1,7 @@
 package org.retriever.server.dailypet.domain.family.entity;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.retriever.server.dailypet.domain.family.dto.request.CreateFamilyRequest;
 import org.retriever.server.dailypet.domain.family.enums.FamilyStatus;
 import org.retriever.server.dailypet.domain.model.BaseTimeEntity;
 
@@ -15,10 +13,11 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Builder
 public class Family extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long familyId;
 
     @Enumerated(EnumType.STRING)
@@ -27,10 +26,25 @@ public class Family extends BaseTimeEntity {
     @Column(nullable = false, unique = true, length = 50)
     private String familyName;
 
+    @Column(nullable = false, unique = true, length = 10)
     private String invitationCode;
 
     private String profileImageUrl;
 
-    @OneToMany(mappedBy = "family")
+    @OneToMany(mappedBy = "family", cascade = CascadeType.ALL)
     private List<FamilyMember> familyMemberList = new ArrayList<>();
+
+    public static Family createFamily(CreateFamilyRequest dto, String invitationCode) {
+        return Family.builder()
+                .familyName(dto.getFamilyName())
+                .familyStatus(FamilyStatus.ACTIVE)
+                .invitationCode(invitationCode)
+                .profileImageUrl(dto.getProfileImageUrl())
+                .familyMemberList(new ArrayList<>())
+                .build();
+    }
+
+    public void insertNewMember(FamilyMember familyMember) {
+        familyMemberList.add(familyMember);
+    }
 }
