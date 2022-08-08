@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.retriever.server.dailypet.domain.family.dto.request.CreateFamilyRequest;
 import org.retriever.server.dailypet.domain.family.dto.request.ValidateFamilyNameRequest;
 import org.retriever.server.dailypet.domain.family.dto.request.ValidateFamilyRoleNameRequest;
 import org.retriever.server.dailypet.domain.family.service.FamilyService;
@@ -52,6 +53,20 @@ public class FamilyController {
     public ResponseEntity<Void> validateFamilyRoleName(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                        @RequestBody @Valid ValidateFamilyRoleNameRequest dto) {
         familyService.validateFamilyRoleName(userDetails, dto);
+        return ResponseEntity.ok().build();
+    }
+
+    @Parameter(name = "X-AUTH-TOKEN", description = "로그인 성공 후 access_token", required = true)
+    @Operation(summary = "가족 생성", description = "새로운 가족을 생성하고 해당 멤버는 가족 리더가 된다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "가족 생성"),
+            @ApiResponse(responseCode = "400", description = "가족 생성 오류"),
+            @ApiResponse(responseCode = "500", description = "내부 서버 에러")
+    })
+    @PostMapping("/family")
+    public ResponseEntity<Void> createFamily(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                       @RequestBody @Valid CreateFamilyRequest dto) {
+        familyService.createFamily(userDetails, dto);
         return ResponseEntity.ok().build();
     }
 }

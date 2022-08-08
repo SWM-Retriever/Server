@@ -1,8 +1,10 @@
 package org.retriever.server.dailypet.domain.family.service;
 
 import lombok.RequiredArgsConstructor;
+import org.retriever.server.dailypet.domain.family.dto.request.CreateFamilyRequest;
 import org.retriever.server.dailypet.domain.family.dto.request.ValidateFamilyNameRequest;
 import org.retriever.server.dailypet.domain.family.dto.request.ValidateFamilyRoleNameRequest;
+import org.retriever.server.dailypet.domain.family.entity.Family;
 import org.retriever.server.dailypet.domain.family.entity.FamilyMember;
 import org.retriever.server.dailypet.domain.family.exception.DuplicateFamilyNameException;
 import org.retriever.server.dailypet.domain.family.exception.DuplicateFamilyRoleNameException;
@@ -12,12 +14,15 @@ import org.retriever.server.dailypet.domain.member.entity.Member;
 import org.retriever.server.dailypet.domain.member.exception.MemberNotFoundException;
 import org.retriever.server.dailypet.domain.member.repository.MemberRepository;
 import org.retriever.server.dailypet.global.config.security.CustomUserDetails;
+import org.retriever.server.dailypet.global.utils.invitationcode.InvitationCodeUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class FamilyService {
 
     private final FamilyRepository familyRepository;
@@ -40,5 +45,23 @@ public class FamilyService {
                 .anyMatch(x -> x.getMember().getFamilyRoleName().equals(dto.getFamilyRoleName()))) {
             throw new DuplicateFamilyRoleNameException();
         }
+    }
+
+    @Transactional
+    public void createFamily(CustomUserDetails userDetails, CreateFamilyRequest dto) {
+
+        // 멤버 조회 및 권한 지정
+        Member member = memberRepository.findById(userDetails.getId())
+                .orElseThrow(MemberNotFoundException::new);
+        member.setFamilyLeader();
+
+        // 새로운 가족 그룹 생성 - 초대코드 생성
+        String invitationCode = InvitationCodeUtil.createInvitationCode();
+        Family newFamily = Family.createFamily(dto, invitationCode);
+        FamilyMember familyMember = FamilyMember.createFamilyMember(member, newFamily);
+
+        // 연관관계 편의 메서드 - family.familyMemberList에 add & cascade.All 옵션을 통해 familyMember 자동 persist
+        newFamily.insertNewMember(familyMember);
+        familyRepository.save(newFamily);
     }
 }
