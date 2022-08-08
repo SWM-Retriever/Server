@@ -14,7 +14,7 @@ import javax.persistence.*;
 public class FamilyMember extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long familyMemberId;
 
     @ManyToOne(fetch = FetchType.LAZY)
