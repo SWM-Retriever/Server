@@ -58,6 +58,7 @@ public class FamilyService {
         Member member = memberRepository.findById(userDetails.getId())
                 .orElseThrow(MemberNotFoundException::new);
         member.setFamilyLeader();
+        member.changeFamilyRoleName(dto.getFamilyRoleName());
 
         // 새로운 가족 그룹 생성 - 초대코드 생성
         String invitationCode = InvitationCodeUtil.createInvitationCode();
