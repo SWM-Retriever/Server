@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import org.retriever.server.dailypet.domain.family.entity.Family;
 import org.retriever.server.dailypet.domain.model.BaseTimeEntity;
 import org.retriever.server.dailypet.domain.pet.enums.Gender;
 import org.retriever.server.dailypet.domain.pet.enums.PetStatus;
@@ -45,4 +46,8 @@ public class Pet extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "petKindId", nullable = false)
     private PetKind petkind;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "familyId", nullable = false)
+    private Family family;
 }
