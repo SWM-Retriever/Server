@@ -84,6 +84,8 @@ public class Member extends BaseTimeEntity {
                 .profileImageUrl(signUpRequest.getProfileImageUrl())
                 .type(signUpRequest.getProviderType())
                 .deviceToken(signUpRequest.getDeviceToken())
+                .isPushAgree((signUpRequest.getIsPushAgree()))
+                .isProfileInformationAgree(signUpRequest.getIsProfileInformationAgree())
                 .build();
     }
 
