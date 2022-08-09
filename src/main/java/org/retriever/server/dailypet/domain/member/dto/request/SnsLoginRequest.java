@@ -2,6 +2,7 @@ package org.retriever.server.dailypet.domain.member.dto.request;
 
 import lombok.Builder;
 import lombok.Getter;
+import org.retriever.server.dailypet.domain.member.enums.ProviderType;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -18,4 +19,6 @@ public class SnsLoginRequest {
     @NotEmpty
     @Email
     private String email;
+
+    private ProviderType providerType;
 }

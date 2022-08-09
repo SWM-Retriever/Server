@@ -5,6 +5,7 @@ import org.retriever.server.dailypet.domain.member.dto.request.SignUpRequest;
 import org.retriever.server.dailypet.domain.member.dto.request.ValidateMemberNicknameRequest;
 import org.retriever.server.dailypet.domain.member.dto.response.SignUpResponse;
 import org.retriever.server.dailypet.domain.member.entity.Member;
+import org.retriever.server.dailypet.domain.member.exception.DifferentProviderTypeException;
 import org.retriever.server.dailypet.domain.member.exception.DuplicateMemberException;
 import org.retriever.server.dailypet.domain.member.exception.DuplicateMemberNicknameException;
 import org.retriever.server.dailypet.domain.member.repository.MemberRepository;
@@ -26,6 +27,10 @@ public class MemberService {
     public SnsLoginResponse checkMemberAndLogin(SnsLoginRequest dto) {
         Member member = memberRepository.findByEmail(dto.getEmail())
                 .orElseThrow(MemberNotFoundException::new);
+
+        if (!member.getProviderType().equals(dto.getProviderType())) {
+            throw new DifferentProviderTypeException();
+        }
         String token = jwtTokenProvider.createToken(dto.getEmail());
 
         return SnsLoginResponse.builder()

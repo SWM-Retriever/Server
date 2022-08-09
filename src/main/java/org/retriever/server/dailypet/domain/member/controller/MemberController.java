@@ -28,6 +28,7 @@ public class MemberController {
             "새로운 회원일 경우 회원 등록 페이지로 이동")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "기존 회원이므로 로그인 진행"),
+            @ApiResponse(responseCode = "400", description = "다른 Sns 계정으로 이미 가입한 회원"),
             @ApiResponse(responseCode = "401", description = "새로운 회원으로 회원 등록 진행"),
             @ApiResponse(responseCode = "500", description = "내부 서버 에러")
     })
