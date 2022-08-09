@@ -26,6 +26,7 @@ public class MemberFactory {
         return SnsLoginRequest.builder()
                 .snsNickName("test")
                 .email("test@naver.com")
+                .providerType(ProviderType.KAKAO)
                 .build();
     }
 
