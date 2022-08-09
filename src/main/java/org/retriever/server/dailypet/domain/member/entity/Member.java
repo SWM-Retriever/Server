@@ -83,4 +83,8 @@ public class Member extends BaseTimeEntity {
     public void setFamilyLeader() {
         this.roleType = RoleType.FAMILY_LEADER;
     }
+
+    public void changeFamilyRoleName(String familyRoleName) {
+        this.familyRoleName = familyRoleName;
+    }
 }

@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.retriever.server.dailypet.domain.family.dto.request.CreateFamilyRequest;
 import org.retriever.server.dailypet.domain.family.dto.request.ValidateFamilyNameRequest;
 import org.retriever.server.dailypet.domain.family.dto.request.ValidateFamilyRoleNameRequest;
+import org.retriever.server.dailypet.domain.family.dto.request.EnterFamilyRequest;
 import org.retriever.server.dailypet.domain.family.dto.response.CreateFamilyResponse;
 import org.retriever.server.dailypet.domain.family.dto.response.FindFamilyWithInvitationCodeResponse;
 import org.retriever.server.dailypet.domain.family.service.FamilyService;
@@ -18,7 +19,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -78,5 +78,20 @@ public class FamilyController {
     @GetMapping("/families/{invitationCode}")
     public ResponseEntity<FindFamilyWithInvitationCodeResponse> findFamilyWithInvitationCode(@PathVariable String invitationCode) {
         return ResponseEntity.ok(familyService.findFamilyWithInvitationCode(invitationCode));
+    }
+
+    @Parameter(name = "X-AUTH-TOKEN", description = "로그인 성공 후 access_token", required = true)
+    @Operation(summary = "가족 입장", description = "검증 완료된 가족 내 닉네임과 초대 코드를 통해 확인한 가족 그룹으로 입장한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "가족 입장 성공"),
+            @ApiResponse(responseCode = "400", description = "가족 입장 실패"),
+            @ApiResponse(responseCode = "500", description = "내부 서버 에러")
+    })
+    @PostMapping("/families/{familyId}")
+    public ResponseEntity<Void> enterFamily(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @PathVariable Long familyId, @RequestBody @Valid EnterFamilyRequest dto) {
+        familyService.enterFamily(userDetails, familyId, dto);
+        return ResponseEntity.ok().build();
     }
 }
