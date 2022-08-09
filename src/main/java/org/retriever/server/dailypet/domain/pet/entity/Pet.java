@@ -43,7 +43,7 @@ public class Pet extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "petKindId", nullable = false)
-    private PetKind petkind;
+    private PetKind petKind;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "familyId", nullable = false)

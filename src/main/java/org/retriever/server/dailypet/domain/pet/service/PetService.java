@@ -5,15 +5,24 @@ import org.retriever.server.dailypet.domain.family.entity.Family;
 import org.retriever.server.dailypet.domain.family.exception.FamilyNotFoundException;
 import org.retriever.server.dailypet.domain.family.repository.FamilyRepository;
 import org.retriever.server.dailypet.domain.pet.dto.request.ValidatePetNameInFamilyRequest;
+import org.retriever.server.dailypet.domain.pet.dto.response.GetPetKindListResponse;
+import org.retriever.server.dailypet.domain.pet.entity.PetKind;
+import org.retriever.server.dailypet.domain.pet.enums.PetType;
 import org.retriever.server.dailypet.domain.pet.exception.DuplicatePetNameInFamilyException;
+import org.retriever.server.dailypet.domain.pet.exception.PetTypeNotFoundException;
+import org.retriever.server.dailypet.domain.pet.repository.PetKindRepository;
 import org.retriever.server.dailypet.global.config.security.CustomUserDetails;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class PetService {
 
     private final FamilyRepository familyRepository;
+    private final PetKindRepository petKindRepository;
 
     // TODO : 멤버 정보를 이용해서 속한 가족 정보를 바로 참조하는 쿼리 작성 (현재는 familyMember를 거쳐야함)
     public void validatePetNameInFamily(CustomUserDetails userDetails, ValidatePetNameInFamilyRequest dto, Long familyId) {
@@ -23,5 +32,13 @@ public class PetService {
                 .anyMatch(pet -> pet.getPetName().equals(dto.getPetName()))) {
             throw new DuplicatePetNameInFamilyException();
         }
+    }
+
+    public List<GetPetKindListResponse> getPetKindListByType(PetType petType) {
+        List<PetKind> petKinds = petKindRepository.findAllByPetTypeOrderByPetKindName(petType).orElseThrow(PetTypeNotFoundException::new);
+
+        return petKinds.stream()
+                .map(GetPetKindListResponse::new)
+                .collect(Collectors.toList());
     }
 }
