@@ -4,6 +4,7 @@ import lombok.*;
 import org.retriever.server.dailypet.domain.family.dto.request.CreateFamilyRequest;
 import org.retriever.server.dailypet.domain.family.enums.FamilyStatus;
 import org.retriever.server.dailypet.domain.model.BaseTimeEntity;
+import org.retriever.server.dailypet.domain.pet.entity.Pet;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -33,6 +34,9 @@ public class Family extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "family", cascade = CascadeType.ALL)
     private List<FamilyMember> familyMemberList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "family")
+    private List<Pet> petList = new ArrayList<>();
 
     public static Family createFamily(CreateFamilyRequest dto, String invitationCode) {
         return Family.builder()
