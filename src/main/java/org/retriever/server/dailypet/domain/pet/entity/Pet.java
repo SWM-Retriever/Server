@@ -3,6 +3,7 @@ package org.retriever.server.dailypet.domain.pet.entity;
 import lombok.*;
 import org.retriever.server.dailypet.domain.family.entity.Family;
 import org.retriever.server.dailypet.domain.model.BaseTimeEntity;
+import org.retriever.server.dailypet.domain.pet.dto.request.RegisterPetRequest;
 import org.retriever.server.dailypet.domain.pet.enums.Gender;
 import org.retriever.server.dailypet.domain.pet.enums.PetStatus;
 
@@ -48,4 +49,25 @@ public class Pet extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "familyId", nullable = false)
     private Family family;
+
+    public static Pet createPet(RegisterPetRequest dto) {
+        return Pet.builder()
+                .petName(dto.getPetName())
+                .profileImageUrl(dto.getProfileImageUrl())
+                .birthDate(dto.getBirthDate())
+                .weight(dto.getWeight())
+                .registerNumber(dto.getRegisterNumber())
+                .isNeutered(dto.getIsNeutered())
+                .gender(dto.getGender())
+                .status(PetStatus.ACTIVE)
+                .build();
+    }
+
+    public void setPetKind(PetKind petKind) {
+        this.petKind = petKind;
+    }
+
+    public void setFamily(Family family) {
+        this.family = family;
+    }
 }

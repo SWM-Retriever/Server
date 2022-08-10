@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface PetKindRepository extends JpaRepository<PetKind, Long> {
 
     Optional<List<PetKind>> findAllByPetTypeOrderByPetKindName(PetType petType); // 이름 순으로 품종 정보 조회
+
+    Optional<PetKind> findByPetKindId(Long petKindId);
 }
