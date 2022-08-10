@@ -33,7 +33,8 @@ class MemberTest {
         assertThat(newMember.getRoleType()).isEqualTo(RoleType.MEMBER);
         assertThat(newMember.getIsPersonalInformationAgree()).isTrue();
         assertThat(newMember.getIsToSAgree()).isTrue();
-        assertThat(newMember.getIsPushAgree()).isFalse();
+        assertThat(newMember.getIsPushAgree()).isTrue();
+        assertThat(newMember.getIsProfileInformationAgree()).isTrue();
 
         assertThat(newMember.getFamilyRoleName()).isEqualTo("별명을 입력해주세요!");
         assertThat(newMember.getPassword()).isNull();

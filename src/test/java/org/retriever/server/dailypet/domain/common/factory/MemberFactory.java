@@ -55,7 +55,8 @@ public class MemberFactory {
                 .deviceToken("abcde12345")
                 .profileImageUrl("S3URL")
                 .providerType(ProviderType.KAKAO)
+                .isPushAgree(Boolean.TRUE)
+                .isProfileInformationAgree(Boolean.TRUE)
                 .build();
     }
-
 }

@@ -22,11 +22,17 @@ public class Member extends BaseTimeEntity {
     @Column(name = "memberId")
     private Long id;
 
+    // 개인정보 이용 약관
     private Boolean isPersonalInformationAgree;
 
+    // 서비스 이용 약관
     private Boolean isToSAgree;
 
+    // 광고성 푸시알람 수신 동의
     private Boolean isPushAgree;
+
+    // 프로필 정보 추가 수집 동의
+    private Boolean isProfileInformationAgree;
 
     @Enumerated(EnumType.STRING)
     private AccountStatus accountStatus;
@@ -56,10 +62,11 @@ public class Member extends BaseTimeEntity {
     private List<FamilyMember> familyMemberList;
 
     @Builder
-    public Member(String email, String nickName, String profileImageUrl, ProviderType type, String deviceToken) {
+    public Member(String email, String nickName, String profileImageUrl, ProviderType type, String deviceToken, Boolean isPushAgree, Boolean isProfileInformationAgree) {
         this.isPersonalInformationAgree = true;
         this.isToSAgree = true;
-        this.isPushAgree = false;
+        this.isPushAgree = isPushAgree;
+        this.isProfileInformationAgree = isProfileInformationAgree;
         this.accountStatus = AccountStatus.ACTIVE;
         this.email = email;
         this.nickName = nickName;
@@ -77,6 +84,8 @@ public class Member extends BaseTimeEntity {
                 .profileImageUrl(signUpRequest.getProfileImageUrl())
                 .type(signUpRequest.getProviderType())
                 .deviceToken(signUpRequest.getDeviceToken())
+                .isPushAgree((signUpRequest.getIsPushAgree()))
+                .isProfileInformationAgree(signUpRequest.getIsProfileInformationAgree())
                 .build();
     }
 

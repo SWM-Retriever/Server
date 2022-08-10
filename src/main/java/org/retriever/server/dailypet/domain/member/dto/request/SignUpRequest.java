@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 public class SignUpRequest {
 
     @NotEmpty
-    @Size(max = 10)
+    @Size(max = 20)
     private String snsNickName;
 
     @NotEmpty
@@ -26,4 +26,8 @@ public class SignUpRequest {
     private ProviderType providerType;
 
     private String deviceToken;
+
+    private Boolean isPushAgree;
+
+    private Boolean isProfileInformationAgree;
 }
