@@ -19,4 +19,8 @@ public class ApiErrorResponse {
         this.errorCode = errorCode;
         this.message = message;
     }
+
+    public static ApiErrorResponse of(String errorCode, String message) {
+        return new ApiErrorResponse(errorCode, message);
+    }
 }
