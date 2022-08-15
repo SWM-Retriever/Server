@@ -96,4 +96,8 @@ public class Member extends BaseTimeEntity {
     public void changeFamilyRoleName(String familyRoleName) {
         this.familyRoleName = familyRoleName;
     }
+
+    public void editProfileImageUrl(String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
+    }
 }
