@@ -43,8 +43,8 @@ public class GlobalExceptionControllerAdvice {
     public ResponseEntity<ApiErrorResponse> runtimeException(RuntimeException exception) {
         String errorCode = INTERNAL_SERVER_ERROR_CODE;
         String message = "내부 서버 에러입니다.";
-        log.error("Exception : {} ErrorCode : {} Message : {}",
-                exception.getClass().getSimpleName(), errorCode, message);
+        log.error("Exception : {} ErrorCode : {} Message : {} Detail : {}",
+                exception.getClass().getSimpleName(), errorCode, message, exception.getMessage());
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .body(new ApiErrorResponse(errorCode, message));

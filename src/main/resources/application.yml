@@ -2,6 +2,10 @@ spring:
   h2:
     console:
       enabled: true
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
 
   datasource:
     url: jdbc:h2:mem:testdb
@@ -25,3 +29,16 @@ logging:
   slack:
     webhook-uri: ${SLACK_WEBHOOK_URI}
   config: classpath:logback-slack.xml
+
+cloud:
+  aws:
+    stack:
+      auto: false
+    region:
+      static: ap-northeast-2
+    credentials:
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
+      instance-profile: true
+    s3:
+      bucket: dailypet-test-bucket

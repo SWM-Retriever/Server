@@ -8,13 +8,18 @@ import lombok.RequiredArgsConstructor;
 import org.retriever.server.dailypet.domain.member.dto.request.SignUpRequest;
 import org.retriever.server.dailypet.domain.member.dto.request.SnsLoginRequest;
 import org.retriever.server.dailypet.domain.member.dto.request.ValidateMemberNicknameRequest;
+import org.retriever.server.dailypet.domain.member.dto.response.EditProfileImageResponse;
 import org.retriever.server.dailypet.domain.member.dto.response.SignUpResponse;
 import org.retriever.server.dailypet.domain.member.dto.response.SnsLoginResponse;
 import org.retriever.server.dailypet.domain.member.service.MemberService;
+import org.retriever.server.dailypet.global.config.security.CustomUserDetails;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -59,6 +64,19 @@ public class MemberController {
     @PostMapping("/auth/sign-up")
     public ResponseEntity<SignUpResponse> signUpAndRegisterProfile(@RequestBody @Valid SignUpRequest dto) {
         return ResponseEntity.ok(memberService.signUpAndRegisterProfile(dto));
+    }
+
+    @Operation(summary = "회원 프로필 사진 수정", description = "회원의 프로필 사진을 수정한다")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "회원 프로필 사진 정상 수정"),
+            @ApiResponse(responseCode = "400", description = "회원 프로필 사진 수정 실패"),
+            @ApiResponse(responseCode = "500", description = "내부 서버 에러")
+    })
+
+    @PatchMapping("member/mypage/profile-image")
+    public ResponseEntity<EditProfileImageResponse> editProfileImage(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                                     @RequestPart MultipartFile image) throws IOException {
+        return ResponseEntity.ok(memberService.editProfileImage(userDetails, image));
     }
 
     @GetMapping("/test")
