@@ -33,9 +33,11 @@ public class Family extends BaseTimeEntity {
     private String profileImageUrl;
 
     @OneToMany(mappedBy = "family", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<FamilyMember> familyMemberList = new ArrayList<>();
 
     @OneToMany(mappedBy = "family")
+    @Builder.Default
     private List<Pet> petList = new ArrayList<>();
 
     public static Family createFamily(CreateFamilyRequest dto, String invitationCode) {
