@@ -36,4 +36,8 @@ public class PetCare extends BaseTimeEntity {
     @OneToMany(mappedBy = "petCare")
     @Builder.Default
     private List<PetCareAlarm> petCareAlarmList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "petCare")
+    @Builder.Default
+    private List<CareLog> careLogList = new ArrayList<>();
 }
