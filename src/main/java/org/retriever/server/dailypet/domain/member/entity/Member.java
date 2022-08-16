@@ -90,7 +90,7 @@ public class Member extends BaseTimeEntity {
                 .email(signUpRequest.getEmail())
                 .nickName(signUpRequest.getSnsNickName())
                 .profileImageUrl(signUpRequest.getProfileImageUrl())
-                .type(signUpRequest.getProviderType())
+                .providerType(signUpRequest.getProviderType())
                 .deviceToken(signUpRequest.getDeviceToken())
                 .isPushAgree((signUpRequest.getIsPushAgree()))
                 .isProfileInformationAgree(signUpRequest.getIsProfileInformationAgree())
