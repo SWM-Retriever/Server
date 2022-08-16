@@ -6,9 +6,12 @@ import org.retriever.server.dailypet.domain.model.BaseTimeEntity;
 import org.retriever.server.dailypet.domain.pet.dto.request.RegisterPetRequest;
 import org.retriever.server.dailypet.domain.pet.enums.Gender;
 import org.retriever.server.dailypet.domain.pet.enums.PetStatus;
+import org.retriever.server.dailypet.domain.petcare.entity.PetCare;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Builder
@@ -49,6 +52,10 @@ public class Pet extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "familyId", nullable = false)
     private Family family;
+
+    @OneToMany(mappedBy = "pet")
+    @Builder.Default
+    private List<PetCare> petCareList = new ArrayList<>();
 
     public static Pet createPet(RegisterPetRequest dto) {
         return Pet.builder()

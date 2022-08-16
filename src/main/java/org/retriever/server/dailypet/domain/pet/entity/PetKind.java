@@ -30,5 +30,6 @@ public class PetKind extends BaseTimeEntity {
     private PetType petType; // 강아지 or 고양이
 
     @OneToMany(mappedBy = "petKind")
+    @Builder.Default
     private List<Pet> petList = new ArrayList<>();
 }

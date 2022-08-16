@@ -7,14 +7,17 @@ import org.retriever.server.dailypet.domain.member.enums.RoleType;
 import org.retriever.server.dailypet.domain.member.enums.AccountStatus;
 import org.retriever.server.dailypet.domain.model.BaseTimeEntity;
 import org.retriever.server.dailypet.domain.member.enums.ProviderType;
+import org.retriever.server.dailypet.domain.petcare.entity.CareLog;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Builder
 public class Member extends BaseTimeEntity {
 
     @Id
@@ -59,7 +62,12 @@ public class Member extends BaseTimeEntity {
     private String password;
 
     @OneToMany(mappedBy = "member")
-    private List<FamilyMember> familyMemberList;
+    @Builder.Default
+    private List<FamilyMember> familyMemberList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    @Builder.Default
+    private List<CareLog> careLogList = new ArrayList<>();
 
     @Builder
     public Member(String email, String nickName, String profileImageUrl, ProviderType type, String deviceToken, Boolean isPushAgree, Boolean isProfileInformationAgree) {
@@ -82,7 +90,7 @@ public class Member extends BaseTimeEntity {
                 .email(signUpRequest.getEmail())
                 .nickName(signUpRequest.getSnsNickName())
                 .profileImageUrl(signUpRequest.getProfileImageUrl())
-                .type(signUpRequest.getProviderType())
+                .providerType(signUpRequest.getProviderType())
                 .deviceToken(signUpRequest.getDeviceToken())
                 .isPushAgree((signUpRequest.getIsPushAgree()))
                 .isProfileInformationAgree(signUpRequest.getIsProfileInformationAgree())
