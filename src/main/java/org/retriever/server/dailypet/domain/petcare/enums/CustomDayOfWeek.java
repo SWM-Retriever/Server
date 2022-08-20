@@ -1,11 +1,11 @@
 package org.retriever.server.dailypet.domain.petcare.enums;
 
 public enum CustomDayOfWeek {
-    MONDAY,
-    TUESDAY,
-    WEDNESDAY,
-    THURSDAY,
-    FRIDAY,
-    SATURDAY,
-    SUNDAY
+    MON,
+    TUE,
+    WED,
+    THU,
+    FRI,
+    SAT,
+    SUN
 }
