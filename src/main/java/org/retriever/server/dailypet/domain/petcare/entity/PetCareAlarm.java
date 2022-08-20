@@ -2,6 +2,7 @@ package org.retriever.server.dailypet.domain.petcare.entity;
 
 import lombok.*;
 import org.retriever.server.dailypet.domain.model.BaseTimeEntity;
+import org.retriever.server.dailypet.domain.petcare.dto.request.CreatePetCareRequest;
 import org.retriever.server.dailypet.domain.petcare.enums.CustomDayOfWeek;
 
 import javax.persistence.*;
@@ -20,9 +21,17 @@ public class PetCareAlarm extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private CustomDayOfWeek dayOfWeek;
 
-    private int repeatCnt;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "petCareId", nullable = false)
     private PetCare petCare;
+
+    public static PetCareAlarm from(CustomDayOfWeek dayOfWeek) {
+        return PetCareAlarm.builder()
+                .dayOfWeek(dayOfWeek)
+                .build();
+    }
+
+    public void setPetCare(PetCare petCare) {
+        this.petCare = petCare;
+    }
 }

@@ -3,6 +3,7 @@ package org.retriever.server.dailypet.domain.petcare.entity;
 import lombok.*;
 import org.retriever.server.dailypet.domain.model.BaseTimeEntity;
 import org.retriever.server.dailypet.domain.pet.entity.Pet;
+import org.retriever.server.dailypet.domain.petcare.dto.request.CreatePetCareRequest;
 import org.retriever.server.dailypet.domain.petcare.enums.PetCareStatus;
 
 import javax.persistence.*;
@@ -22,7 +23,7 @@ public class PetCare extends BaseTimeEntity {
 
     private String careName;
 
-    private int alarmSetting;
+    private int repeatCnt;
 
     private Boolean isPushAgree;
 
@@ -33,11 +34,29 @@ public class PetCare extends BaseTimeEntity {
     @JoinColumn(name = "petId", nullable = false)
     private Pet pet;
 
-    @OneToMany(mappedBy = "petCare")
+    @OneToMany(mappedBy = "petCare", cascade = CascadeType.PERSIST)
     @Builder.Default
     private List<PetCareAlarm> petCareAlarmList = new ArrayList<>();
 
     @OneToMany(mappedBy = "petCare")
     @Builder.Default
     private List<CareLog> careLogList = new ArrayList<>();
+
+    public static PetCare from(CreatePetCareRequest dto) {
+        return PetCare.builder()
+                .careName(dto.getCareName())
+                .repeatCnt(dto.getRepeatCnt())
+                .isPushAgree(false)
+                .petCareStatus(PetCareStatus.ACTIVE)
+                .build();
+    }
+
+    public void addPet(Pet pet) {
+        this.pet = pet;
+    }
+
+    public void addPetCareAlarm(PetCareAlarm petCareAlarm) {
+        this.petCareAlarmList.add(petCareAlarm);
+        petCareAlarm.setPetCare(this);
+    }
 }
