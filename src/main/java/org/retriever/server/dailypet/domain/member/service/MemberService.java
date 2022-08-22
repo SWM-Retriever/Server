@@ -3,6 +3,7 @@ package org.retriever.server.dailypet.domain.member.service;
 import lombok.RequiredArgsConstructor;
 import org.retriever.server.dailypet.domain.member.dto.request.SignUpRequest;
 import org.retriever.server.dailypet.domain.member.dto.request.ValidateMemberNicknameRequest;
+import org.retriever.server.dailypet.domain.member.dto.response.CalculateDayResponse;
 import org.retriever.server.dailypet.domain.member.dto.response.EditProfileImageResponse;
 import org.retriever.server.dailypet.domain.member.dto.response.SignUpResponse;
 import org.retriever.server.dailypet.domain.member.entity.Member;
@@ -13,14 +14,20 @@ import org.retriever.server.dailypet.domain.member.repository.MemberRepository;
 import org.retriever.server.dailypet.domain.member.exception.MemberNotFoundException;
 import org.retriever.server.dailypet.domain.member.dto.request.SnsLoginRequest;
 import org.retriever.server.dailypet.domain.member.dto.response.SnsLoginResponse;
+import org.retriever.server.dailypet.domain.pet.entity.Pet;
+import org.retriever.server.dailypet.domain.pet.exception.PetNotFoundException;
+import org.retriever.server.dailypet.domain.pet.repository.PetRepository;
 import org.retriever.server.dailypet.global.config.jwt.JwtTokenProvider;
 import org.retriever.server.dailypet.global.config.security.CustomUserDetails;
+import org.retriever.server.dailypet.global.utils.LocalDateTimeUtils;
 import org.retriever.server.dailypet.global.utils.s3.S3FileUploader;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.Period;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +35,7 @@ import java.io.IOException;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final PetRepository petRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final S3FileUploader s3FileUploader;
 
@@ -78,5 +86,14 @@ public class MemberService {
         member.editProfileImageUrl(profileImageUrl);
 
         return EditProfileImageResponse.from(profileImageUrl);
+    }
+
+    public CalculateDayResponse calculateDayOfFirstMeet(CustomUserDetails userDetails, Long petId) {
+        Member member = memberRepository.findById(userDetails.getId()).orElseThrow(MemberNotFoundException::new);
+        Pet pet = petRepository.findById(petId).orElseThrow(PetNotFoundException::new);
+
+        int calculatedDay = LocalDateTimeUtils.calculateDaysFromNow(pet.getBirthDate());
+
+        return CalculateDayResponse.of(member.getNickName(), pet.getPetName(), calculatedDay);
     }
 }
