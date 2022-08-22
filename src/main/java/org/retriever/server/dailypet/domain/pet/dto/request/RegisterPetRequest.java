@@ -4,7 +4,7 @@ import lombok.*;
 import org.retriever.server.dailypet.domain.pet.enums.Gender;
 import org.retriever.server.dailypet.domain.pet.enums.PetType;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Builder
 @Getter
@@ -20,7 +20,7 @@ public class RegisterPetRequest {
 
     private Gender gender;
 
-    private LocalDateTime birthDate;
+    private LocalDate birthDate;
 
     private Long petKindId;
 
