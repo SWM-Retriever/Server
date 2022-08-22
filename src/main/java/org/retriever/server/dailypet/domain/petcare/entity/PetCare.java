@@ -23,6 +23,8 @@ public class PetCare extends BaseTimeEntity {
 
     private String careName;
 
+    private int curCnt;
+
     private int repeatCnt;
 
     private Boolean isPushAgree;
