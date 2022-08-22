@@ -15,5 +15,5 @@ public class CreatePetCareRequest {
 
     private List<CustomDayOfWeek> dayOfWeeks;
 
-    private int repeatCnt;
+    private int totalCountPerDay;
 }
