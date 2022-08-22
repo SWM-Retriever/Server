@@ -6,6 +6,7 @@ import org.retriever.server.dailypet.domain.model.BaseTimeEntity;
 import org.retriever.server.dailypet.domain.pet.dto.request.RegisterPetRequest;
 import org.retriever.server.dailypet.domain.pet.enums.Gender;
 import org.retriever.server.dailypet.domain.pet.enums.PetStatus;
+import org.retriever.server.dailypet.domain.petcare.entity.CareLog;
 import org.retriever.server.dailypet.domain.petcare.entity.PetCare;
 
 import javax.persistence.*;
@@ -56,6 +57,10 @@ public class Pet extends BaseTimeEntity {
     @OneToMany(mappedBy = "pet")
     @Builder.Default
     private List<PetCare> petCareList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "pet")
+    @Builder.Default
+    private List<CareLog> careLogList = new ArrayList<>();
 
     public static Pet createPet(RegisterPetRequest dto) {
         return Pet.builder()
