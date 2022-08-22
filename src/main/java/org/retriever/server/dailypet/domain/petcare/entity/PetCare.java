@@ -5,6 +5,7 @@ import org.retriever.server.dailypet.domain.model.BaseTimeEntity;
 import org.retriever.server.dailypet.domain.pet.entity.Pet;
 import org.retriever.server.dailypet.domain.petcare.dto.request.CreatePetCareRequest;
 import org.retriever.server.dailypet.domain.petcare.enums.PetCareStatus;
+import org.retriever.server.dailypet.domain.petcare.exception.CareCountExceededException;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -23,7 +24,9 @@ public class PetCare extends BaseTimeEntity {
 
     private String careName;
 
-    private int repeatCnt;
+    private int currentCount;
+
+    private int totalCountPerDay;
 
     private Boolean isPushAgree;
 
@@ -45,7 +48,7 @@ public class PetCare extends BaseTimeEntity {
     public static PetCare from(CreatePetCareRequest dto) {
         return PetCare.builder()
                 .careName(dto.getCareName())
-                .repeatCnt(dto.getRepeatCnt())
+                .totalCountPerDay(dto.getTotalCountPerDay())
                 .isPushAgree(false)
                 .petCareStatus(PetCareStatus.ACTIVE)
                 .build();
@@ -58,5 +61,13 @@ public class PetCare extends BaseTimeEntity {
     public void addPetCareAlarm(PetCareAlarm petCareAlarm) {
         this.petCareAlarmList.add(petCareAlarm);
         petCareAlarm.setPetCare(this);
+    }
+
+    public void pushCareCheckButton() {
+        int after = this.currentCount + 1;
+        if (after > totalCountPerDay) {
+            throw new CareCountExceededException();
+        }
+        this.currentCount = after;
     }
 }
