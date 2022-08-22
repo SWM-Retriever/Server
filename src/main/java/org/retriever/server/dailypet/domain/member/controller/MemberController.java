@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.retriever.server.dailypet.domain.member.dto.request.SignUpRequest;
 import org.retriever.server.dailypet.domain.member.dto.request.SnsLoginRequest;
 import org.retriever.server.dailypet.domain.member.dto.request.ValidateMemberNicknameRequest;
+import org.retriever.server.dailypet.domain.member.dto.response.CalculateDayResponse;
 import org.retriever.server.dailypet.domain.member.dto.response.EditProfileImageResponse;
 import org.retriever.server.dailypet.domain.member.dto.response.SignUpResponse;
 import org.retriever.server.dailypet.domain.member.dto.response.SnsLoginResponse;
@@ -72,12 +73,24 @@ public class MemberController {
             @ApiResponse(responseCode = "400", description = "회원 프로필 사진 수정 실패"),
             @ApiResponse(responseCode = "500", description = "내부 서버 에러")
     })
-
-    @PatchMapping("member/mypage/profile-image")
+    @PatchMapping("/member/mypage/profile-image")
     public ResponseEntity<EditProfileImageResponse> editProfileImage(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                                      @RequestPart MultipartFile image) throws IOException {
         return ResponseEntity.ok(memberService.editProfileImage(userDetails, image));
     }
+
+    @Operation(summary = "메인 페이지 - 반려동물과 보낸 시간 조회", description = "나와 반려동물이 만난지 얼마나 됐는지 날짜를 조회한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "정상 조회"),
+            @ApiResponse(responseCode = "400", description = "조회 실패"),
+            @ApiResponse(responseCode = "500", description = "내부 서버 에러")
+    })
+    @GetMapping("/main/pets/{petId}/days")
+    public ResponseEntity<CalculateDayResponse> calculateDayOfFirstMeet(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                                        @PathVariable Long petId) {
+        return ResponseEntity.ok(memberService.calculateDayOfFirstMeet(userDetails, petId));
+    }
+
 
     @GetMapping("/test")
     public String test() {

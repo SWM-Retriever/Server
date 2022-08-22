@@ -9,7 +9,7 @@ import org.retriever.server.dailypet.domain.pet.enums.PetStatus;
 import org.retriever.server.dailypet.domain.petcare.entity.PetCare;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +29,7 @@ public class Pet extends BaseTimeEntity {
 
     private String profileImageUrl;
 
-    private LocalDateTime birthDate;
+    private LocalDate birthDate;
 
     private Double weight;
 
