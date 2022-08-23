@@ -4,6 +4,7 @@ import lombok.*;
 import org.retriever.server.dailypet.domain.member.entity.Member;
 import org.retriever.server.dailypet.domain.model.BaseTimeEntity;
 import org.retriever.server.dailypet.domain.pet.entity.Pet;
+import org.retriever.server.dailypet.domain.petcare.enums.CareLogStatus;
 
 import javax.persistence.*;
 
@@ -18,6 +19,9 @@ public class CareLog extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long careLogId;
 
+    @Enumerated(EnumType.STRING)
+    private CareLogStatus careLogStatus;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "petCareId", nullable = false)
     private PetCare petCare;
@@ -30,11 +34,12 @@ public class CareLog extends BaseTimeEntity {
     @JoinColumn(name = "petId", nullable = false)
     private Pet pet;
 
-    public static CareLog of(Member member, Pet pet, PetCare petCare) {
+    public static CareLog of(Member member, Pet pet, PetCare petCare, CareLogStatus careLogStatus) {
         CareLog careLog = CareLog.builder()
                 .member(member)
                 .pet(pet)
                 .petCare(petCare)
+                .careLogStatus(careLogStatus)
                 .build();
         member.getCareLogList().add(careLog);
 

@@ -8,10 +8,12 @@ import org.retriever.server.dailypet.domain.pet.entity.Pet;
 import org.retriever.server.dailypet.domain.pet.exception.PetNotFoundException;
 import org.retriever.server.dailypet.domain.pet.repository.PetRepository;
 import org.retriever.server.dailypet.domain.petcare.dto.request.CreatePetCareRequest;
+import org.retriever.server.dailypet.domain.petcare.dto.response.CancelPetCareResponse;
 import org.retriever.server.dailypet.domain.petcare.dto.response.CheckPetCareResponse;
 import org.retriever.server.dailypet.domain.petcare.entity.CareLog;
 import org.retriever.server.dailypet.domain.petcare.entity.PetCare;
 import org.retriever.server.dailypet.domain.petcare.entity.PetCareAlarm;
+import org.retriever.server.dailypet.domain.petcare.enums.CareLogStatus;
 import org.retriever.server.dailypet.domain.petcare.enums.CustomDayOfWeek;
 import org.retriever.server.dailypet.domain.petcare.exception.PetCareNotFoundException;
 import org.retriever.server.dailypet.domain.petcare.repository.CareLogRepository;
@@ -64,7 +66,7 @@ public class PetCareService {
         PetCare petCare = petCareRepository.findById(careId).orElseThrow(PetCareNotFoundException::new);
         petCare.pushCareCheckButton();
 
-        CareLog careLog = CareLog.of(member, pet, petCare);
+        CareLog careLog = CareLog.of(member, pet, petCare, CareLogStatus.CHECK);
 
         careLogRepository.save(careLog);
 
