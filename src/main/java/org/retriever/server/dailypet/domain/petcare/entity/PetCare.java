@@ -6,6 +6,7 @@ import org.retriever.server.dailypet.domain.pet.entity.Pet;
 import org.retriever.server.dailypet.domain.petcare.dto.request.CreatePetCareRequest;
 import org.retriever.server.dailypet.domain.petcare.enums.PetCareStatus;
 import org.retriever.server.dailypet.domain.petcare.exception.CareCountExceededException;
+import org.retriever.server.dailypet.domain.petcare.exception.CareCountIsZeroException;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -67,6 +68,14 @@ public class PetCare extends BaseTimeEntity {
         int after = this.currentCount + 1;
         if (after > totalCountPerDay) {
             throw new CareCountExceededException();
+        }
+        this.currentCount = after;
+    }
+
+    public void cancelCareCheckButton() {
+        int after = this.currentCount - 1;
+        if (after < 0) {
+            throw new CareCountIsZeroException();
         }
         this.currentCount = after;
     }

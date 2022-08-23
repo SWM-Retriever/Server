@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.retriever.server.dailypet.domain.petcare.dto.request.CreatePetCareRequest;
+import org.retriever.server.dailypet.domain.petcare.dto.response.CancelPetCareResponse;
 import org.retriever.server.dailypet.domain.petcare.dto.response.CheckPetCareResponse;
 import org.retriever.server.dailypet.domain.petcare.service.PetCareService;
 import org.retriever.server.dailypet.global.config.security.CustomUserDetails;
@@ -48,5 +49,18 @@ public class PetCareController {
     public ResponseEntity<CheckPetCareResponse> checkPetCare(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                              @PathVariable Long petId, @PathVariable Long careId) {
         return ResponseEntity.ok(petCareService.checkPetCare(userDetails, petId, careId));
+    }
+
+    @Parameter(name = "X-AUTH-TOKEN", description = "로그인 성공 후 access_token", required = true)
+    @Operation(summary = "챙겨주기 항목 1회 취소", description = "해당 반려동물의 챙겨주기 항목을 취소한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "챙겨주기 정상 취소"),
+            @ApiResponse(responseCode = "400", description = "챙겨주기 취소 실패"),
+            @ApiResponse(responseCode = "500", description = "내부 서버 에러")
+    })
+    @PostMapping("/pets/{petId}/cares/{careId}/cancel")
+    public ResponseEntity<CancelPetCareResponse> cancelPetCare(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                               @PathVariable Long petId, @PathVariable Long careId) {
+        return ResponseEntity.ok(petCareService.cancelPetCare(userDetails, petId, careId));
     }
 }
