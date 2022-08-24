@@ -7,6 +7,7 @@ import org.retriever.server.dailypet.domain.pet.entity.Pet;
 import org.retriever.server.dailypet.domain.petcare.enums.CareLogStatus;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -21,6 +22,8 @@ public class CareLog extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     private CareLogStatus careLogStatus;
+
+    private LocalDate logDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "petCareId", nullable = false)
@@ -40,6 +43,7 @@ public class CareLog extends BaseTimeEntity {
                 .pet(pet)
                 .petCare(petCare)
                 .careLogStatus(careLogStatus)
+                .logDate(LocalDate.now())
                 .build();
         member.getCareLogList().add(careLog);
 
