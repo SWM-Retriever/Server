@@ -25,16 +25,16 @@ public class Member extends BaseTimeEntity {
     @Column(name = "memberId")
     private Long id;
 
-    // 개인정보 이용 약관
+    // 개인정보 이용 약관 (필수)
     private Boolean isPersonalInformationAgree;
 
-    // 서비스 이용 약관
+    // 서비스 이용 약관 (필수)
     private Boolean isToSAgree;
 
-    // 광고성 푸시알람 수신 동의
+    // 광고성 푸시알람 수신 동의 (선택)
     private Boolean isPushAgree;
 
-    // 프로필 정보 추가 수집 동의
+    // 프로필 정보 추가 수집 동의 (선택)
     private Boolean isProfileInformationAgree;
 
     @Enumerated(EnumType.STRING)
@@ -94,6 +94,11 @@ public class Member extends BaseTimeEntity {
                 .deviceToken(signUpRequest.getDeviceToken())
                 .isPushAgree((signUpRequest.getIsPushAgree()))
                 .isProfileInformationAgree(signUpRequest.getIsProfileInformationAgree())
+                .isPersonalInformationAgree(true)
+                .isToSAgree(true)
+                .accountStatus(AccountStatus.ACTIVE)
+                .familyRoleName("별명을 입력해주세요!")
+                .roleType(RoleType.MEMBER)
                 .build();
     }
 
