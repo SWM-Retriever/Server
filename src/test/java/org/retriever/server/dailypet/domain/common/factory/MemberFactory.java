@@ -5,7 +5,9 @@ import org.retriever.server.dailypet.domain.member.dto.request.SnsLoginRequest;
 import org.retriever.server.dailypet.domain.member.dto.request.ValidateMemberNicknameRequest;
 import org.retriever.server.dailypet.domain.member.dto.response.SnsLoginResponse;
 import org.retriever.server.dailypet.domain.member.entity.Member;
+import org.retriever.server.dailypet.domain.member.enums.AccountStatus;
 import org.retriever.server.dailypet.domain.member.enums.ProviderType;
+import org.retriever.server.dailypet.domain.member.enums.RoleType;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 
@@ -21,6 +23,13 @@ public class MemberFactory {
                 .profileImageUrl("abcdefghijk")
                 .providerType(ProviderType.KAKAO)
                 .deviceToken("abcdefg12345")
+                .roleType(RoleType.MEMBER)
+                .isPushAgree(true)
+                .isProfileInformationAgree(true)
+                .isPersonalInformationAgree(true)
+                .isToSAgree(true)
+                .accountStatus(AccountStatus.ACTIVE)
+                .familyRoleName("별명을 입력해주세요!")
                 .build();
     }
 
