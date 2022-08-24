@@ -18,7 +18,10 @@ import org.retriever.server.dailypet.domain.member.exception.DuplicateMemberNick
 import org.retriever.server.dailypet.domain.member.exception.MemberNotFoundException;
 import org.retriever.server.dailypet.domain.member.repository.MemberRepository;
 import org.retriever.server.dailypet.global.config.jwt.JwtTokenProvider;
+import org.retriever.server.dailypet.global.utils.s3.S3FileUploader;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -32,6 +35,8 @@ class MemberServiceTest {
     MemberRepository memberRepository;
     @Mock
     JwtTokenProvider jwtTokenProvider;
+    @Mock
+    S3FileUploader s3FileUploader;
 
     @InjectMocks
     MemberService memberService;
@@ -87,18 +92,21 @@ class MemberServiceTest {
 
     @DisplayName("회원 가입 - 정상 회원 가입 후 프로필 등록")
     @Test
-    void sign_up_success_and_register_profile() {
+    void sign_up_success_and_register_profile() throws IOException {
 
         // given
         Member member = MemberFactory.createTestMember();
         SignUpRequest signUpRequest = MemberFactory.createSignUpRequest();
         String testToken = "jwtToken";
+        String imageURL = "testImageUrl";
+        MultipartFile image = MemberFactory.createMultipartFile();
         when(memberRepository.findByEmail(signUpRequest.getEmail())).thenReturn(Optional.empty());
         when(memberRepository.save(any())).thenReturn(member);
         when(jwtTokenProvider.createToken(any())).thenReturn(testToken);
+        when(s3FileUploader.upload(any(), any())).thenReturn(imageURL);
 
         // when
-        SignUpResponse signUpResponse = memberService.signUpAndRegisterProfile(signUpRequest);
+        SignUpResponse signUpResponse = memberService.signUpAndRegisterProfile(signUpRequest, image);
 
         // then
         assertAll(
@@ -115,9 +123,10 @@ class MemberServiceTest {
         // given
         Member member = MemberFactory.createTestMember();
         SignUpRequest signUpRequest = MemberFactory.createSignUpRequest();
+        MultipartFile image = MemberFactory.createMultipartFile();
         when(memberRepository.findByEmail(signUpRequest.getEmail())).thenReturn(Optional.of(member));
 
         // when, then
-        assertThrows(DuplicateMemberException.class, () -> memberService.signUpAndRegisterProfile(signUpRequest));
+        assertThrows(DuplicateMemberException.class, () -> memberService.signUpAndRegisterProfile(signUpRequest, image));
     }
 }

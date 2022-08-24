@@ -6,6 +6,8 @@ import org.retriever.server.dailypet.domain.member.dto.request.ValidateMemberNic
 import org.retriever.server.dailypet.domain.member.dto.response.SnsLoginResponse;
 import org.retriever.server.dailypet.domain.member.entity.Member;
 import org.retriever.server.dailypet.domain.member.enums.ProviderType;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 
 public class MemberFactory {
 
@@ -17,7 +19,7 @@ public class MemberFactory {
                 .email("test@naver.com")
                 .nickName("test")
                 .profileImageUrl("abcdefghijk")
-                .type(ProviderType.KAKAO)
+                .providerType(ProviderType.KAKAO)
                 .deviceToken("abcdefg12345")
                 .build();
     }
@@ -53,10 +55,18 @@ public class MemberFactory {
                 .email("test@naver.com")
                 .snsNickName("test")
                 .deviceToken("abcde12345")
-                .profileImageUrl("S3URL")
                 .providerType(ProviderType.KAKAO)
                 .isPushAgree(Boolean.TRUE)
                 .isProfileInformationAgree(Boolean.TRUE)
                 .build();
+    }
+
+    public static MockMultipartFile createMultipartFile() {
+        return new MockMultipartFile(
+                "testfile",
+                "test.txt",
+                MediaType.TEXT_PLAIN_VALUE,
+                "Hello, World!".getBytes()
+        );
     }
 }
