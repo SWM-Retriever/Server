@@ -85,11 +85,11 @@ public class Member extends BaseTimeEntity {
         this.deviceToken = deviceToken;
     }
 
-    public static Member createNewMember(SignUpRequest signUpRequest) {
+    public static Member createNewMember(SignUpRequest signUpRequest, String url) {
         return Member.builder()
                 .email(signUpRequest.getEmail())
                 .nickName(signUpRequest.getSnsNickName())
-                .profileImageUrl(signUpRequest.getProfileImageUrl())
+                .profileImageUrl(url)
                 .providerType(signUpRequest.getProviderType())
                 .deviceToken(signUpRequest.getDeviceToken())
                 .isPushAgree((signUpRequest.getIsPushAgree()))

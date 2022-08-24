@@ -16,8 +16,6 @@ public class RegisterPetRequest {
 
     private PetType petType;
 
-    private String profileImageUrl;
-
     private Gender gender;
 
     private LocalDate birthDate;

@@ -20,9 +20,6 @@ public class SignUpRequest {
     @Email
     private String email;
 
-    @NotEmpty
-    private String profileImageUrl;
-
     private ProviderType providerType;
 
     private String deviceToken;

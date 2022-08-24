@@ -19,13 +19,14 @@ class MemberTest {
         SignUpRequest signUpRequest = MemberFactory.createSignUpRequest();
 
         // when
-        Member newMember = Member.createNewMember(signUpRequest);
+        String imageUrl = "test";
+        Member newMember = Member.createNewMember(signUpRequest, imageUrl);
 
         // then
         assertThat(newMember.getId()).isNull();
         assertThat(newMember.getNickName()).isEqualTo(signUpRequest.getSnsNickName());
         assertThat(newMember.getEmail()).isEqualTo(signUpRequest.getEmail());
-        assertThat(newMember.getProfileImageUrl()).isEqualTo(signUpRequest.getProfileImageUrl());
+        assertThat(newMember.getProfileImageUrl()).isEqualTo(imageUrl);
         assertThat(newMember.getProviderType()).isEqualTo(signUpRequest.getProviderType());
         assertThat(newMember.getDeviceToken()).isEqualTo(signUpRequest.getDeviceToken());
 

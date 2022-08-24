@@ -26,9 +26,12 @@ import org.retriever.server.dailypet.domain.petcare.entity.PetCare;
 import org.retriever.server.dailypet.domain.petcare.repository.CareLogQueryRepository;
 import org.retriever.server.dailypet.domain.petcare.repository.CareLogRepository;
 import org.retriever.server.dailypet.global.config.security.CustomUserDetails;
+import org.retriever.server.dailypet.global.utils.s3.S3FileUploader;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,6 +46,7 @@ public class PetService {
     private final PetRepository petRepository;
     private final MemberRepository memberRepository;
     private final CareLogQueryRepository careLogRepository;
+    private final S3FileUploader s3FileUploader;
 
     // TODO : 멤버 정보를 이용해서 속한 가족 정보를 바로 참조하는 쿼리 작성 (현재는 familyMember를 거쳐야함)
     public void validatePetNameInFamily(CustomUserDetails userDetails, ValidatePetNameInFamilyRequest dto, Long familyId) {
@@ -63,13 +67,15 @@ public class PetService {
     }
 
     @Transactional
-    public RegisterPetResponse registerPet(CustomUserDetails userDetails, RegisterPetRequest dto, Long familyId) {
+    public RegisterPetResponse registerPet(CustomUserDetails userDetails, RegisterPetRequest dto,
+                                           Long familyId, MultipartFile image) throws IOException {
 
         Member member = memberRepository.findById(userDetails.getId()).orElseThrow(MemberNotFoundException::new);
         Family family = familyRepository.findById(familyId).orElseThrow(FamilyNotFoundException::new);
         PetKind petKind = petKindRepository.findByPetKindId(dto.getPetKindId()).orElseThrow(PetTypeNotFoundException::new);
+        String profileImageUrl = s3FileUploader.upload(image, "test");
 
-        Pet newPet = Pet.createPet(dto);
+        Pet newPet = Pet.createPet(dto, profileImageUrl);
 
         newPet.setPetKind(petKind);
         newPet.setFamily(family);

@@ -40,12 +40,12 @@ public class Family extends BaseTimeEntity {
     @Builder.Default
     private List<Pet> petList = new ArrayList<>();
 
-    public static Family createFamily(CreateFamilyRequest dto, String invitationCode) {
+    public static Family createFamily(CreateFamilyRequest dto, String invitationCode, String profileImageUrl) {
         return Family.builder()
                 .familyName(dto.getFamilyName())
                 .familyStatus(FamilyStatus.ACTIVE)
                 .invitationCode(invitationCode)
-                .profileImageUrl(dto.getProfileImageUrl())
+                .profileImageUrl(profileImageUrl)
                 .familyMemberList(new ArrayList<>())
                 .build();
     }

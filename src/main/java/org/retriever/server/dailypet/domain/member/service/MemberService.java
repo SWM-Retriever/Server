@@ -62,12 +62,12 @@ public class MemberService {
     }
 
     @Transactional
-    public SignUpResponse signUpAndRegisterProfile(SignUpRequest dto) {
+    public SignUpResponse signUpAndRegisterProfile(SignUpRequest dto, MultipartFile image) throws IOException {
         if (memberRepository.findByEmail(dto.getEmail()).isPresent()) {
             throw new DuplicateMemberException();
         }
-
-        Member signUpMember = Member.createNewMember(dto);
+        String profileImageUrl = s3FileUploader.upload(image, "test");
+        Member signUpMember = Member.createNewMember(dto, profileImageUrl);
 
         memberRepository.save(signUpMember);
 
