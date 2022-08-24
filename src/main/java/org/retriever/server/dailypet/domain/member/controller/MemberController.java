@@ -63,7 +63,7 @@ public class MemberController {
             @ApiResponse(responseCode = "500", description = "내부 서버 에러")
     })
     @PostMapping("/auth/sign-up")
-    public ResponseEntity<SignUpResponse> signUpAndRegisterProfile(@RequestBody @Valid SignUpRequest dto,
+    public ResponseEntity<SignUpResponse> signUpAndRegisterProfile(@RequestPart @Valid SignUpRequest dto,
                                                                    @RequestPart MultipartFile image) throws IOException {
         return ResponseEntity.ok(memberService.signUpAndRegisterProfile(dto, image));
     }

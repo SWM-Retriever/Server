@@ -68,7 +68,7 @@ public class PetController {
     })
     @PostMapping("/families/{familyId}/pet")
     public ResponseEntity<RegisterPetResponse> registerPet(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                                           @RequestBody @Valid RegisterPetRequest dto,
+                                                           @RequestPart @Valid RegisterPetRequest dto,
                                                            @RequestPart MultipartFile image,
                                                            @PathVariable Long familyId) throws IOException {
         return ResponseEntity.ok(petService.registerPet(userDetails, dto, familyId, image));

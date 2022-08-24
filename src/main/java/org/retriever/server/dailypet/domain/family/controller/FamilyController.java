@@ -66,7 +66,7 @@ public class FamilyController {
     })
     @PostMapping("/family")
     public ResponseEntity<CreateFamilyResponse> createFamily(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                                             @RequestBody @Valid CreateFamilyRequest dto,
+                                                             @RequestPart @Valid CreateFamilyRequest dto,
                                                              @RequestPart MultipartFile image) throws IOException {
         return ResponseEntity.ok(familyService.createFamily(userDetails, dto, image));
     }
