@@ -15,7 +15,9 @@ import org.retriever.server.dailypet.domain.petcare.entity.PetCare;
 import org.retriever.server.dailypet.domain.petcare.entity.PetCareAlarm;
 import org.retriever.server.dailypet.domain.petcare.enums.CareLogStatus;
 import org.retriever.server.dailypet.domain.petcare.enums.CustomDayOfWeek;
+import org.retriever.server.dailypet.domain.petcare.exception.NotCancelCareLogException;
 import org.retriever.server.dailypet.domain.petcare.exception.PetCareNotFoundException;
+import org.retriever.server.dailypet.domain.petcare.repository.CareLogQueryRepository;
 import org.retriever.server.dailypet.domain.petcare.repository.CareLogRepository;
 import org.retriever.server.dailypet.domain.petcare.repository.PetCareRepository;
 import org.retriever.server.dailypet.global.config.security.CustomUserDetails;
@@ -33,6 +35,7 @@ public class PetCareService {
     private final PetCareRepository petCareRepository;
     private final CareLogRepository careLogRepository;
     private final MemberRepository memberRepository;
+    private final CareLogQueryRepository careLogQueryRepository;
 
     @Transactional
     public void registerPetCare(Long petId, CreatePetCareRequest dto) {
@@ -73,19 +76,24 @@ public class PetCareService {
         return new CheckPetCareResponse(petCareId, petCare.getCurrentCount(), member.getFamilyRoleName());
     }
 
+    /**
+     * 내가 한 항목만 취소할 수 있도록, CareLog에서 요청한 멤버와 항목으로 검색한다.
+     * CareLog에서 내가 한 행동의 가장 최근을 조회하고, 없으면 취소 불가
+     * 있으면 해당 CareLog의 status를 cancel로 바꾼다.
+     */
+    @Transactional
     public CancelPetCareResponse cancelPetCare(CustomUserDetails userDetails, Long petId, Long petCareId) {
         Member member = memberRepository.findById(userDetails.getId())
                 .orElseThrow(MemberNotFoundException::new);
 
-        Pet pet = petRepository.findById(petId)
-                .orElseThrow(PetNotFoundException::new);
-
         PetCare petCare = petCareRepository.findById(petCareId).orElseThrow(PetCareNotFoundException::new);
+        CareLog careLog = careLogQueryRepository.findByMemberIdAndCareIdWithCurDateLatestLimit1(member.getId(), petCareId);
+
+        if (careLog == null) {
+            throw new NotCancelCareLogException();
+        }
         petCare.cancelCareCheckButton();
-
-        CareLog careLog = CareLog.of(member, pet, petCare, CareLogStatus.CANCEL);
-
-        careLogRepository.save(careLog);
+        careLog.cancel();
 
         return new CancelPetCareResponse(petCareId, petCare.getCurrentCount());
     }

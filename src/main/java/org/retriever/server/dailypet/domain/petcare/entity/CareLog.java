@@ -49,4 +49,8 @@ public class CareLog extends BaseTimeEntity {
 
         return careLog;
     }
+
+    public void cancel() {
+        this.careLogStatus = CareLogStatus.CANCEL;
+    }
 }
