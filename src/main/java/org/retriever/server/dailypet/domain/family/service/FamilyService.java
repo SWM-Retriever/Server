@@ -19,9 +19,12 @@ import org.retriever.server.dailypet.domain.member.exception.MemberNotFoundExcep
 import org.retriever.server.dailypet.domain.member.repository.MemberRepository;
 import org.retriever.server.dailypet.global.config.security.CustomUserDetails;
 import org.retriever.server.dailypet.global.utils.invitationcode.InvitationCodeUtil;
+import org.retriever.server.dailypet.global.utils.s3.S3FileUploader;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -32,6 +35,7 @@ public class FamilyService {
     private final FamilyRepository familyRepository;
     private final MemberRepository memberRepository;
     private final FamilyMemberRepository familyMemberRepository;
+    private final S3FileUploader s3FileUploader;
 
     public void validateFamilyName(ValidateFamilyNameRequest dto) {
         if (familyRepository.findByFamilyName(dto.getFamilyName()).isPresent()) {
@@ -52,7 +56,8 @@ public class FamilyService {
     }
 
     @Transactional
-    public CreateFamilyResponse createFamily(CustomUserDetails userDetails, CreateFamilyRequest dto) {
+    public CreateFamilyResponse createFamily(CustomUserDetails userDetails, CreateFamilyRequest dto,
+                                             MultipartFile image) throws IOException {
 
         // 멤버 조회 및 권한 지정
         Member member = memberRepository.findById(userDetails.getId())
@@ -60,9 +65,11 @@ public class FamilyService {
         member.setFamilyLeader();
         member.changeFamilyRoleName(dto.getFamilyRoleName());
 
+        String profileImageUrl = s3FileUploader.upload(image, "test");
+
         // 새로운 가족 그룹 생성 - 초대코드 생성
         String invitationCode = InvitationCodeUtil.createInvitationCode();
-        Family newFamily = Family.createFamily(dto, invitationCode);
+        Family newFamily = Family.createFamily(dto, invitationCode, profileImageUrl);
         FamilyMember familyMember = FamilyMember.createFamilyMember(member, newFamily);
 
         // 연관관계 편의 메서드 - family.familyMemberList에 add & cascade.All 옵션을 통해 familyMember 자동 persist

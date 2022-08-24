@@ -17,8 +17,10 @@ import org.retriever.server.dailypet.global.config.security.CustomUserDetails;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -64,8 +66,9 @@ public class FamilyController {
     })
     @PostMapping("/family")
     public ResponseEntity<CreateFamilyResponse> createFamily(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                                             @RequestBody @Valid CreateFamilyRequest dto) {
-        return ResponseEntity.ok(familyService.createFamily(userDetails, dto));
+                                                             @RequestBody @Valid CreateFamilyRequest dto,
+                                                             @RequestPart MultipartFile image) throws IOException {
+        return ResponseEntity.ok(familyService.createFamily(userDetails, dto, image));
     }
 
     @Parameter(name = "X-AUTH-TOKEN", description = "로그인 성공 후 access_token", required = true)

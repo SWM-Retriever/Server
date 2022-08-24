@@ -11,6 +11,4 @@ public class CreateFamilyRequest {
     private String familyName;
 
     private String familyRoleName;
-
-    private String profileImageUrl;
 }
