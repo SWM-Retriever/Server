@@ -1,6 +1,8 @@
 package org.retriever.server.dailypet.domain.common.factory;
 
 import org.retriever.server.dailypet.domain.family.dto.request.CreateFamilyRequest;
+import org.retriever.server.dailypet.domain.family.dto.request.ValidateFamilyNameRequest;
+import org.retriever.server.dailypet.domain.family.dto.request.ValidateFamilyRoleNameRequest;
 import org.retriever.server.dailypet.domain.family.entity.Family;
 import org.retriever.server.dailypet.domain.family.enums.FamilyStatus;
 
@@ -25,6 +27,18 @@ public class FamilyFactory {
         return CreateFamilyRequest.builder()
                 .familyName("testFamily")
                 .familyRoleName("동생")
+                .build();
+    }
+
+    public static ValidateFamilyNameRequest createValidateFamilyNameRequest() {
+        return ValidateFamilyNameRequest.builder()
+                .familyName("testFamily")
+                .build();
+    }
+
+    public static ValidateFamilyRoleNameRequest createValidateFamilyRoleNameRequest(String name) {
+        return ValidateFamilyRoleNameRequest.builder()
+                .familyRoleName(name)
                 .build();
     }
 }

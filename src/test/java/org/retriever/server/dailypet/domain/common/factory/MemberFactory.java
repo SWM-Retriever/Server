@@ -1,5 +1,6 @@
 package org.retriever.server.dailypet.domain.common.factory;
 
+import org.retriever.server.dailypet.domain.family.entity.FamilyMember;
 import org.retriever.server.dailypet.domain.member.dto.request.SignUpRequest;
 import org.retriever.server.dailypet.domain.member.dto.request.SnsLoginRequest;
 import org.retriever.server.dailypet.domain.member.dto.request.ValidateMemberNicknameRequest;
@@ -10,6 +11,9 @@ import org.retriever.server.dailypet.domain.member.enums.ProviderType;
 import org.retriever.server.dailypet.domain.member.enums.RoleType;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MemberFactory {
 
@@ -30,6 +34,27 @@ public class MemberFactory {
                 .isToSAgree(true)
                 .accountStatus(AccountStatus.ACTIVE)
                 .familyRoleName("별명을 입력해주세요!")
+                .build();
+    }
+
+    public static Member createTestMemberWithFamilyMemberList(String name1, String name2) {
+        return Member.builder()
+                .email("test@naver.com")
+                .nickName("test")
+                .profileImageUrl("abcdefghijk")
+                .providerType(ProviderType.KAKAO)
+                .deviceToken("abcdefg12345")
+                .roleType(RoleType.MEMBER)
+                .isPushAgree(true)
+                .isProfileInformationAgree(true)
+                .isPersonalInformationAgree(true)
+                .isToSAgree(true)
+                .accountStatus(AccountStatus.ACTIVE)
+                .familyRoleName("별명을 입력해주세요!")
+                .familyMemberList(new ArrayList<>(List.of(
+                        FamilyMember.builder().member(Member.builder().familyRoleName(name1).build()).build(),
+                        FamilyMember.builder().member(Member.builder().familyRoleName(name2).build()).build()
+                )))
                 .build();
     }
 
