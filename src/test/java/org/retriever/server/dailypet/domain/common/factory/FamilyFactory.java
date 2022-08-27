@@ -4,6 +4,8 @@ import org.retriever.server.dailypet.domain.family.dto.request.CreateFamilyReque
 import org.retriever.server.dailypet.domain.family.dto.request.EnterFamilyRequest;
 import org.retriever.server.dailypet.domain.family.dto.request.ValidateFamilyNameRequest;
 import org.retriever.server.dailypet.domain.family.dto.request.ValidateFamilyRoleNameRequest;
+import org.retriever.server.dailypet.domain.family.dto.response.CreateFamilyResponse;
+import org.retriever.server.dailypet.domain.family.dto.response.FindFamilyWithInvitationCodeResponse;
 import org.retriever.server.dailypet.domain.family.entity.Family;
 import org.retriever.server.dailypet.domain.family.enums.FamilyStatus;
 
@@ -47,6 +49,22 @@ public class FamilyFactory {
         return EnterFamilyRequest
                 .builder()
                 .familyRoleName("동생")
+                .build();
+    }
+
+    public static CreateFamilyResponse createFamilyResponse() {
+        return CreateFamilyResponse.builder()
+                .familyName("testFamily")
+                .invitationCode("1234567890")
+                .build();
+    }
+
+    public static FindFamilyWithInvitationCodeResponse findFamilyWithInvitationCodeResponse() {
+        return FindFamilyWithInvitationCodeResponse.builder()
+                .familyName("testFamily")
+                .familyId(1L)
+                .profileImageUrl("testUrl")
+                .familyMemberCount(5)
                 .build();
     }
 }
