@@ -81,6 +81,7 @@ public class Pet extends BaseTimeEntity {
 
     public void setFamily(Family family) {
         this.family = family;
+        family.getPetList().add(this);
     }
 
     public void registerPetCare(PetCare petCare) {
