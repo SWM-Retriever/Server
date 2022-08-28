@@ -94,7 +94,7 @@ public class PetService {
      * // 최종 1+N+N 쿼리가 나옴 (펫 한개 + 케어리스트 N개에서 필드 조회(N번) + 각 케어리스트마다 케어로그 조회(N번))
      */
     // TODO : N+1 문제 해결하기
-    public List<GetPetCaresDetailResponse> getPetCaresDetail(CustomUserDetails userDetails, Long petId) {
+    public List<GetPetCaresDetailResponse> getPetCaresDetail(Long petId) {
         Pet pet = petRepository.findById(petId).orElseThrow(PetNotFoundException::new);
 
         List<GetPetCaresDetailResponse> responseList = new ArrayList<>();

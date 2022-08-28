@@ -84,6 +84,6 @@ public class PetController {
     @GetMapping("/pets/{petId}/cares/detail")
     public ResponseEntity<List<GetPetCaresDetailResponse>> getPetCareDetails(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                                        @PathVariable Long petId) {
-        return ResponseEntity.ok(petService.getPetCaresDetail(userDetails, petId));
+        return ResponseEntity.ok(petService.getPetCaresDetail(petId));
     }
 }
