@@ -42,7 +42,7 @@ public class PetController {
     public ResponseEntity<Void> validatePetNameInFamily(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                         @RequestBody @Valid ValidatePetNameInFamilyRequest dto,
                                                         @PathVariable Long familyId) {
-        petService.validatePetNameInFamily(userDetails, dto, familyId);
+        petService.validatePetNameInFamily(dto, familyId);
         return ResponseEntity.ok().build();
     }
 
