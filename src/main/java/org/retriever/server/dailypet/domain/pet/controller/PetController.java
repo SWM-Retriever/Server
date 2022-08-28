@@ -42,7 +42,7 @@ public class PetController {
     public ResponseEntity<Void> validatePetNameInFamily(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                         @RequestBody @Valid ValidatePetNameInFamilyRequest dto,
                                                         @PathVariable Long familyId) {
-        petService.validatePetNameInFamily(userDetails, dto, familyId);
+        petService.validatePetNameInFamily(dto, familyId);
         return ResponseEntity.ok().build();
     }
 
@@ -84,6 +84,6 @@ public class PetController {
     @GetMapping("/pets/{petId}/cares/detail")
     public ResponseEntity<List<GetPetCaresDetailResponse>> getPetCareDetails(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                                        @PathVariable Long petId) {
-        return ResponseEntity.ok(petService.getPetCaresDetail(userDetails, petId));
+        return ResponseEntity.ok(petService.getPetCaresDetail(petId));
     }
 }

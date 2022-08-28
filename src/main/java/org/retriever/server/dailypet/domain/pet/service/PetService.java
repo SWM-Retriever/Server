@@ -49,7 +49,7 @@ public class PetService {
     private final S3FileUploader s3FileUploader;
 
     // TODO : 멤버 정보를 이용해서 속한 가족 정보를 바로 참조하는 쿼리 작성 (현재는 familyMember를 거쳐야함)
-    public void validatePetNameInFamily(CustomUserDetails userDetails, ValidatePetNameInFamilyRequest dto, Long familyId) {
+    public void validatePetNameInFamily(ValidatePetNameInFamilyRequest dto, Long familyId) {
         Family family = familyRepository.findById(familyId).orElseThrow(FamilyNotFoundException::new);
 
         if (family.getPetList().stream()
@@ -94,7 +94,7 @@ public class PetService {
      * // 최종 1+N+N 쿼리가 나옴 (펫 한개 + 케어리스트 N개에서 필드 조회(N번) + 각 케어리스트마다 케어로그 조회(N번))
      */
     // TODO : N+1 문제 해결하기
-    public List<GetPetCaresDetailResponse> getPetCaresDetail(CustomUserDetails userDetails, Long petId) {
+    public List<GetPetCaresDetailResponse> getPetCaresDetail(Long petId) {
         Pet pet = petRepository.findById(petId).orElseThrow(PetNotFoundException::new);
 
         List<GetPetCaresDetailResponse> responseList = new ArrayList<>();

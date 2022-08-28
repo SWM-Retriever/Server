@@ -8,8 +8,10 @@ import org.retriever.server.dailypet.domain.family.dto.response.CreateFamilyResp
 import org.retriever.server.dailypet.domain.family.dto.response.FindFamilyWithInvitationCodeResponse;
 import org.retriever.server.dailypet.domain.family.entity.Family;
 import org.retriever.server.dailypet.domain.family.enums.FamilyStatus;
+import org.retriever.server.dailypet.domain.pet.entity.Pet;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class FamilyFactory {
 
@@ -23,6 +25,7 @@ public class FamilyFactory {
                 .invitationCode("1234567890")
                 .profileImageUrl("testImage")
                 .familyMemberList(new ArrayList<>())
+                .petList(new ArrayList<>())
                 .build();
     }
 
@@ -65,6 +68,17 @@ public class FamilyFactory {
                 .familyId(1L)
                 .profileImageUrl("testUrl")
                 .familyMemberCount(5)
+                .build();
+    }
+
+    public static Family createTestFamilyWithPetList(String name1, String name2) {
+        return Family.builder()
+                .familyName("testFamily")
+                .familyStatus(FamilyStatus.ACTIVE)
+                .invitationCode("1234567890")
+                .profileImageUrl("testImage")
+                .familyMemberList(new ArrayList<>())
+                .petList(new ArrayList<>(List.of(Pet.builder().petName(name1).build(), Pet.builder().petName(name2).build())))
                 .build();
     }
 }
