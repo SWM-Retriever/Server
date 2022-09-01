@@ -92,6 +92,17 @@ public class MemberController {
         return ResponseEntity.ok(memberService.calculateDayOfFirstMeet(userDetails, petId));
     }
 
+    @Operation(summary = "가족 유무 조회", description = "해당 회원이 가족에 속해있는지 유무 반환")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "가족 정상 조회"),
+            @ApiResponse(responseCode = "400", description = "가족에 속해 있지 않음"),
+            @ApiResponse(responseCode = "500", description = "내부 서버 에러")
+    })
+    @GetMapping("/members/{memberId}/family")
+    public ResponseEntity<Void> checkGroup(@PathVariable Long memberId) {
+        memberService.checkGroup(memberId);
+        return ResponseEntity.ok().build();
+    }
 
     @GetMapping("/test")
     public String test() {
