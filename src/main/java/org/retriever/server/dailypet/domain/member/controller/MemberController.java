@@ -98,9 +98,9 @@ public class MemberController {
             @ApiResponse(responseCode = "400", description = "가족에 속해 있지 않음"),
             @ApiResponse(responseCode = "500", description = "내부 서버 에러")
     })
-    @GetMapping("/members/{memberId}/family")
-    public ResponseEntity<Void> checkGroup(@PathVariable Long memberId) {
-        memberService.checkGroup(memberId);
+    @GetMapping("/auth/family")
+    public ResponseEntity<Void> checkGroup(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        memberService.checkGroup(userDetails);
         return ResponseEntity.ok().build();
     }
 
