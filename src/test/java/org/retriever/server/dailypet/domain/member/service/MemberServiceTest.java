@@ -3,10 +3,13 @@ package org.retriever.server.dailypet.domain.member.service;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.retriever.server.dailypet.domain.common.factory.MemberFactory;
+import org.retriever.server.dailypet.domain.family.exception.FamilyNotFoundException;
+import org.retriever.server.dailypet.domain.family.repository.FamilyMemberRepository;
 import org.retriever.server.dailypet.domain.member.dto.request.SignUpRequest;
 import org.retriever.server.dailypet.domain.member.dto.request.SnsLoginRequest;
 import org.retriever.server.dailypet.domain.member.dto.request.ValidateMemberNicknameRequest;
@@ -18,6 +21,7 @@ import org.retriever.server.dailypet.domain.member.exception.DuplicateMemberNick
 import org.retriever.server.dailypet.domain.member.exception.MemberNotFoundException;
 import org.retriever.server.dailypet.domain.member.repository.MemberRepository;
 import org.retriever.server.dailypet.global.config.jwt.JwtTokenProvider;
+import org.retriever.server.dailypet.global.config.security.CustomUserDetails;
 import org.retriever.server.dailypet.global.utils.s3.S3FileUploader;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,6 +30,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -37,6 +42,8 @@ class MemberServiceTest {
     JwtTokenProvider jwtTokenProvider;
     @Mock
     S3FileUploader s3FileUploader;
+    @Mock
+    FamilyMemberRepository familyMemberRepository;
 
     @InjectMocks
     MemberService memberService;
@@ -128,5 +135,19 @@ class MemberServiceTest {
 
         // when, then
         assertThrows(DuplicateMemberException.class, () -> memberService.signUpAndRegisterProfile(signUpRequest, image));
+    }
+
+    @DisplayName("회원 가입 - 회원 가입 도중 프로필 등록만 이탈한 회원일 경우 그룹이 존재하지 않고 FamilyNotFoundException 예외 발생")
+    @Test
+    void check_family_fail_and_throw_exception() {
+
+        // given
+        Member member = MemberFactory.createTestMember();
+        CustomUserDetails userDetails = new CustomUserDetails(member);
+        given(memberRepository.findById(any())).willReturn(Optional.of(member));
+        given(familyMemberRepository.findByMemberId(any())).willReturn(Optional.empty());
+
+        // when, then
+        assertThrows(FamilyNotFoundException.class, () -> memberService.checkGroup(userDetails));
     }
 }
