@@ -98,8 +98,9 @@ public class MemberService {
         return CalculateDayResponse.of(member.getNickName(), pet.getPetName(), calculatedDay);
     }
 
-    public void checkGroup(Long memberId) {
-        memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
-        familyMemberRepository.findByMemberId(memberId).orElseThrow(FamilyNotFoundException::new);
+    public void checkGroup(CustomUserDetails userDetails) {
+        Long id = userDetails.getId();
+        memberRepository.findById(id).orElseThrow(MemberNotFoundException::new);
+        familyMemberRepository.findByMemberId(id).orElseThrow(FamilyNotFoundException::new);
     }
 }
