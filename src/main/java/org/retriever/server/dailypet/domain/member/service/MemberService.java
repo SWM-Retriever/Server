@@ -1,19 +1,21 @@
 package org.retriever.server.dailypet.domain.member.service;
 
 import lombok.RequiredArgsConstructor;
+import org.retriever.server.dailypet.domain.family.exception.FamilyNotFoundException;
+import org.retriever.server.dailypet.domain.family.repository.FamilyMemberRepository;
 import org.retriever.server.dailypet.domain.member.dto.request.SignUpRequest;
+import org.retriever.server.dailypet.domain.member.dto.request.SnsLoginRequest;
 import org.retriever.server.dailypet.domain.member.dto.request.ValidateMemberNicknameRequest;
 import org.retriever.server.dailypet.domain.member.dto.response.CalculateDayResponse;
 import org.retriever.server.dailypet.domain.member.dto.response.EditProfileImageResponse;
 import org.retriever.server.dailypet.domain.member.dto.response.SignUpResponse;
+import org.retriever.server.dailypet.domain.member.dto.response.SnsLoginResponse;
 import org.retriever.server.dailypet.domain.member.entity.Member;
 import org.retriever.server.dailypet.domain.member.exception.DifferentProviderTypeException;
 import org.retriever.server.dailypet.domain.member.exception.DuplicateMemberException;
 import org.retriever.server.dailypet.domain.member.exception.DuplicateMemberNicknameException;
-import org.retriever.server.dailypet.domain.member.repository.MemberRepository;
 import org.retriever.server.dailypet.domain.member.exception.MemberNotFoundException;
-import org.retriever.server.dailypet.domain.member.dto.request.SnsLoginRequest;
-import org.retriever.server.dailypet.domain.member.dto.response.SnsLoginResponse;
+import org.retriever.server.dailypet.domain.member.repository.MemberRepository;
 import org.retriever.server.dailypet.domain.pet.entity.Pet;
 import org.retriever.server.dailypet.domain.pet.exception.PetNotFoundException;
 import org.retriever.server.dailypet.domain.pet.repository.PetRepository;
@@ -26,8 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.Period;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +38,7 @@ public class MemberService {
     private final PetRepository petRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final S3FileUploader s3FileUploader;
+    private final FamilyMemberRepository familyMemberRepository;
 
     public SnsLoginResponse checkMemberAndLogin(SnsLoginRequest dto) {
         Member member = memberRepository.findByEmail(dto.getEmail())
@@ -95,5 +96,10 @@ public class MemberService {
         int calculatedDay = LocalDateTimeUtils.calculateDaysFromNow(pet.getBirthDate());
 
         return CalculateDayResponse.of(member.getNickName(), pet.getPetName(), calculatedDay);
+    }
+
+    public void checkGroup(Long memberId) {
+        memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
+        familyMemberRepository.findByMemberId(memberId).orElseThrow(FamilyNotFoundException::new);
     }
 }
