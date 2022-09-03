@@ -21,6 +21,7 @@ import org.retriever.server.dailypet.domain.member.exception.DuplicateMemberNick
 import org.retriever.server.dailypet.domain.member.exception.MemberNotFoundException;
 import org.retriever.server.dailypet.domain.member.repository.MemberQueryRepository;
 import org.retriever.server.dailypet.domain.member.repository.MemberRepository;
+import org.retriever.server.dailypet.domain.pet.exception.PetNotFoundException;
 import org.retriever.server.dailypet.global.config.jwt.JwtTokenProvider;
 import org.retriever.server.dailypet.global.config.security.CustomUserDetails;
 import org.retriever.server.dailypet.global.utils.s3.S3FileUploader;
@@ -151,5 +152,16 @@ class MemberServiceTest {
 
         // when, then
         assertThrows(FamilyNotFoundException.class, () -> memberService.checkGroup(userDetails));
+    }
+
+    @DisplayName("회원 가입 - 회원 가입 도중 그룹 등록만 이탈한 회원일 경우 반려동물이 존재하지 않고 PetNotFoundException 예외 발생")
+    @Test
+    void check_pet_fail_and_throw_exception() {
+
+        // given
+        given(memberQueryRepository.findPetByFamilyId(any())).willReturn(new ArrayList<>());
+
+        // when, then
+        assertThrows(PetNotFoundException.class, () -> memberService.checkPet(any()));
     }
 }
