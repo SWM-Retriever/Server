@@ -29,12 +29,14 @@
     </appender>
 
     <springProfile name="dev">
-        <logger name="com.example.log" level="WARN" additivity="false">
-            <appender-ref ref="ASYNC_SLACK"/>
-        </logger>
+        <root>
+            <level value="WARN" />
+            <appender-ref ref="ASYNC_SLACK" />
+        </root>
     </springProfile>
 
-    <root level="INFO">
+    <root>
+        <level value="INFO"/>
         <appender-ref ref="Console" />
     </root>
 </configuration>
