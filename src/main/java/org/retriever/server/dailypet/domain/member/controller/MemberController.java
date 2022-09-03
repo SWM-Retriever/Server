@@ -8,10 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.retriever.server.dailypet.domain.member.dto.request.SignUpRequest;
 import org.retriever.server.dailypet.domain.member.dto.request.SnsLoginRequest;
 import org.retriever.server.dailypet.domain.member.dto.request.ValidateMemberNicknameRequest;
-import org.retriever.server.dailypet.domain.member.dto.response.CalculateDayResponse;
-import org.retriever.server.dailypet.domain.member.dto.response.EditProfileImageResponse;
-import org.retriever.server.dailypet.domain.member.dto.response.SignUpResponse;
-import org.retriever.server.dailypet.domain.member.dto.response.SnsLoginResponse;
+import org.retriever.server.dailypet.domain.member.dto.response.*;
 import org.retriever.server.dailypet.domain.member.service.MemberService;
 import org.retriever.server.dailypet.global.config.security.CustomUserDetails;
 import org.springframework.http.ResponseEntity;
@@ -99,9 +96,19 @@ public class MemberController {
             @ApiResponse(responseCode = "500", description = "내부 서버 에러")
     })
     @GetMapping("/auth/family")
-    public ResponseEntity<Void> checkGroup(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        memberService.checkGroup(userDetails);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<CheckGroupResponse> checkGroup(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        return ResponseEntity.ok(memberService.checkGroup(userDetails));
+    }
+
+    @Operation(summary = "반려동물 유무 조회", description = "해당 회원의 가족이 반려동물을 등록했는지 유무 반환")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "반려동물 정상 조회"),
+            @ApiResponse(responseCode = "400", description = "반려동물이 등록되지 않음"),
+            @ApiResponse(responseCode = "500", description = "내부 서버 에러")
+    })
+    @GetMapping("/auth/families/{familyId}/pet")
+    public ResponseEntity<CheckPetResponse> checkPet(@PathVariable Long familyId) {
+        return ResponseEntity.ok(memberService.checkPet(familyId));
     }
 
     @GetMapping("/test")

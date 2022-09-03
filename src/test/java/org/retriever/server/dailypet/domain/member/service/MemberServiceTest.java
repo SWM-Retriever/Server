@@ -19,13 +19,17 @@ import org.retriever.server.dailypet.domain.member.entity.Member;
 import org.retriever.server.dailypet.domain.member.exception.DuplicateMemberException;
 import org.retriever.server.dailypet.domain.member.exception.DuplicateMemberNicknameException;
 import org.retriever.server.dailypet.domain.member.exception.MemberNotFoundException;
+import org.retriever.server.dailypet.domain.member.repository.MemberQueryRepository;
 import org.retriever.server.dailypet.domain.member.repository.MemberRepository;
+import org.retriever.server.dailypet.domain.pet.exception.PetNotFoundException;
 import org.retriever.server.dailypet.global.config.jwt.JwtTokenProvider;
 import org.retriever.server.dailypet.global.config.security.CustomUserDetails;
 import org.retriever.server.dailypet.global.utils.s3.S3FileUploader;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -43,7 +47,7 @@ class MemberServiceTest {
     @Mock
     S3FileUploader s3FileUploader;
     @Mock
-    FamilyMemberRepository familyMemberRepository;
+    MemberQueryRepository memberQueryRepository;
 
     @InjectMocks
     MemberService memberService;
@@ -144,10 +148,20 @@ class MemberServiceTest {
         // given
         Member member = MemberFactory.createTestMember();
         CustomUserDetails userDetails = new CustomUserDetails(member);
-        given(memberRepository.findById(any())).willReturn(Optional.of(member));
-        given(familyMemberRepository.findByMemberId(any())).willReturn(Optional.empty());
+        given(memberQueryRepository.findFamilyByMemberId(any())).willReturn(new ArrayList<>());
 
         // when, then
         assertThrows(FamilyNotFoundException.class, () -> memberService.checkGroup(userDetails));
+    }
+
+    @DisplayName("회원 가입 - 회원 가입 도중 그룹 등록만 이탈한 회원일 경우 반려동물이 존재하지 않고 PetNotFoundException 예외 발생")
+    @Test
+    void check_pet_fail_and_throw_exception() {
+
+        // given
+        given(memberQueryRepository.findPetByFamilyId(any())).willReturn(new ArrayList<>());
+
+        // when, then
+        assertThrows(PetNotFoundException.class, () -> memberService.checkPet(any()));
     }
 }
