@@ -1,20 +1,21 @@
 package org.retriever.server.dailypet.domain.member.service;
 
 import lombok.RequiredArgsConstructor;
+import org.retriever.server.dailypet.domain.family.entity.Family;
+import org.retriever.server.dailypet.domain.family.entity.FamilyMember;
 import org.retriever.server.dailypet.domain.family.exception.FamilyNotFoundException;
 import org.retriever.server.dailypet.domain.family.repository.FamilyMemberRepository;
+import org.retriever.server.dailypet.domain.family.repository.FamilyRepository;
 import org.retriever.server.dailypet.domain.member.dto.request.SignUpRequest;
 import org.retriever.server.dailypet.domain.member.dto.request.SnsLoginRequest;
 import org.retriever.server.dailypet.domain.member.dto.request.ValidateMemberNicknameRequest;
-import org.retriever.server.dailypet.domain.member.dto.response.CalculateDayResponse;
-import org.retriever.server.dailypet.domain.member.dto.response.EditProfileImageResponse;
-import org.retriever.server.dailypet.domain.member.dto.response.SignUpResponse;
-import org.retriever.server.dailypet.domain.member.dto.response.SnsLoginResponse;
+import org.retriever.server.dailypet.domain.member.dto.response.*;
 import org.retriever.server.dailypet.domain.member.entity.Member;
 import org.retriever.server.dailypet.domain.member.exception.DifferentProviderTypeException;
 import org.retriever.server.dailypet.domain.member.exception.DuplicateMemberException;
 import org.retriever.server.dailypet.domain.member.exception.DuplicateMemberNicknameException;
 import org.retriever.server.dailypet.domain.member.exception.MemberNotFoundException;
+import org.retriever.server.dailypet.domain.member.repository.MemberQueryRepository;
 import org.retriever.server.dailypet.domain.member.repository.MemberRepository;
 import org.retriever.server.dailypet.domain.pet.entity.Pet;
 import org.retriever.server.dailypet.domain.pet.exception.PetNotFoundException;
@@ -28,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +40,7 @@ public class MemberService {
     private final PetRepository petRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final S3FileUploader s3FileUploader;
-    private final FamilyMemberRepository familyMemberRepository;
+    private final MemberQueryRepository memberQueryRepository;
 
     public SnsLoginResponse checkMemberAndLogin(SnsLoginRequest dto) {
         Member member = memberRepository.findByEmail(dto.getEmail())
@@ -98,9 +100,14 @@ public class MemberService {
         return CalculateDayResponse.of(member.getNickName(), pet.getPetName(), calculatedDay);
     }
 
-    public void checkGroup(CustomUserDetails userDetails) {
-        Long id = userDetails.getId();
-        memberRepository.findById(id).orElseThrow(MemberNotFoundException::new);
-        familyMemberRepository.findByMemberId(id).orElseThrow(FamilyNotFoundException::new);
+    public CheckGroupResponse checkGroup(CustomUserDetails userDetails) {
+        Long memberId = userDetails.getId();
+        List<FamilyMember> familyByMemberId = memberQueryRepository.findFamilyByMemberId(memberId);
+        if (familyByMemberId.isEmpty()) {
+            throw new FamilyNotFoundException();
+        }
+        return CheckGroupResponse.builder()
+                .groupId(familyByMemberId.get(0).getFamily().getFamilyId())
+                .build();
     }
 }
