@@ -110,4 +110,12 @@ public class MemberService {
                 .groupId(familyByMemberId.get(0).getFamily().getFamilyId())
                 .build();
     }
+
+    public CheckPetResponse checkPet(Long familyId) {
+        List<Pet> petByFamilyId = memberQueryRepository.findPetByFamilyId(familyId);
+        if (petByFamilyId.isEmpty()) {
+            throw new PetNotFoundException();
+        }
+        return CheckPetResponse.from(petByFamilyId);
+    }
 }
