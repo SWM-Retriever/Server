@@ -1,5 +1,6 @@
 package org.retriever.server.dailypet.domain.member.service;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,6 +17,7 @@ import org.retriever.server.dailypet.domain.member.dto.request.ValidateMemberNic
 import org.retriever.server.dailypet.domain.member.dto.response.SignUpResponse;
 import org.retriever.server.dailypet.domain.member.dto.response.SnsLoginResponse;
 import org.retriever.server.dailypet.domain.member.entity.Member;
+import org.retriever.server.dailypet.domain.member.enums.AccountStatus;
 import org.retriever.server.dailypet.domain.member.exception.DuplicateMemberException;
 import org.retriever.server.dailypet.domain.member.exception.DuplicateMemberNicknameException;
 import org.retriever.server.dailypet.domain.member.exception.MemberNotFoundException;
@@ -163,5 +165,21 @@ class MemberServiceTest {
 
         // when, then
         assertThrows(PetNotFoundException.class, () -> memberService.checkPet(any()));
+    }
+
+    @DisplayName("회원 탈퇴 - 회원 탈퇴 진행 시 계정 status는 deleted로 변한다")
+    @Test
+    void delete_member() {
+
+        // given
+        Member member = MemberFactory.createTestMember();
+        CustomUserDetails userDetails = new CustomUserDetails(member);
+        given(memberRepository.findById(any())).willReturn(Optional.of(member));
+
+        // when
+        memberService.deleteMember(userDetails);
+
+        // then
+        Assertions.assertThat(member.getAccountStatus()).isEqualTo(AccountStatus.DELETED);
     }
 }

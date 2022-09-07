@@ -40,10 +40,10 @@ public class Member extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private AccountStatus accountStatus;
 
-    @Column(nullable = false, unique = true, length = 100)
+    @Column(nullable = false, length = 100)
     private String email;
 
-    @Column(nullable = false, unique = true, length = 50)
+    @Column(nullable = false, length = 50)
     private String nickName;
 
     private String profileImageUrl;
@@ -112,5 +112,9 @@ public class Member extends BaseTimeEntity {
 
     public void editProfileImageUrl(String profileImageUrl) {
         this.profileImageUrl = profileImageUrl;
+    }
+
+    public void deleteMember() {
+        this.accountStatus = AccountStatus.DELETED;
     }
 }

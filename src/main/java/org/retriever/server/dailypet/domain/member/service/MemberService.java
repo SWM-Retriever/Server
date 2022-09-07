@@ -118,4 +118,10 @@ public class MemberService {
         }
         return CheckPetResponse.from(petByFamilyId);
     }
+
+    @Transactional
+    public void deleteMember(CustomUserDetails userDetails) {
+        Member member = memberRepository.findById(userDetails.getId()).orElseThrow(MemberNotFoundException::new);
+        member.deleteMember();
+    }
 }

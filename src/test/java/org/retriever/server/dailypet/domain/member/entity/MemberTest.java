@@ -54,4 +54,18 @@ class MemberTest {
         // then
         assertThat(testMember.getRoleType()).isEqualTo(RoleType.FAMILY_LEADER);
     }
+
+    @DisplayName("회원 탈퇴")
+    @Test
+    void delete_member() {
+
+        // given
+        Member testMember = MemberFactory.createTestMember();
+
+        // when
+        testMember.deleteMember();
+
+        // then
+        assertThat(testMember.getAccountStatus()).isEqualTo(AccountStatus.DELETED);
+    }
 }

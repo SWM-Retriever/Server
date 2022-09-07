@@ -111,6 +111,18 @@ public class MemberController {
         return ResponseEntity.ok(memberService.checkPet(familyId));
     }
 
+    @Operation(summary = "회원 탈퇴", description = "회원 탈퇴를 진행한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "회원 탈퇴 정상 처리"),
+            @ApiResponse(responseCode = "400", description = "회원 탈퇴가 진행되지 않음"),
+            @ApiResponse(responseCode = "500", description = "내부 서버 에러")
+    })
+    @DeleteMapping("/auth/member")
+    public ResponseEntity<Void> deleteMember(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        memberService.deleteMember(userDetails);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/test")
     public String test() {
         return "hello it's test";
