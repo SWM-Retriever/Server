@@ -10,9 +10,7 @@ import org.retriever.server.dailypet.domain.member.dto.request.SnsLoginRequest;
 import org.retriever.server.dailypet.domain.member.dto.request.ValidateMemberNicknameRequest;
 import org.retriever.server.dailypet.domain.member.dto.response.*;
 import org.retriever.server.dailypet.domain.member.service.MemberService;
-import org.retriever.server.dailypet.global.config.security.CustomUserDetails;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -72,9 +70,9 @@ public class MemberController {
             @ApiResponse(responseCode = "500", description = "내부 서버 에러")
     })
     @PatchMapping("/member/mypage/profile-image")
-    public ResponseEntity<EditProfileImageResponse> editProfileImage(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                                                     @RequestPart MultipartFile image) throws IOException {
-        return ResponseEntity.ok(memberService.editProfileImage(userDetails, image));
+    public ResponseEntity<EditProfileImageResponse> editProfileImage(
+            @RequestPart MultipartFile image) throws IOException {
+        return ResponseEntity.ok(memberService.editProfileImage(image));
     }
 
     @Operation(summary = "메인 페이지 - 반려동물과 보낸 시간 조회", description = "나와 반려동물이 만난지 얼마나 됐는지 날짜를 조회한다.")
@@ -84,9 +82,8 @@ public class MemberController {
             @ApiResponse(responseCode = "500", description = "내부 서버 에러")
     })
     @GetMapping("/main/pets/{petId}/days")
-    public ResponseEntity<CalculateDayResponse> calculateDayOfFirstMeet(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                                                        @PathVariable Long petId) {
-        return ResponseEntity.ok(memberService.calculateDayOfFirstMeet(userDetails, petId));
+    public ResponseEntity<CalculateDayResponse> calculateDayOfFirstMeet(@PathVariable Long petId) {
+        return ResponseEntity.ok(memberService.calculateDayOfFirstMeet(petId));
     }
 
     @Operation(summary = "가족 유무 조회", description = "해당 회원이 가족에 속해있는지 유무 반환")
@@ -96,8 +93,8 @@ public class MemberController {
             @ApiResponse(responseCode = "500", description = "내부 서버 에러")
     })
     @GetMapping("/auth/family")
-    public ResponseEntity<CheckGroupResponse> checkGroup(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        return ResponseEntity.ok(memberService.checkGroup(userDetails));
+    public ResponseEntity<CheckGroupResponse> checkGroup() {
+        return ResponseEntity.ok(memberService.checkGroup());
     }
 
     @Operation(summary = "반려동물 유무 조회", description = "해당 회원의 가족이 반려동물을 등록했는지 유무 반환")
@@ -118,8 +115,8 @@ public class MemberController {
             @ApiResponse(responseCode = "500", description = "내부 서버 에러")
     })
     @DeleteMapping("/auth/member")
-    public ResponseEntity<Void> deleteMember(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        memberService.deleteMember(userDetails);
+    public ResponseEntity<Void> deleteMember() {
+        memberService.deleteMember();
         return ResponseEntity.ok().build();
     }
 
