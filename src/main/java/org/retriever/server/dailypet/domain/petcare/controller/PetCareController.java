@@ -10,9 +10,7 @@ import org.retriever.server.dailypet.domain.petcare.dto.request.CreatePetCareReq
 import org.retriever.server.dailypet.domain.petcare.dto.response.CancelPetCareResponse;
 import org.retriever.server.dailypet.domain.petcare.dto.response.CheckPetCareResponse;
 import org.retriever.server.dailypet.domain.petcare.service.PetCareService;
-import org.retriever.server.dailypet.global.config.security.CustomUserDetails;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -46,9 +44,8 @@ public class PetCareController {
             @ApiResponse(responseCode = "500", description = "내부 서버 에러")
     })
     @PostMapping("/pets/{petId}/cares/{careId}/check")
-    public ResponseEntity<CheckPetCareResponse> checkPetCare(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                                             @PathVariable Long petId, @PathVariable Long careId) {
-        return ResponseEntity.ok(petCareService.checkPetCare(userDetails, petId, careId));
+    public ResponseEntity<CheckPetCareResponse> checkPetCare(@PathVariable Long petId, @PathVariable Long careId) {
+        return ResponseEntity.ok(petCareService.checkPetCare(petId, careId));
     }
 
     @Parameter(name = "X-AUTH-TOKEN", description = "로그인 성공 후 access_token", required = true)
@@ -59,8 +56,7 @@ public class PetCareController {
             @ApiResponse(responseCode = "500", description = "내부 서버 에러")
     })
     @PostMapping("/pets/{petId}/cares/{careId}/cancel")
-    public ResponseEntity<CancelPetCareResponse> cancelPetCare(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                                               @PathVariable Long petId, @PathVariable Long careId) {
-        return ResponseEntity.ok(petCareService.cancelPetCare(userDetails, petId, careId));
+    public ResponseEntity<CancelPetCareResponse> cancelPetCare(@PathVariable Long petId, @PathVariable Long careId) {
+        return ResponseEntity.ok(petCareService.cancelPetCare(petId, careId));
     }
 }

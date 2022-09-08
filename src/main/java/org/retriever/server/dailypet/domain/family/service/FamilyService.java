@@ -15,11 +15,9 @@ import org.retriever.server.dailypet.domain.family.exception.FamilyNotFoundExcep
 import org.retriever.server.dailypet.domain.family.repository.FamilyMemberRepository;
 import org.retriever.server.dailypet.domain.family.repository.FamilyRepository;
 import org.retriever.server.dailypet.domain.member.entity.Member;
-import org.retriever.server.dailypet.domain.member.exception.MemberNotFoundException;
-import org.retriever.server.dailypet.domain.member.repository.MemberRepository;
-import org.retriever.server.dailypet.global.config.security.CustomUserDetails;
 import org.retriever.server.dailypet.global.utils.invitationcode.InvitationCodeUtil;
 import org.retriever.server.dailypet.global.utils.s3.S3FileUploader;
+import org.retriever.server.dailypet.global.utils.security.SecurityUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,9 +31,9 @@ import java.util.List;
 public class FamilyService {
 
     private final FamilyRepository familyRepository;
-    private final MemberRepository memberRepository;
     private final FamilyMemberRepository familyMemberRepository;
     private final S3FileUploader s3FileUploader;
+    private final SecurityUtil securityUtil;
 
     public void validateFamilyName(ValidateFamilyNameRequest dto) {
         if (familyRepository.findByFamilyName(dto.getFamilyName()).isPresent()) {
@@ -44,9 +42,8 @@ public class FamilyService {
     }
 
     // TODO : 쿼리 직접 만들어서 한 번에 해당 가족에 속한 member 참조하기 (현재는 familyMember.getMember()로 가져옴)
-    public void validateFamilyRoleName(CustomUserDetails userDetails, ValidateFamilyRoleNameRequest dto) {
-        Member member = memberRepository.findById(userDetails.getId())
-                .orElseThrow(MemberNotFoundException::new);
+    public void validateFamilyRoleName(ValidateFamilyRoleNameRequest dto) {
+        Member member = securityUtil.getMemberByUserDetails();
         List<FamilyMember> familyMemberList = member.getFamilyMemberList();
 
         if (familyMemberList.stream()
@@ -56,12 +53,11 @@ public class FamilyService {
     }
 
     @Transactional
-    public CreateFamilyResponse createFamily(CustomUserDetails userDetails, CreateFamilyRequest dto,
+    public CreateFamilyResponse createFamily(CreateFamilyRequest dto,
                                              MultipartFile image) throws IOException {
 
         // 멤버 조회 및 권한 지정
-        Member member = memberRepository.findById(userDetails.getId())
-                .orElseThrow(MemberNotFoundException::new);
+        Member member = securityUtil.getMemberByUserDetails();
         member.setFamilyLeader();
         member.changeFamilyRoleName(dto.getFamilyRoleName());
 
@@ -89,9 +85,8 @@ public class FamilyService {
     }
 
     @Transactional
-    public void enterFamily(CustomUserDetails userDetails, Long familyId, EnterFamilyRequest dto) {
-        Member member = memberRepository.findById(userDetails.getId())
-                .orElseThrow(MemberNotFoundException::new);
+    public void enterFamily(Long familyId, EnterFamilyRequest dto) {
+        Member member = securityUtil.getMemberByUserDetails();
 
         Family family = familyRepository.findById(familyId).orElseThrow(FamilyNotFoundException::new);
 

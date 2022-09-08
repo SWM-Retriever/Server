@@ -7,15 +7,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.retriever.server.dailypet.domain.family.dto.request.CreateFamilyRequest;
+import org.retriever.server.dailypet.domain.family.dto.request.EnterFamilyRequest;
 import org.retriever.server.dailypet.domain.family.dto.request.ValidateFamilyNameRequest;
 import org.retriever.server.dailypet.domain.family.dto.request.ValidateFamilyRoleNameRequest;
-import org.retriever.server.dailypet.domain.family.dto.request.EnterFamilyRequest;
 import org.retriever.server.dailypet.domain.family.dto.response.CreateFamilyResponse;
 import org.retriever.server.dailypet.domain.family.dto.response.FindFamilyWithInvitationCodeResponse;
 import org.retriever.server.dailypet.domain.family.service.FamilyService;
-import org.retriever.server.dailypet.global.config.security.CustomUserDetails;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -51,9 +49,8 @@ public class FamilyController {
             @ApiResponse(responseCode = "500", description = "내부 서버 에러")
     })
     @PostMapping("/validation/family-role-name")
-    public ResponseEntity<Void> validateFamilyRoleName(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                                       @RequestBody @Valid ValidateFamilyRoleNameRequest dto) {
-        familyService.validateFamilyRoleName(userDetails, dto);
+    public ResponseEntity<Void> validateFamilyRoleName(@RequestBody @Valid ValidateFamilyRoleNameRequest dto) {
+        familyService.validateFamilyRoleName(dto);
         return ResponseEntity.ok().build();
     }
 
@@ -65,10 +62,9 @@ public class FamilyController {
             @ApiResponse(responseCode = "500", description = "내부 서버 에러")
     })
     @PostMapping("/family")
-    public ResponseEntity<CreateFamilyResponse> createFamily(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                                             @RequestPart @Valid CreateFamilyRequest dto,
+    public ResponseEntity<CreateFamilyResponse> createFamily(@RequestPart @Valid CreateFamilyRequest dto,
                                                              @RequestPart MultipartFile image) throws IOException {
-        return ResponseEntity.ok(familyService.createFamily(userDetails, dto, image));
+        return ResponseEntity.ok(familyService.createFamily(dto, image));
     }
 
     @Parameter(name = "X-AUTH-TOKEN", description = "로그인 성공 후 access_token", required = true)
@@ -92,9 +88,8 @@ public class FamilyController {
     })
     @PostMapping("/families/{familyId}")
     public ResponseEntity<Void> enterFamily(
-            @AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable Long familyId, @RequestBody @Valid EnterFamilyRequest dto) {
-        familyService.enterFamily(userDetails, familyId, dto);
+        familyService.enterFamily(familyId, dto);
         return ResponseEntity.ok().build();
     }
 }

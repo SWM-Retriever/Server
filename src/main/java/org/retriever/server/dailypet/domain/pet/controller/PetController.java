@@ -13,9 +13,7 @@ import org.retriever.server.dailypet.domain.pet.dto.response.GetPetKindListRespo
 import org.retriever.server.dailypet.domain.pet.dto.response.RegisterPetResponse;
 import org.retriever.server.dailypet.domain.pet.enums.PetType;
 import org.retriever.server.dailypet.domain.pet.service.PetService;
-import org.retriever.server.dailypet.global.config.security.CustomUserDetails;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,8 +37,7 @@ public class PetController {
             @ApiResponse(responseCode = "500", description = "내부 서버 에러")
     })
     @PostMapping("/validation/families/{familyId}/pet-name")
-    public ResponseEntity<Void> validatePetNameInFamily(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                                        @RequestBody @Valid ValidatePetNameInFamilyRequest dto,
+    public ResponseEntity<Void> validatePetNameInFamily(@RequestBody @Valid ValidatePetNameInFamilyRequest dto,
                                                         @PathVariable Long familyId) {
         petService.validatePetNameInFamily(dto, familyId);
         return ResponseEntity.ok().build();
@@ -67,11 +64,10 @@ public class PetController {
             @ApiResponse(responseCode = "500", description = "내부 서버 에러")
     })
     @PostMapping("/families/{familyId}/pet")
-    public ResponseEntity<RegisterPetResponse> registerPet(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                                           @RequestPart @Valid RegisterPetRequest dto,
+    public ResponseEntity<RegisterPetResponse> registerPet(@RequestPart @Valid RegisterPetRequest dto,
                                                            @RequestPart MultipartFile image,
                                                            @PathVariable Long familyId) throws IOException {
-        return ResponseEntity.ok(petService.registerPet(userDetails, dto, familyId, image));
+        return ResponseEntity.ok(petService.registerPet(dto, familyId, image));
     }
 
     @Parameter(name = "X-AUTH-TOKEN", description = "로그인 성공 후 access_token", required = true)
@@ -82,8 +78,7 @@ public class PetController {
             @ApiResponse(responseCode = "500", description = "내부 서버 에러")
     })
     @GetMapping("/pets/{petId}/cares/detail")
-    public ResponseEntity<List<GetPetCaresDetailResponse>> getPetCareDetails(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                                                       @PathVariable Long petId) {
+    public ResponseEntity<List<GetPetCaresDetailResponse>> getPetCareDetails(@PathVariable Long petId) {
         return ResponseEntity.ok(petService.getPetCaresDetail(petId));
     }
 }
