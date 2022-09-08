@@ -18,7 +18,13 @@ public class SecurityUtil {
 
     private final MemberRepository memberRepository;
 
-    public Member getMemberByUserDetails(CustomUserDetails userDetails) {
+    public Member getMemberByUserDetails() {
+        Long memberId = getMemberIdByUserDetails();
+        return memberRepository.findById(memberId)
+                .orElseThrow(MemberNotFoundException::new);
+    }
+
+    public Long getMemberIdByUserDetails() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication == null) {
@@ -32,7 +38,6 @@ public class SecurityUtil {
             memberId = principal.getId();
         }
 
-        return memberRepository.findById(memberId)
-                .orElseThrow(MemberNotFoundException::new);
+        return memberId;
     }
 }
