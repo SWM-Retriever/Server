@@ -2,8 +2,6 @@ package org.retriever.server.dailypet.domain.petcare.service;
 
 import lombok.RequiredArgsConstructor;
 import org.retriever.server.dailypet.domain.member.entity.Member;
-import org.retriever.server.dailypet.domain.member.exception.MemberNotFoundException;
-import org.retriever.server.dailypet.domain.member.repository.MemberRepository;
 import org.retriever.server.dailypet.domain.pet.entity.Pet;
 import org.retriever.server.dailypet.domain.pet.exception.PetNotFoundException;
 import org.retriever.server.dailypet.domain.pet.repository.PetRepository;
@@ -20,7 +18,7 @@ import org.retriever.server.dailypet.domain.petcare.exception.PetCareNotFoundExc
 import org.retriever.server.dailypet.domain.petcare.repository.CareLogQueryRepository;
 import org.retriever.server.dailypet.domain.petcare.repository.CareLogRepository;
 import org.retriever.server.dailypet.domain.petcare.repository.PetCareRepository;
-import org.retriever.server.dailypet.global.config.security.CustomUserDetails;
+import org.retriever.server.dailypet.global.utils.security.SecurityUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,8 +32,8 @@ public class PetCareService {
     private final PetRepository petRepository;
     private final PetCareRepository petCareRepository;
     private final CareLogRepository careLogRepository;
-    private final MemberRepository memberRepository;
     private final CareLogQueryRepository careLogQueryRepository;
+    private final SecurityUtil securityUtil;
 
     @Transactional
     public void registerPetCare(Long petId, CreatePetCareRequest dto) {
@@ -59,9 +57,8 @@ public class PetCareService {
 
     // TODO 1회 체크 동시성 이슈 해결 필요 (가족들 공동 접근)
     @Transactional
-    public CheckPetCareResponse checkPetCare(CustomUserDetails userDetails, Long petId, Long petCareId) {
-        Member member = memberRepository.findById(userDetails.getId())
-                .orElseThrow(MemberNotFoundException::new);
+    public CheckPetCareResponse checkPetCare(Long petId, Long petCareId) {
+        Member member = securityUtil.getMemberByUserDetails();
 
         Pet pet = petRepository.findById(petId)
                 .orElseThrow(PetNotFoundException::new);
@@ -82,9 +79,8 @@ public class PetCareService {
      * 있으면 해당 CareLog의 status를 cancel로 바꾼다.
      */
     @Transactional
-    public CancelPetCareResponse cancelPetCare(CustomUserDetails userDetails, Long petId, Long petCareId) {
-        Member member = memberRepository.findById(userDetails.getId())
-                .orElseThrow(MemberNotFoundException::new);
+    public CancelPetCareResponse cancelPetCare(Long petId, Long petCareId) {
+        Member member = securityUtil.getMemberByUserDetails();
 
         PetCare petCare = petCareRepository.findById(petCareId).orElseThrow(PetCareNotFoundException::new);
         CareLog careLog = careLogQueryRepository.findByMemberIdAndCareIdWithCurDateLatestLimit1(member.getId(), petCareId);
