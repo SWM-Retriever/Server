@@ -9,8 +9,11 @@ import org.retriever.server.dailypet.domain.member.entity.Member;
 import org.retriever.server.dailypet.domain.member.enums.AccountStatus;
 import org.retriever.server.dailypet.domain.member.enums.ProviderType;
 import org.retriever.server.dailypet.domain.member.enums.RoleType;
+import org.retriever.server.dailypet.global.config.security.CustomUserDetails;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -102,5 +105,12 @@ public class MemberFactory {
                 MediaType.TEXT_PLAIN_VALUE,
                 "Hello, World!".getBytes()
         );
+    }
+
+    public static Authentication createAuthentication() {
+        Member member = createTestMember();
+        CustomUserDetails userDetails = new CustomUserDetails(member);
+
+        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 }

@@ -4,13 +4,11 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.retriever.server.dailypet.domain.common.factory.MemberFactory;
 import org.retriever.server.dailypet.domain.family.exception.FamilyNotFoundException;
-import org.retriever.server.dailypet.domain.family.repository.FamilyMemberRepository;
 import org.retriever.server.dailypet.domain.member.dto.request.SignUpRequest;
 import org.retriever.server.dailypet.domain.member.dto.request.SnsLoginRequest;
 import org.retriever.server.dailypet.domain.member.dto.request.ValidateMemberNicknameRequest;
@@ -25,19 +23,17 @@ import org.retriever.server.dailypet.domain.member.repository.MemberQueryReposit
 import org.retriever.server.dailypet.domain.member.repository.MemberRepository;
 import org.retriever.server.dailypet.domain.pet.exception.PetNotFoundException;
 import org.retriever.server.dailypet.global.config.jwt.JwtTokenProvider;
-import org.retriever.server.dailypet.global.config.security.CustomUserDetails;
 import org.retriever.server.dailypet.global.utils.s3.S3FileUploader;
+import org.retriever.server.dailypet.global.utils.security.SecurityUtil;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class MemberServiceTest {
@@ -50,6 +46,8 @@ class MemberServiceTest {
     S3FileUploader s3FileUploader;
     @Mock
     MemberQueryRepository memberQueryRepository;
+    @Mock
+    SecurityUtil securityUtil;
 
     @InjectMocks
     MemberService memberService;
@@ -148,12 +146,11 @@ class MemberServiceTest {
     void check_family_fail_and_throw_exception() {
 
         // given
-        Member member = MemberFactory.createTestMember();
-        CustomUserDetails userDetails = new CustomUserDetails(member);
         given(memberQueryRepository.findFamilyByMemberId(any())).willReturn(new ArrayList<>());
+        given(securityUtil.getMemberIdByUserDetails()).willReturn(1L);
 
         // when, then
-        assertThrows(FamilyNotFoundException.class, () -> memberService.checkGroup(userDetails));
+        assertThrows(FamilyNotFoundException.class, () -> memberService.checkGroup());
     }
 
     @DisplayName("회원 가입 - 회원 가입 도중 그룹 등록만 이탈한 회원일 경우 반려동물이 존재하지 않고 PetNotFoundException 예외 발생")
@@ -173,11 +170,10 @@ class MemberServiceTest {
 
         // given
         Member member = MemberFactory.createTestMember();
-        CustomUserDetails userDetails = new CustomUserDetails(member);
-        given(memberRepository.findById(any())).willReturn(Optional.of(member));
+        given(securityUtil.getMemberByUserDetails()).willReturn(member);
 
         // when
-        memberService.deleteMember(userDetails);
+        memberService.deleteMember();
 
         // then
         Assertions.assertThat(member.getAccountStatus()).isEqualTo(AccountStatus.DELETED);
