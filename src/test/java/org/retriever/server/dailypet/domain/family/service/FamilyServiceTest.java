@@ -22,18 +22,18 @@ import org.retriever.server.dailypet.domain.family.repository.FamilyRepository;
 import org.retriever.server.dailypet.domain.member.entity.Member;
 import org.retriever.server.dailypet.domain.member.enums.RoleType;
 import org.retriever.server.dailypet.domain.member.repository.MemberRepository;
-import org.retriever.server.dailypet.global.config.security.CustomUserDetails;
 import org.retriever.server.dailypet.global.utils.s3.S3FileUploader;
+import org.retriever.server.dailypet.global.utils.security.SecurityUtil;
 import org.springframework.mock.web.MockMultipartFile;
 
 import java.io.IOException;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
 class FamilyServiceTest {
@@ -46,6 +46,9 @@ class FamilyServiceTest {
 
     @Mock
     S3FileUploader s3FileUploader;
+
+    @Mock
+    SecurityUtil securityUtil;
 
     @InjectMocks
     FamilyService familyService;
@@ -106,12 +109,11 @@ class FamilyServiceTest {
         String name1 = "엄마";
         String name2 = "아빠";
         Member member = MemberFactory.createTestMemberWithFamilyMemberList(name1, name2);
-        CustomUserDetails details = new CustomUserDetails(member);
         ValidateFamilyRoleNameRequest request = FamilyFactory.createValidateFamilyRoleNameRequest(name1);
-        when(memberRepository.findById(any())).thenReturn(Optional.of(member));
+        when(securityUtil.getMemberByUserDetails()).thenReturn(member);
 
         // when, then
-        assertThrows(DuplicateFamilyRoleNameException.class, () -> familyService.validateFamilyRoleName(details, request));
+        assertThrows(DuplicateFamilyRoleNameException.class, () -> familyService.validateFamilyRoleName(request));
     }
 
     @DisplayName("가족 생성 - 가족 정상 생성")
@@ -121,14 +123,13 @@ class FamilyServiceTest {
         // given
         Member member = MemberFactory.createTestMember();
         CreateFamilyRequest familyRequest = FamilyFactory.createFamilyRequest();
-        CustomUserDetails details = new CustomUserDetails(member);
         MockMultipartFile image = MemberFactory.createMultipartFile();
         String imageURL = "testImageUrl";
-        when(memberRepository.findById(any())).thenReturn(Optional.of(member));
         when(s3FileUploader.upload(any(), any())).thenReturn(imageURL);
+        when(securityUtil.getMemberByUserDetails()).thenReturn(member);
 
         // when
-        CreateFamilyResponse response = familyService.createFamily(details, familyRequest, image);
+        CreateFamilyResponse response = familyService.createFamily(familyRequest, image);
 
         // then
         assertThat(member.getFamilyRoleName()).isEqualTo(familyRequest.getFamilyRoleName());
@@ -136,7 +137,7 @@ class FamilyServiceTest {
         assertThat(response.getFamilyName()).isEqualTo(familyRequest.getFamilyName());
         assertThat(response.getInvitationCode()).isNotNull();
         assertAll(
-                () -> verify(memberRepository, times(1)).findById(any()),
+                () -> verify(securityUtil, times(1)).getMemberByUserDetails(),
                 () -> verify(familyRepository, times(1)).save(any()),
                 () -> verify(s3FileUploader, times(1)).upload(any(), any())
         );
@@ -150,13 +151,12 @@ class FamilyServiceTest {
         Member member = MemberFactory.createTestMember();
         Family family = FamilyFactory.createTestFamily();
         int size = family.getFamilyMemberList().size();
-        CustomUserDetails userDetails = new CustomUserDetails(member);
         EnterFamilyRequest request = FamilyFactory.createEnterFamilyRequest();
-        when(memberRepository.findById(any())).thenReturn(Optional.of(member));
         when(familyRepository.findById(any())).thenReturn(Optional.of(family));
+        when(securityUtil.getMemberByUserDetails()).thenReturn(member);
 
         // when
-        familyService.enterFamily(userDetails, family.getFamilyId(), request);
+        familyService.enterFamily(family.getFamilyId(), request);
 
         // then
         assertThat(member.getFamilyRoleName()).isEqualTo(request.getFamilyRoleName());
