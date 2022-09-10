@@ -47,3 +47,8 @@ cloud:
       instance-profile: true
     s3:
       bucket: dailypet-test-bucket
+
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: true

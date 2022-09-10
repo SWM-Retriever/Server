@@ -1,6 +1,7 @@
 package org.retriever.server.dailypet.domain.member.entity;
 
 import lombok.*;
+import org.hibernate.annotations.Where;
 import org.retriever.server.dailypet.domain.family.entity.FamilyMember;
 import org.retriever.server.dailypet.domain.member.dto.request.SignUpRequest;
 import org.retriever.server.dailypet.domain.member.enums.RoleType;
@@ -18,6 +19,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
+@Where(clause = "account_status = 'ACTIVE'")
 public class Member extends BaseTimeEntity {
 
     @Id
