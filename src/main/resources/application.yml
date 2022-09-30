@@ -26,6 +26,11 @@ spring:
   sql:
     init:
       mode: always
+  redis:
+    port: 6379
+    host: localhost
+  cache:
+    type: redis
 
 jwt:
   secret: c2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQtc2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQK
