@@ -131,7 +131,6 @@ class PetServiceTest {
         verify(petRepository, times(1)).save(any());
         assertThat(response.getFamilyId()).isEqualTo(family.getFamilyId());
         assertThat(response.getFamilyName()).isEqualTo(family.getFamilyName());
-        assertThat(response.getPetCount()).isEqualTo(beforeSize + 1);
         assertThat(response.getFamilyRoleName()).isEqualTo(member.getFamilyRoleName());
         assertThat(response.getInvitationCode()).isEqualTo(family.getInvitationCode());
         assertThat(response.getPetList()).isNotNull();

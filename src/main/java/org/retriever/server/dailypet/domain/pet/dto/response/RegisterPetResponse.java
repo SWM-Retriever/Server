@@ -21,8 +21,6 @@ public class RegisterPetResponse {
 
     private List<PetInfoResponse> petList;
 
-    private int petCount;
-
     private String invitationCode;
 
     public static RegisterPetResponse from(Member member, Family family) {
@@ -33,7 +31,6 @@ public class RegisterPetResponse {
                 .petList(family.getPetList().stream()
                         .map(PetInfoResponse::new)
                         .collect(Collectors.toList()))
-                .petCount(family.getPetList().size())
                 .invitationCode(family.getInvitationCode())
                 .build();
     }
