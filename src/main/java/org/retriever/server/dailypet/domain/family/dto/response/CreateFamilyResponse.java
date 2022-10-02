@@ -8,7 +8,5 @@ import lombok.*;
 @Getter
 public class CreateFamilyResponse {
 
-    private String familyName;
-
-    private String invitationCode;
+    private Long familyId;
 }
