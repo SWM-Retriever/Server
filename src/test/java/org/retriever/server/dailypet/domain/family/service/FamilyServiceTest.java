@@ -12,6 +12,7 @@ import org.retriever.server.dailypet.domain.family.dto.request.CreateFamilyReque
 import org.retriever.server.dailypet.domain.family.dto.request.EnterFamilyRequest;
 import org.retriever.server.dailypet.domain.family.dto.request.ValidateFamilyNameRequest;
 import org.retriever.server.dailypet.domain.family.dto.request.ValidateFamilyRoleNameRequest;
+import org.retriever.server.dailypet.domain.family.dto.response.CreateFamilyResponse;
 import org.retriever.server.dailypet.domain.family.dto.response.FindFamilyWithInvitationCodeResponse;
 import org.retriever.server.dailypet.domain.family.entity.Family;
 import org.retriever.server.dailypet.domain.family.exception.DuplicateFamilyNameException;
@@ -119,7 +120,7 @@ class FamilyServiceTest {
         when(securityUtil.getMemberByUserDetails()).thenReturn(member);
 
         // when
-        familyService.createFamily(familyRequest);
+        CreateFamilyResponse response = familyService.createFamily(familyRequest);
 
         // then
         assertThat(member.getFamilyRoleName()).isEqualTo(familyRequest.getFamilyRoleName());

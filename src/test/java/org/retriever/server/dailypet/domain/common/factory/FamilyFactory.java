@@ -56,8 +56,7 @@ public class FamilyFactory {
 
     public static CreateFamilyResponse createFamilyResponse() {
         return CreateFamilyResponse.builder()
-                .familyName("testFamily")
-                .invitationCode("1234567890")
+                .familyId(1L)
                 .build();
     }
 
