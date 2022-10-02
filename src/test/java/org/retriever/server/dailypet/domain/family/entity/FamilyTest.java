@@ -18,15 +18,13 @@ class FamilyTest {
         // given
         CreateFamilyRequest familyRequest = FamilyFactory.createFamilyRequest();
         String invitationCode = InvitationCodeUtil.createInvitationCode();
-        String imageUrl = "testUrl";
 
         // when
-        Family family = Family.createFamily(familyRequest, invitationCode, imageUrl);
+        Family family = Family.createFamily(familyRequest, invitationCode);
 
         // then
         assertThat(family.getFamilyName()).isEqualTo(familyRequest.getFamilyName());
         assertThat(family.getFamilyStatus()).isEqualTo(FamilyStatus.ACTIVE);
         assertThat(family.getInvitationCode()).isEqualTo(invitationCode);
-        assertThat(family.getProfileImageUrl()).isEqualTo(imageUrl);
     }
 }

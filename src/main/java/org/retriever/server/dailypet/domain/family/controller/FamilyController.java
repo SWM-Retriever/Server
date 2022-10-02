@@ -15,7 +15,6 @@ import org.retriever.server.dailypet.domain.family.dto.response.FindFamilyWithIn
 import org.retriever.server.dailypet.domain.family.service.FamilyService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -62,9 +61,8 @@ public class FamilyController {
             @ApiResponse(responseCode = "500", description = "내부 서버 에러")
     })
     @PostMapping("/family")
-    public ResponseEntity<CreateFamilyResponse> createFamily(@RequestPart @Valid CreateFamilyRequest dto,
-                                                             @RequestPart MultipartFile image) throws IOException {
-        return ResponseEntity.ok(familyService.createFamily(dto, image));
+    public ResponseEntity<CreateFamilyResponse> createFamily(@RequestPart @Valid CreateFamilyRequest dto) throws IOException {
+        return ResponseEntity.ok(familyService.createFamily(dto));
     }
 
     @Parameter(name = "X-AUTH-TOKEN", description = "로그인 성공 후 access_token", required = true)

@@ -12,15 +12,12 @@ import org.retriever.server.dailypet.domain.family.entity.FamilyMember;
 import org.retriever.server.dailypet.domain.family.exception.DuplicateFamilyNameException;
 import org.retriever.server.dailypet.domain.family.exception.DuplicateFamilyRoleNameException;
 import org.retriever.server.dailypet.domain.family.exception.FamilyNotFoundException;
-import org.retriever.server.dailypet.domain.family.repository.FamilyMemberRepository;
 import org.retriever.server.dailypet.domain.family.repository.FamilyRepository;
 import org.retriever.server.dailypet.domain.member.entity.Member;
 import org.retriever.server.dailypet.global.utils.invitationcode.InvitationCodeUtil;
-import org.retriever.server.dailypet.global.utils.s3.S3FileUploader;
 import org.retriever.server.dailypet.global.utils.security.SecurityUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -31,8 +28,6 @@ import java.util.List;
 public class FamilyService {
 
     private final FamilyRepository familyRepository;
-    private final FamilyMemberRepository familyMemberRepository;
-    private final S3FileUploader s3FileUploader;
     private final SecurityUtil securityUtil;
 
     public void validateFamilyName(ValidateFamilyNameRequest dto) {
@@ -53,19 +48,16 @@ public class FamilyService {
     }
 
     @Transactional
-    public CreateFamilyResponse createFamily(CreateFamilyRequest dto,
-                                             MultipartFile image) throws IOException {
+    public CreateFamilyResponse createFamily(CreateFamilyRequest dto) throws IOException {
 
         // 멤버 조회 및 권한 지정
         Member member = securityUtil.getMemberByUserDetails();
         member.setFamilyLeader();
         member.changeFamilyRoleName(dto.getFamilyRoleName());
 
-        String profileImageUrl = s3FileUploader.upload(image, "test");
-
         // 새로운 가족 그룹 생성 - 초대코드 생성
         String invitationCode = InvitationCodeUtil.createInvitationCode();
-        Family newFamily = Family.createFamily(dto, invitationCode, profileImageUrl);
+        Family newFamily = Family.createFamily(dto, invitationCode);
         FamilyMember familyMember = FamilyMember.createFamilyMember(member, newFamily);
 
         // 연관관계 편의 메서드 - family.familyMemberList에 add & cascade.All 옵션을 통해 familyMember 자동 persist

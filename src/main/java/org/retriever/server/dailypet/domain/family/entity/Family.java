@@ -30,8 +30,6 @@ public class Family extends BaseTimeEntity {
     @Column(nullable = false, unique = true, length = 10)
     private String invitationCode;
 
-    private String profileImageUrl;
-
     @OneToMany(mappedBy = "family", cascade = CascadeType.ALL)
     @Builder.Default
     private List<FamilyMember> familyMemberList = new ArrayList<>();
@@ -40,12 +38,11 @@ public class Family extends BaseTimeEntity {
     @Builder.Default
     private List<Pet> petList = new ArrayList<>();
 
-    public static Family createFamily(CreateFamilyRequest dto, String invitationCode, String profileImageUrl) {
+    public static Family createFamily(CreateFamilyRequest dto, String invitationCode) {
         return Family.builder()
                 .familyName(dto.getFamilyName())
                 .familyStatus(FamilyStatus.ACTIVE)
                 .invitationCode(invitationCode)
-                .profileImageUrl(profileImageUrl)
                 .familyMemberList(new ArrayList<>())
                 .build();
     }
