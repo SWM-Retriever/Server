@@ -12,6 +12,7 @@ import org.retriever.server.dailypet.domain.common.factory.PetFactory;
 import org.retriever.server.dailypet.domain.family.entity.Family;
 import org.retriever.server.dailypet.domain.family.repository.FamilyRepository;
 import org.retriever.server.dailypet.domain.member.entity.Member;
+import org.retriever.server.dailypet.domain.member.enums.AccountProgressStatus;
 import org.retriever.server.dailypet.domain.member.repository.MemberRepository;
 import org.retriever.server.dailypet.domain.pet.dto.request.RegisterPetRequest;
 import org.retriever.server.dailypet.domain.pet.dto.request.ValidatePetNameInFamilyRequest;
@@ -118,7 +119,7 @@ class PetServiceTest {
         PetKind petKind = PetFactory.createTestPetKind();
         RegisterPetRequest request = PetFactory.createRegisterPetRequest();
         String imageUrl = "testUrl";
-        int beforeSize = family.getPetList().size();
+
         given(familyRepository.findById(any())).willReturn(Optional.of(family));
         given(s3FileUploader.upload(any(), any())).willReturn(imageUrl);
         given(petKindRepository.findByPetKindId(any())).willReturn(Optional.of(petKind));
@@ -136,6 +137,7 @@ class PetServiceTest {
         assertThat(response.getPetList()).isNotNull();
         assertThat(response.getPetList().get(0).getPetName()).isEqualTo(request.getPetName());
         assertThat(family.getPetList()).isNotNull();
+        assertThat(member.getAccountProgressStatus()).isEqualTo(AccountProgressStatus.PET);
     }
 
     @DisplayName("메인 페이지 - 반려동물 챙겨주기 탭 조회 성공")
