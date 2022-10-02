@@ -6,6 +6,7 @@ import org.retriever.server.dailypet.domain.member.dto.request.SnsLoginRequest;
 import org.retriever.server.dailypet.domain.member.dto.request.ValidateMemberNicknameRequest;
 import org.retriever.server.dailypet.domain.member.dto.response.SnsLoginResponse;
 import org.retriever.server.dailypet.domain.member.entity.Member;
+import org.retriever.server.dailypet.domain.member.enums.AccountProgressStatus;
 import org.retriever.server.dailypet.domain.member.enums.AccountStatus;
 import org.retriever.server.dailypet.domain.member.enums.ProviderType;
 import org.retriever.server.dailypet.domain.member.enums.RoleType;
@@ -36,6 +37,7 @@ public class MemberFactory {
                 .isPersonalInformationAgree(true)
                 .isToSAgree(true)
                 .accountStatus(AccountStatus.ACTIVE)
+                .accountProgressStatus(AccountProgressStatus.PROFILE)
                 .familyRoleName("별명을 입력해주세요!")
                 .build();
     }
@@ -53,6 +55,7 @@ public class MemberFactory {
                 .isPersonalInformationAgree(true)
                 .isToSAgree(true)
                 .accountStatus(AccountStatus.ACTIVE)
+                .accountProgressStatus(AccountProgressStatus.GROUP)
                 .familyRoleName("별명을 입력해주세요!")
                 .familyMemberList(new ArrayList<>(List.of(
                         FamilyMember.builder().member(Member.builder().familyRoleName(name1).build()).build(),

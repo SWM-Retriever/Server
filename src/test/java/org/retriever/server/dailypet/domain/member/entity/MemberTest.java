@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.retriever.server.dailypet.domain.common.factory.MemberFactory;
 import org.retriever.server.dailypet.domain.member.dto.request.SignUpRequest;
+import org.retriever.server.dailypet.domain.member.enums.AccountProgressStatus;
 import org.retriever.server.dailypet.domain.member.enums.AccountStatus;
 import org.retriever.server.dailypet.domain.member.enums.RoleType;
 
@@ -32,6 +33,7 @@ class MemberTest {
 
         assertThat(newMember.getAccountStatus()).isEqualTo(AccountStatus.ACTIVE);
         assertThat(newMember.getRoleType()).isEqualTo(RoleType.MEMBER);
+        assertThat(newMember.getAccountProgressStatus()).isEqualTo(AccountProgressStatus.PROFILE);
         assertThat(newMember.getIsPersonalInformationAgree()).isTrue();
         assertThat(newMember.getIsToSAgree()).isTrue();
         assertThat(newMember.getIsPushAgree()).isTrue();
@@ -67,5 +69,33 @@ class MemberTest {
 
         // then
         assertThat(testMember.getAccountStatus()).isEqualTo(AccountStatus.DELETED);
+    }
+
+    @DisplayName("계정 진행 상태 GROUP으로 변경")
+    @Test
+    void change_status_to_group() {
+
+        // given
+        Member testMember = MemberFactory.createTestMember();
+
+        // when
+        testMember.changeProgressStatusToGroup();
+
+        // then
+        assertThat(testMember.getAccountProgressStatus()).isEqualTo(AccountProgressStatus.GROUP);
+    }
+
+    @DisplayName("계정 진행 상태 PET으로 변경")
+    @Test
+    void change_status_to_pet() {
+
+        // given
+        Member testMember = MemberFactory.createTestMember();
+
+        // when
+        testMember.changeProgressStatusToPet();
+
+        // then
+        assertThat(testMember.getAccountProgressStatus()).isEqualTo(AccountProgressStatus.PET);
     }
 }
