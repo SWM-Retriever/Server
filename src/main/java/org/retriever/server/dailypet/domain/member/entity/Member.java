@@ -4,6 +4,7 @@ import lombok.*;
 import org.hibernate.annotations.Where;
 import org.retriever.server.dailypet.domain.family.entity.FamilyMember;
 import org.retriever.server.dailypet.domain.member.dto.request.SignUpRequest;
+import org.retriever.server.dailypet.domain.member.enums.AccountProgressStatus;
 import org.retriever.server.dailypet.domain.member.enums.RoleType;
 import org.retriever.server.dailypet.domain.member.enums.AccountStatus;
 import org.retriever.server.dailypet.domain.model.BaseTimeEntity;
@@ -59,6 +60,9 @@ public class Member extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private RoleType roleType;
 
+    @Enumerated(EnumType.STRING)
+    private AccountProgressStatus accountProgressStatus;
+
     private String deviceToken;
 
     private String password;
@@ -85,6 +89,7 @@ public class Member extends BaseTimeEntity {
         this.providerType = type;
         this.roleType = RoleType.MEMBER;
         this.deviceToken = deviceToken;
+        this.accountProgressStatus = AccountProgressStatus.PROFILE;
     }
 
     public static Member createNewMember(SignUpRequest signUpRequest, String url) {
@@ -101,6 +106,7 @@ public class Member extends BaseTimeEntity {
                 .accountStatus(AccountStatus.ACTIVE)
                 .familyRoleName("별명을 입력해주세요!")
                 .roleType(RoleType.MEMBER)
+                .accountProgressStatus(AccountProgressStatus.PROFILE)
                 .build();
     }
 
