@@ -67,6 +67,7 @@ public class PetService {
     public RegisterPetResponse registerPet(RegisterPetRequest dto, Long familyId, MultipartFile image) throws IOException {
 
         Member member = securityUtil.getMemberByUserDetails();
+        member.changeProgressStatusToPet();
         Family family = familyRepository.findById(familyId).orElseThrow(FamilyNotFoundException::new);
         PetKind petKind = petKindRepository.findByPetKindId(dto.getPetKindId()).orElseThrow(PetTypeNotFoundException::new);
         String profileImageUrl = s3FileUploader.upload(image, "test");

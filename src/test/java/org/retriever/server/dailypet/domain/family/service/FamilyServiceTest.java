@@ -20,6 +20,7 @@ import org.retriever.server.dailypet.domain.family.exception.DuplicateFamilyRole
 import org.retriever.server.dailypet.domain.family.exception.FamilyNotFoundException;
 import org.retriever.server.dailypet.domain.family.repository.FamilyRepository;
 import org.retriever.server.dailypet.domain.member.entity.Member;
+import org.retriever.server.dailypet.domain.member.enums.AccountProgressStatus;
 import org.retriever.server.dailypet.domain.member.enums.RoleType;
 import org.retriever.server.dailypet.domain.member.repository.MemberRepository;
 import org.retriever.server.dailypet.global.utils.security.SecurityUtil;
@@ -125,8 +126,7 @@ class FamilyServiceTest {
         // then
         assertThat(member.getFamilyRoleName()).isEqualTo(familyRequest.getFamilyRoleName());
         assertThat(member.getRoleType()).isEqualTo(RoleType.FAMILY_LEADER);
-        assertThat(response.getFamilyName()).isEqualTo(familyRequest.getFamilyName());
-        assertThat(response.getInvitationCode()).isNotNull();
+        assertThat(member.getAccountProgressStatus()).isEqualTo(AccountProgressStatus.GROUP);
         assertAll(
                 () -> verify(securityUtil, times(1)).getMemberByUserDetails(),
                 () -> verify(familyRepository, times(1)).save(any())
