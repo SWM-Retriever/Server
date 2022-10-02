@@ -61,7 +61,7 @@ public class FamilyController {
             @ApiResponse(responseCode = "500", description = "내부 서버 에러")
     })
     @PostMapping("/family")
-    public ResponseEntity<CreateFamilyResponse> createFamily(@RequestPart @Valid CreateFamilyRequest dto) throws IOException {
+    public ResponseEntity<CreateFamilyResponse> createFamily(@RequestBody @Valid CreateFamilyRequest dto) throws IOException {
         return ResponseEntity.ok(familyService.createFamily(dto));
     }
 
