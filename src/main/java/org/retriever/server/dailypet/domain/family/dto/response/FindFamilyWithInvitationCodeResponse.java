@@ -15,14 +15,11 @@ public class FindFamilyWithInvitationCodeResponse {
 
     private int familyMemberCount;
 
-    private String profileImageUrl;
-
     public static FindFamilyWithInvitationCodeResponse from(Family family) {
         return FindFamilyWithInvitationCodeResponse.builder()
                 .familyId(family.getFamilyId())
                 .familyName(family.getFamilyName())
                 .familyMemberCount(family.getFamilyMemberList().size())
-                .profileImageUrl(family.getProfileImageUrl())
                 .build();
     }
 }
