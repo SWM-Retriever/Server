@@ -48,7 +48,7 @@ public class FamilyService {
     }
 
     @Transactional
-    public CreateFamilyResponse createFamily(CreateFamilyRequest dto) throws IOException {
+    public void createFamily(CreateFamilyRequest dto) throws IOException {
 
         // 멤버 조회 및 권한 지정
         Member member = securityUtil.getMemberByUserDetails();
@@ -63,11 +63,6 @@ public class FamilyService {
         // 연관관계 편의 메서드 - family.familyMemberList에 add & cascade.All 옵션을 통해 familyMember 자동 persist
         newFamily.insertNewMember(familyMember);
         familyRepository.save(newFamily);
-
-        return CreateFamilyResponse.builder()
-                .familyName(newFamily.getFamilyName())
-                .invitationCode(invitationCode)
-                .build();
     }
 
     public FindFamilyWithInvitationCodeResponse findFamilyWithInvitationCode(String code) {
