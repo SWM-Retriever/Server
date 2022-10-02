@@ -54,6 +54,7 @@ public class FamilyService {
         Member member = securityUtil.getMemberByUserDetails();
         member.setFamilyLeader();
         member.changeFamilyRoleName(dto.getFamilyRoleName());
+        member.changeProgressStatusToGroup();
 
         // 새로운 가족 그룹 생성 - 초대코드 생성
         String invitationCode = InvitationCodeUtil.createInvitationCode();

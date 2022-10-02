@@ -125,4 +125,12 @@ public class Member extends BaseTimeEntity {
     public void deleteMember() {
         this.accountStatus = AccountStatus.DELETED;
     }
+
+    public void changeProgressStatusToGroup() {
+        this.accountProgressStatus = AccountProgressStatus.GROUP;
+    }
+
+    public void changeProgressStatusToPet() {
+        this.accountProgressStatus = AccountProgressStatus.PET;
+    }
 }
