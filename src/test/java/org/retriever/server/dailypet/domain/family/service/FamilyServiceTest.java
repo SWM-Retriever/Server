@@ -22,9 +22,7 @@ import org.retriever.server.dailypet.domain.family.repository.FamilyRepository;
 import org.retriever.server.dailypet.domain.member.entity.Member;
 import org.retriever.server.dailypet.domain.member.enums.RoleType;
 import org.retriever.server.dailypet.domain.member.repository.MemberRepository;
-import org.retriever.server.dailypet.global.utils.s3.S3FileUploader;
 import org.retriever.server.dailypet.global.utils.security.SecurityUtil;
-import org.springframework.mock.web.MockMultipartFile;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -43,9 +41,6 @@ class FamilyServiceTest {
 
     @Mock
     MemberRepository memberRepository;
-
-    @Mock
-    S3FileUploader s3FileUploader;
 
     @Mock
     SecurityUtil securityUtil;
@@ -82,7 +77,6 @@ class FamilyServiceTest {
         // then
         assertThat(response.getFamilyId()).isEqualTo(family.getFamilyId());
         assertThat(response.getFamilyName()).isEqualTo(family.getFamilyName());
-        assertThat(response.getProfileImageUrl()).isEqualTo(family.getProfileImageUrl());
         assertThat(response.getFamilyMemberCount()).isEqualTo(family.getFamilyMemberList().size());
     }
 
@@ -123,13 +117,10 @@ class FamilyServiceTest {
         // given
         Member member = MemberFactory.createTestMember();
         CreateFamilyRequest familyRequest = FamilyFactory.createFamilyRequest();
-        MockMultipartFile image = MemberFactory.createMultipartFile();
-        String imageURL = "testImageUrl";
-        when(s3FileUploader.upload(any(), any())).thenReturn(imageURL);
         when(securityUtil.getMemberByUserDetails()).thenReturn(member);
 
         // when
-        CreateFamilyResponse response = familyService.createFamily(familyRequest, image);
+        CreateFamilyResponse response = familyService.createFamily(familyRequest);
 
         // then
         assertThat(member.getFamilyRoleName()).isEqualTo(familyRequest.getFamilyRoleName());
@@ -138,8 +129,7 @@ class FamilyServiceTest {
         assertThat(response.getInvitationCode()).isNotNull();
         assertAll(
                 () -> verify(securityUtil, times(1)).getMemberByUserDetails(),
-                () -> verify(familyRepository, times(1)).save(any()),
-                () -> verify(s3FileUploader, times(1)).upload(any(), any())
+                () -> verify(familyRepository, times(1)).save(any())
         );
     }
 

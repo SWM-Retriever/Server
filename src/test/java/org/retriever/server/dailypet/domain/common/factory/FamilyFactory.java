@@ -23,7 +23,6 @@ public class FamilyFactory {
                 .familyName("testFamily")
                 .familyStatus(FamilyStatus.ACTIVE)
                 .invitationCode("1234567890")
-                .profileImageUrl("testImage")
                 .familyMemberList(new ArrayList<>())
                 .petList(new ArrayList<>())
                 .build();
@@ -66,7 +65,6 @@ public class FamilyFactory {
         return FindFamilyWithInvitationCodeResponse.builder()
                 .familyName("testFamily")
                 .familyId(1L)
-                .profileImageUrl("testUrl")
                 .familyMemberCount(5)
                 .build();
     }
@@ -76,7 +74,6 @@ public class FamilyFactory {
                 .familyName("testFamily")
                 .familyStatus(FamilyStatus.ACTIVE)
                 .invitationCode("1234567890")
-                .profileImageUrl("testImage")
                 .familyMemberList(new ArrayList<>())
                 .petList(new ArrayList<>(List.of(Pet.builder().petName(name1).build(), Pet.builder().petName(name2).build())))
                 .build();
