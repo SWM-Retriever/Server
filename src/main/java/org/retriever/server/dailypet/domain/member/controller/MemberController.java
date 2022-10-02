@@ -1,6 +1,7 @@
 package org.retriever.server.dailypet.domain.member.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -63,6 +64,7 @@ public class MemberController {
         return ResponseEntity.ok(memberService.signUpAndRegisterProfile(dto, image));
     }
 
+    @Parameter(name = "X-AUTH-TOKEN", description = "로그인 성공 후 access_token", required = true)
     @Operation(summary = "회원 프로필 사진 수정", description = "회원의 프로필 사진을 수정한다")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "회원 프로필 사진 정상 수정"),
@@ -75,6 +77,7 @@ public class MemberController {
         return ResponseEntity.ok(memberService.editProfileImage(image));
     }
 
+    @Parameter(name = "X-AUTH-TOKEN", description = "로그인 성공 후 access_token", required = true)
     @Operation(summary = "메인 페이지 - 반려동물과 보낸 시간 조회", description = "나와 반려동물이 만난지 얼마나 됐는지 날짜를 조회한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "정상 조회"),
@@ -86,6 +89,7 @@ public class MemberController {
         return ResponseEntity.ok(memberService.calculateDayOfFirstMeet(petId));
     }
 
+    @Parameter(name = "X-AUTH-TOKEN", description = "로그인 성공 후 access_token", required = true)
     @Operation(summary = "가족 유무 조회", description = "해당 회원이 가족에 속해있는지 유무 반환")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "가족 정상 조회"),
@@ -97,6 +101,7 @@ public class MemberController {
         return ResponseEntity.ok(memberService.checkGroup());
     }
 
+    @Parameter(name = "X-AUTH-TOKEN", description = "로그인 성공 후 access_token", required = true)
     @Operation(summary = "반려동물 유무 조회", description = "해당 회원의 가족이 반려동물을 등록했는지 유무 반환")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "반려동물 정상 조회"),
@@ -108,6 +113,7 @@ public class MemberController {
         return ResponseEntity.ok(memberService.checkPet(familyId));
     }
 
+    @Parameter(name = "X-AUTH-TOKEN", description = "로그인 성공 후 access_token", required = true)
     @Operation(summary = "회원 탈퇴", description = "회원 탈퇴를 진행한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "회원 탈퇴 정상 처리"),
@@ -118,10 +124,5 @@ public class MemberController {
     public ResponseEntity<Void> deleteMember() {
         memberService.deleteMember();
         return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/test")
-    public String test() {
-        return "hello it's test";
     }
 }
