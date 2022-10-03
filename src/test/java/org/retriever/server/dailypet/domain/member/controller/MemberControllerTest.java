@@ -47,7 +47,7 @@ class MemberControllerTest {
     @MockBean
     MemberRepository memberRepository;
 
-    @DisplayName("로그인 시도 시 회원 확인 후 정상 로그인")
+    @DisplayName("로그인 시도 시 회원 확인 후 정상 로그인, familyId, petId는 모두 -1L")
     @Test
     void checkMemberAndLogin() throws Exception {
 
@@ -70,6 +70,8 @@ class MemberControllerTest {
                 .andExpect(jsonPath("email").value(snsLoginRequest.getEmail()))
                 .andExpect(jsonPath("snsNickName").value(snsLoginRequest.getSnsNickName()))
                 .andExpect(jsonPath("jwtToken").value("testToken"))
+                .andExpect(jsonPath("familyId").value(-1L))
+                .andExpect(jsonPath("petIdList[0]").value(-1L))
                 .andDo(print())
                 .andReturn()
                 .getResponse();

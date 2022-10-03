@@ -1,5 +1,6 @@
 package org.retriever.server.dailypet.domain.common.factory;
 
+import org.retriever.server.dailypet.domain.family.entity.Family;
 import org.retriever.server.dailypet.domain.family.entity.FamilyMember;
 import org.retriever.server.dailypet.domain.member.dto.request.SignUpRequest;
 import org.retriever.server.dailypet.domain.member.dto.request.SnsLoginRequest;
@@ -64,6 +65,37 @@ public class MemberFactory {
                 .build();
     }
 
+    public static Member createTestMemberWithFamily(Long familyId) {
+        return Member.builder()
+                .email("test@naver.com")
+                .nickName("test")
+                .profileImageUrl("abcdefghijk")
+                .providerType(ProviderType.KAKAO)
+                .deviceToken("abcdefg12345")
+                .roleType(RoleType.MEMBER)
+                .isPushAgree(true)
+                .isProfileInformationAgree(true)
+                .isPersonalInformationAgree(true)
+                .isToSAgree(true)
+                .accountStatus(AccountStatus.ACTIVE)
+                .accountProgressStatus(AccountProgressStatus.GROUP)
+                .familyRoleName("별명을 입력해주세요!")
+                .familyMemberList(new ArrayList<>(List.of(
+                        FamilyMember.builder()
+                                .member(Member.builder().familyRoleName("엄마").build())
+                                .family(Family.builder().familyId(familyId).build())
+                                .build()
+                )))
+                .build();
+    }
+
+    public static List<FamilyMember> createTestFamilyMember(Long familyId) {
+        return List.of(FamilyMember.builder()
+                .member(Member.builder().build())
+                .family(Family.builder().familyId(familyId).build())
+                .build());
+    }
+
     public static SnsLoginRequest createSnsLoginRequest() {
         return SnsLoginRequest.builder()
                 .snsNickName("test")
@@ -77,6 +109,8 @@ public class MemberFactory {
                 .snsNickName("test")
                 .email("test@naver.com")
                 .jwtToken("testToken")
+                .familyId(-1L)
+                .petIdList(List.of(-1L))
                 .build();
     }
 
