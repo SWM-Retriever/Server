@@ -2,6 +2,7 @@ package org.retriever.server.dailypet.global.error.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.retriever.server.dailypet.global.error.exception.dto.ApiErrorResponse;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -16,6 +17,7 @@ public class GlobalExceptionControllerAdvice {
 
     private static final String VALID_ERROR_CODE = "VALID-001";
     private static final String INTERNAL_SERVER_ERROR_CODE = "SERVER-001";
+    private static final String DATABASE_ERROR_CODE = "DB-001";
 
     @ExceptionHandler(ApplicationException.class)
     public ResponseEntity<ApiErrorResponse> applicationException(ApplicationException exception) {
@@ -47,6 +49,17 @@ public class GlobalExceptionControllerAdvice {
                 exception.getClass().getSimpleName(), errorCode, message, exception.getMessage());
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .body(new ApiErrorResponse(errorCode, message));
+    }
+
+    @ExceptionHandler(DataAccessException.class)
+    public ResponseEntity<ApiErrorResponse> dataAccessException(DataAccessException exception) {
+        String errorCode = DATABASE_ERROR_CODE;
+        String message = "중복된 키와 같은 DB 접근 에러입니다.";
+        log.error("Exception : {} ErrorCode : {} Message : {} Detail : {}",
+                exception.getClass().getSimpleName(), errorCode, message, exception.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST.value())
                 .body(new ApiErrorResponse(errorCode, message));
     }
 }
