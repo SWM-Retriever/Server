@@ -51,7 +51,7 @@ public class PetController {
             @ApiResponse(responseCode = "500", description = "내부 서버 에러")
     })
     @GetMapping("/pet/{petType}/kinds")
-    public ResponseEntity<List<GetPetKindListResponse>> getPetKindListByType(
+    public ResponseEntity<GetPetKindListResponse> getPetKindListByType(
             @PathVariable PetType petType) {
         return ResponseEntity.ok(petService.getPetKindListByType(petType));
     }
