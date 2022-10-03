@@ -100,12 +100,12 @@ class PetServiceTest {
         given(petKindRepository.findAllByPetTypeOrderByPetKindName(any())).willReturn(Optional.of(unknownPetKind));
 
         // when
-        List<GetPetKindListResponse> response = petService.getPetKindListByType(unknown);
+        GetPetKindListResponse response = petService.getPetKindListByType(unknown);
 
         // then
-        assertThat(response.size()).isEqualTo(1);
-        assertThat(response.get(0).getPetKindName()).isEqualTo(unknownPetKind.get(0).getPetKindName());
-        assertThat(response.get(0).getPetKindId()).isEqualTo(0L);
+        assertThat(response.getPetKindList().size()).isEqualTo(1);
+        assertThat(response.getPetKindList().get(0).getPetKindName()).isEqualTo(unknownPetKind.get(0).getPetKindName());
+        assertThat(response.getPetKindList().get(0).getPetKindId()).isEqualTo(0L);
     }
 
     @DisplayName("반려동물 등록 - 요청을 받아서 정상 등록을 진행한다.")
