@@ -78,7 +78,7 @@ public class PetService {
 
         petRepository.save(newPet);
 
-        return RegisterPetResponse.from(member, family);
+        return RegisterPetResponse.of(member, family);
     }
 
     /**

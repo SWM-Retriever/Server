@@ -23,7 +23,7 @@ public class RegisterPetResponse {
 
     private String invitationCode;
 
-    public static RegisterPetResponse from(Member member, Family family) {
+    public static RegisterPetResponse of(Member member, Family family) {
         return RegisterPetResponse.builder()
                 .familyId(family.getFamilyId())
                 .familyName(family.getFamilyName())
