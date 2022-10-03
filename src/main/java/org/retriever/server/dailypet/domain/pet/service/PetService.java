@@ -7,10 +7,7 @@ import org.retriever.server.dailypet.domain.family.repository.FamilyRepository;
 import org.retriever.server.dailypet.domain.member.entity.Member;
 import org.retriever.server.dailypet.domain.pet.dto.request.RegisterPetRequest;
 import org.retriever.server.dailypet.domain.pet.dto.request.ValidatePetNameInFamilyRequest;
-import org.retriever.server.dailypet.domain.pet.dto.response.CareLogHistory;
-import org.retriever.server.dailypet.domain.pet.dto.response.GetPetCaresDetailResponse;
-import org.retriever.server.dailypet.domain.pet.dto.response.GetPetKindListResponse;
-import org.retriever.server.dailypet.domain.pet.dto.response.RegisterPetResponse;
+import org.retriever.server.dailypet.domain.pet.dto.response.*;
 import org.retriever.server.dailypet.domain.pet.entity.Pet;
 import org.retriever.server.dailypet.domain.pet.entity.PetKind;
 import org.retriever.server.dailypet.domain.pet.enums.PetType;
@@ -55,12 +52,14 @@ public class PetService {
         }
     }
 
-    public List<GetPetKindListResponse> getPetKindListByType(PetType petType) {
+    public GetPetKindListResponse getPetKindListByType(PetType petType) {
         List<PetKind> petKinds = petKindRepository.findAllByPetTypeOrderByPetKindName(petType).orElseThrow(PetTypeNotFoundException::new);
 
-        return petKinds.stream()
-                .map(GetPetKindListResponse::new)
-                .collect(Collectors.toList());
+        return GetPetKindListResponse.from(
+                petKinds.stream()
+                .map(PetKindPair::new)
+                .collect(Collectors.toList())
+        );
     }
 
     @Transactional
