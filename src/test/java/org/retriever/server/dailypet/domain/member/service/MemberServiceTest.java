@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.retriever.server.dailypet.domain.common.factory.MemberFactory;
+import org.retriever.server.dailypet.domain.family.entity.FamilyMember;
 import org.retriever.server.dailypet.domain.family.exception.FamilyNotFoundException;
 import org.retriever.server.dailypet.domain.member.dto.request.SignUpRequest;
 import org.retriever.server.dailypet.domain.member.dto.request.SnsLoginRequest;
@@ -29,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -52,9 +54,9 @@ class MemberServiceTest {
     @InjectMocks
     MemberService memberService;
 
-    @DisplayName("로그인 - 가입된 회원인 경우 JWT 토큰을 반환해준다.")
+    @DisplayName("로그인 - 가입된 회원인 경우 JWT 토큰과 가족과 펫이 등록되어 있지 않으면 각각 -1이 리턴된다.")
     @Test
-    void check_member_success_and_login() {
+    void check_member_success_and_login_and_not_register_group_pet() {
 
         // given
         SnsLoginRequest snsLoginRequest = MemberFactory.createSnsLoginRequest();
@@ -70,7 +72,36 @@ class MemberServiceTest {
         assertAll(
                 () -> assertEquals(snsLoginResponse.getEmail(), member.getEmail()),
                 () -> assertEquals(snsLoginResponse.getSnsNickName(), member.getNickName()),
-                () -> assertEquals(snsLoginResponse.getJwtToken(), testToken)
+                () -> assertEquals(snsLoginResponse.getJwtToken(), testToken),
+                () -> assertEquals(snsLoginResponse.getFamilyId(), -1L),
+                () -> assertEquals(snsLoginResponse.getPetIdList(), List.of(-1L))
+        );
+    }
+
+    @DisplayName("로그인 - 가입된 회원인 경우 JWT 토큰과 가족이 등록되어 있는 경우 해당 familyId와 펫이 등록되어 있지 않으면 -1이 리턴된다.")
+    @Test
+    void check_member_success_and_login_and_register_family() {
+
+        // given
+        SnsLoginRequest snsLoginRequest = MemberFactory.createSnsLoginRequest();
+        Long testFamilyId = 3L;
+        Member member = MemberFactory.createTestMember();
+        List<FamilyMember> testFamilyMember = MemberFactory.createTestFamilyMember(testFamilyId);
+        String testToken = "jwtToken";
+        when(memberRepository.findByEmail(any())).thenReturn(Optional.of(member));
+        when(memberQueryRepository.findFamilyByMemberId(member.getId())).thenReturn(testFamilyMember);
+        when(jwtTokenProvider.createToken(any())).thenReturn(MemberFactory.createToken(testToken));
+
+        // when
+        SnsLoginResponse snsLoginResponse = memberService.checkMemberAndLogin(snsLoginRequest);
+
+        // then
+        assertAll(
+                () -> assertEquals(snsLoginResponse.getEmail(), member.getEmail()),
+                () -> assertEquals(snsLoginResponse.getSnsNickName(), member.getNickName()),
+                () -> assertEquals(snsLoginResponse.getJwtToken(), testToken),
+                () -> assertEquals(snsLoginResponse.getFamilyId(), testFamilyId),
+                () -> assertEquals(snsLoginResponse.getPetIdList(), List.of(-1L))
         );
     }
 

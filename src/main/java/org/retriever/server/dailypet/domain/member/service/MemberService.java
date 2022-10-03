@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -41,8 +42,25 @@ public class MemberService {
     private final SecurityUtil securityUtil;
 
     public SnsLoginResponse checkMemberAndLogin(SnsLoginRequest dto) {
+
+        Long familyId = -1L;
+        List<Long> petIdList = new ArrayList<>();
+
         Member member = memberRepository.findByEmail(dto.getEmail())
                 .orElseThrow(MemberNotFoundException::new);
+        // TODO : familyId랑 petId 가져오기, 없으면 -1 반환
+
+        List<FamilyMember> familyList = memberQueryRepository.findFamilyByMemberId(member.getId());
+        if (!familyList.isEmpty()) {
+            familyId = familyList.get(0).getFamily().getFamilyId();
+        }
+        List<Pet> petList = memberQueryRepository.findPetByFamilyId(familyId);
+        if (!petList.isEmpty()) {
+            petList.forEach(pet -> petIdList.add(pet.getPetId()));
+        } else{
+            petIdList.add(-1L);
+        }
+
 
         if (!member.getProviderType().equals(dto.getProviderType())) {
             throw new DifferentProviderTypeException();
@@ -53,6 +71,8 @@ public class MemberService {
                 .snsNickName(dto.getSnsNickName())
                 .email(dto.getEmail())
                 .jwtToken(token)
+                .familyId(familyId)
+                .petIdList(petIdList)
                 .build();
     }
 
