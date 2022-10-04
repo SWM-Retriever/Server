@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -38,5 +37,16 @@ public class CareLogQueryRepository {
                 .setParameter("petCareId", petCareId)
                 .setMaxResults(1)
                 .getSingleResult();
+    }
+
+    // 오늘 해당 챙겨주기 항목에 대한 횟수 조회 쿼리
+    public int findTodayCountByCareId(Long petCareId) {
+        return entityManager.createQuery("select c from CareLog c" +
+                        " where" +
+                        " c.petCare.petCareId = :petCareId" +
+                        " and" +
+                        " c.logDate = current_date", CareLog.class)
+                .setParameter("petCareId", petCareId)
+                .getResultList().size();
     }
 }
