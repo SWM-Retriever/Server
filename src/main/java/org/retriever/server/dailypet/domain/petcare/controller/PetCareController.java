@@ -56,7 +56,7 @@ public class PetCareController {
             @ApiResponse(responseCode = "500", description = "내부 서버 에러")
     })
     @PostMapping("/pets/{petId}/cares/{careId}/cancel")
-    public ResponseEntity<CancelPetCareResponse> cancelPetCare(@PathVariable Long petId, @PathVariable Long careId) {
-        return ResponseEntity.ok(petCareService.cancelPetCare(petId, careId));
+    public ResponseEntity<CancelPetCareResponse> cancelPetCare(@PathVariable Long careId) {
+        return ResponseEntity.ok(petCareService.cancelPetCare(careId));
     }
 }

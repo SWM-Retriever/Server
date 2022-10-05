@@ -60,17 +60,15 @@ public class PetCareService {
     public CheckPetCareResponse checkPetCare(Long petId, Long petCareId) {
         Member member = securityUtil.getMemberByUserDetails();
 
-        Pet pet = petRepository.findById(petId)
-                .orElseThrow(PetNotFoundException::new);
+        Pet pet = petRepository.findById(petId).orElseThrow(PetNotFoundException::new);
 
         PetCare petCare = petCareRepository.findById(petCareId).orElseThrow(PetCareNotFoundException::new);
-        petCare.pushCareCheckButton();
+        int currentCount = careLogQueryRepository.findTodayCountByCareId(petCareId);
+        int afterCount = petCare.pushCareCheckButton(currentCount);
 
-        CareLog careLog = CareLog.of(member, pet, petCare, CareLogStatus.CHECK);
+        careLogRepository.save(CareLog.of(member, pet, petCare, CareLogStatus.CHECK));
 
-        careLogRepository.save(careLog);
-
-        return new CheckPetCareResponse(petCareId, petCare.getCurrentCount(), member.getFamilyRoleName());
+        return new CheckPetCareResponse(petCareId, afterCount, member.getFamilyRoleName());
     }
 
     /**
@@ -79,7 +77,7 @@ public class PetCareService {
      * 있으면 해당 CareLog의 status를 cancel로 바꾼다.
      */
     @Transactional
-    public CancelPetCareResponse cancelPetCare(Long petId, Long petCareId) {
+    public CancelPetCareResponse cancelPetCare(Long petCareId) {
         Member member = securityUtil.getMemberByUserDetails();
 
         PetCare petCare = petCareRepository.findById(petCareId).orElseThrow(PetCareNotFoundException::new);
@@ -88,9 +86,10 @@ public class PetCareService {
         if (careLog == null) {
             throw new NotCancelCareLogException();
         }
-        petCare.cancelCareCheckButton();
+        int currentCount = careLogQueryRepository.findTodayCountByCareId(petCareId);
+        int afterCount = petCare.cancelCareCheckButton(currentCount);
         careLog.cancel();
 
-        return new CancelPetCareResponse(petCareId, petCare.getCurrentCount());
+        return new CancelPetCareResponse(petCareId, afterCount);
     }
 }

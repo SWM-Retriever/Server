@@ -23,7 +23,7 @@ public class GetPetCaresDetailResponse {
     public static GetPetCaresDetailResponse of(PetCare petCare, List<CareLogHistory> list) {
         return GetPetCaresDetailResponse.builder()
                 .careName(petCare.getCareName())
-                .currentCount(petCare.getCurrentCount())
+                .currentCount(list.size())
                 .totalCountPerDay(petCare.getTotalCountPerDay())
                 .logHistoryList(list)
                 .build();
