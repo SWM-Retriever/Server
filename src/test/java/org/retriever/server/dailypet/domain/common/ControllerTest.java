@@ -15,7 +15,6 @@ import org.retriever.server.dailypet.domain.petcare.service.PetCareService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest({
@@ -25,8 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
         PetController.class,
         PetCareController.class
 })
-@Import(SecurityTestConfig.class)
-public abstract class ControllerTest {
+public abstract class ControllerTest extends SecurityTestConfig {
 
     @MockBean
     protected MemberService memberService;
