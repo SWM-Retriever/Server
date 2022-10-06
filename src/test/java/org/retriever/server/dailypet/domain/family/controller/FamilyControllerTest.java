@@ -1,45 +1,23 @@
 package org.retriever.server.dailypet.domain.family.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.retriever.server.dailypet.domain.common.config.SecurityTestConfig;
+import org.retriever.server.dailypet.domain.common.ControllerTest;
 import org.retriever.server.dailypet.domain.common.factory.FamilyFactory;
 import org.retriever.server.dailypet.domain.family.dto.request.ValidateFamilyNameRequest;
-import org.retriever.server.dailypet.domain.family.repository.FamilyRepository;
-import org.retriever.server.dailypet.domain.family.service.FamilyService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.util.Optional;
-
-import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DisplayName("FamilyController 테스트")
-@WebMvcTest(controllers = FamilyController.class)
-@Import(SecurityTestConfig.class)
-class FamilyControllerTest {
-
-    @Autowired
-    MockMvc mockMvc;
-
-    @Autowired
-    ObjectMapper objectMapper;
-
-    @MockBean
-    FamilyService familyService;
-
-    @MockBean
-    FamilyRepository familyRepository;
+@WithMockUser
+class FamilyControllerTest extends ControllerTest {
 
     @DisplayName("가족 이름 검증 실패")
     @Test
@@ -51,7 +29,7 @@ class FamilyControllerTest {
     @Test
     void validateFamilyNameSuccess() throws Exception {
         ValidateFamilyNameRequest request = FamilyFactory.createValidateFamilyNameRequest();
-        given(familyRepository.findByFamilyName(any())).willReturn(Optional.empty());
+        willDoNothing().given(familyService).validateFamilyName(any());
 
         ResultActions actions = mockMvc.perform(post("/api/v1/validation/family-name")
                 .contentType(MediaType.APPLICATION_JSON)
