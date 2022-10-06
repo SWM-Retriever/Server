@@ -5,7 +5,7 @@ import org.retriever.server.dailypet.domain.family.entity.FamilyMember;
 import org.retriever.server.dailypet.domain.member.dto.request.SignUpRequest;
 import org.retriever.server.dailypet.domain.member.dto.request.SnsLoginRequest;
 import org.retriever.server.dailypet.domain.member.dto.request.ValidateMemberNicknameRequest;
-import org.retriever.server.dailypet.domain.member.dto.response.SnsLoginResponse;
+import org.retriever.server.dailypet.domain.member.dto.response.*;
 import org.retriever.server.dailypet.domain.member.entity.Member;
 import org.retriever.server.dailypet.domain.member.enums.AccountProgressStatus;
 import org.retriever.server.dailypet.domain.member.enums.AccountStatus;
@@ -135,6 +135,12 @@ public class MemberFactory {
                 .build();
     }
 
+    public static SignUpResponse createSignUpResponse() {
+        return SignUpResponse.builder()
+                .jwtToken("testToken")
+                .build();
+    }
+
     public static MockMultipartFile createMultipartFile() {
         return new MockMultipartFile(
                 "testfile",
@@ -149,5 +155,25 @@ public class MemberFactory {
         CustomUserDetails userDetails = new CustomUserDetails(member);
 
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+    }
+
+    public static CalculateDayResponse createCalculateMeetDay() {
+        return CalculateDayResponse.builder()
+                .petName("testPet")
+                .userName("testUser")
+                .calculatedDay(5)
+                .build();
+    }
+
+    public static CheckGroupResponse createCheckGroupResponse() {
+        return CheckGroupResponse.builder()
+                .groupId(5L)
+                .build();
+    }
+
+    public static CheckPetResponse createCheckPetResponse() {
+        return CheckPetResponse.builder()
+                .petIdList(List.of(1L, 2L, 3L))
+                .build();
     }
 }
