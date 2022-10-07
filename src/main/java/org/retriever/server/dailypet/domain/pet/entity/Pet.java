@@ -34,7 +34,7 @@ public class Pet extends BaseTimeEntity {
 
     private Double weight;
 
-    @Column(unique = true, length = 50)
+    @Column(length = 50)
     private String registerNumber;
 
     @Column(nullable = false)
