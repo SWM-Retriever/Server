@@ -76,6 +76,8 @@ public class PetService {
         newPet.setPetKind(petKind);
         newPet.setFamily(family);
 
+        family.getPetList().size();
+
         petRepository.save(newPet);
 
         return RegisterPetResponse.of(member, family);
