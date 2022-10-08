@@ -1,10 +1,12 @@
 package org.retriever.server.dailypet.domain.petcare.entity;
 
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.retriever.server.dailypet.domain.model.BaseTimeEntity;
+import org.retriever.server.dailypet.domain.model.IsDeleted;
 import org.retriever.server.dailypet.domain.pet.entity.Pet;
 import org.retriever.server.dailypet.domain.petcare.dto.request.CreatePetCareRequest;
-import org.retriever.server.dailypet.domain.petcare.enums.PetCareStatus;
 import org.retriever.server.dailypet.domain.petcare.exception.CareCountExceededException;
 import org.retriever.server.dailypet.domain.petcare.exception.CareCountIsZeroException;
 
@@ -17,6 +19,8 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
+@Where(clause = "is_deleted = 'FALSE'")
+@SQLDelete(sql = "UPDATE pet_care SET is_deleted = 'TRUE' WHERE pet_care_id = ?")
 public class PetCare extends BaseTimeEntity {
 
     @Id
@@ -30,13 +34,13 @@ public class PetCare extends BaseTimeEntity {
     private Boolean isPushAgree;
 
     @Enumerated(EnumType.STRING)
-    private PetCareStatus petCareStatus;
+    private IsDeleted isDeleted;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "petId", nullable = false)
     private Pet pet;
 
-    @OneToMany(mappedBy = "petCare", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "petCare", cascade = CascadeType.ALL)
     @Builder.Default
     private List<PetCareAlarm> petCareAlarmList = new ArrayList<>();
 
@@ -49,7 +53,7 @@ public class PetCare extends BaseTimeEntity {
                 .careName(dto.getCareName())
                 .totalCountPerDay(dto.getTotalCountPerDay())
                 .isPushAgree(false)
-                .petCareStatus(PetCareStatus.ACTIVE)
+                .isDeleted(IsDeleted.FALSE)
                 .build();
     }
 

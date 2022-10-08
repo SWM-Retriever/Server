@@ -1,8 +1,11 @@
 package org.retriever.server.dailypet.domain.petcare.entity;
 
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.retriever.server.dailypet.domain.member.entity.Member;
 import org.retriever.server.dailypet.domain.model.BaseTimeEntity;
+import org.retriever.server.dailypet.domain.model.IsDeleted;
 import org.retriever.server.dailypet.domain.pet.entity.Pet;
 import org.retriever.server.dailypet.domain.petcare.enums.CareLogStatus;
 
@@ -14,6 +17,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Where(clause = "is_deleted = 'FALSE'")
+@SQLDelete(sql = "UPDATE care_log SET is_deleted = 'TRUE' WHERE care_log_id = ?")
 public class CareLog extends BaseTimeEntity {
 
     @Id
@@ -22,6 +27,9 @@ public class CareLog extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     private CareLogStatus careLogStatus;
+
+    @Enumerated(EnumType.STRING)
+    private IsDeleted isDeleted;
 
     private LocalDate logDate;
 
@@ -44,6 +52,7 @@ public class CareLog extends BaseTimeEntity {
                 .petCare(petCare)
                 .careLogStatus(careLogStatus)
                 .logDate(LocalDate.now())
+                .isDeleted(IsDeleted.FALSE)
                 .build();
         member.getCareLogList().add(careLog);
 
