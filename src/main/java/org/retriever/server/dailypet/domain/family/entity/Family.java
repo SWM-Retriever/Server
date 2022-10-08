@@ -34,7 +34,7 @@ public class Family extends BaseTimeEntity {
     @Column(nullable = false, unique = true, length = 10)
     private String invitationCode;
 
-    @OneToMany(mappedBy = "family", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "family", cascade = CascadeType.PERSIST)
     @Builder.Default
     private List<FamilyMember> familyMemberList = new ArrayList<>();
 
