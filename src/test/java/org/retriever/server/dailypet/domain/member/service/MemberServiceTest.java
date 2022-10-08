@@ -1,22 +1,23 @@
 package org.retriever.server.dailypet.domain.member.service;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.retriever.server.dailypet.domain.common.factory.FamilyFactory;
 import org.retriever.server.dailypet.domain.common.factory.MemberFactory;
+import org.retriever.server.dailypet.domain.family.entity.Family;
 import org.retriever.server.dailypet.domain.family.entity.FamilyMember;
 import org.retriever.server.dailypet.domain.family.exception.FamilyNotFoundException;
+import org.retriever.server.dailypet.domain.family.repository.FamilyRepository;
 import org.retriever.server.dailypet.domain.member.dto.request.SignUpRequest;
 import org.retriever.server.dailypet.domain.member.dto.request.SnsLoginRequest;
 import org.retriever.server.dailypet.domain.member.dto.request.ValidateMemberNicknameRequest;
 import org.retriever.server.dailypet.domain.member.dto.response.SignUpResponse;
 import org.retriever.server.dailypet.domain.member.dto.response.SnsLoginResponse;
 import org.retriever.server.dailypet.domain.member.entity.Member;
-import org.retriever.server.dailypet.domain.member.enums.AccountStatus;
 import org.retriever.server.dailypet.domain.member.exception.DuplicateMemberException;
 import org.retriever.server.dailypet.domain.member.exception.DuplicateMemberNicknameException;
 import org.retriever.server.dailypet.domain.member.exception.MemberNotFoundException;
@@ -50,6 +51,8 @@ class MemberServiceTest {
     MemberQueryRepository memberQueryRepository;
     @Mock
     SecurityUtil securityUtil;
+    @Mock
+    FamilyRepository familyRepository;
 
     @InjectMocks
     MemberService memberService;
@@ -201,12 +204,44 @@ class MemberServiceTest {
 
         // given
         Member member = MemberFactory.createTestMember();
+        Family family = FamilyFactory.createTestFamily();
+        FamilyMember familyMember = FamilyMember.createFamilyMember(member, family);
+
         given(securityUtil.getMemberByUserDetails()).willReturn(member);
+        given(memberQueryRepository.findFamilyByMemberId(any())).willReturn(List.of(familyMember));
 
         // when
         memberService.deleteMember();
 
         // then
-        Assertions.assertThat(member.getAccountStatus()).isEqualTo(AccountStatus.DELETED);
+        verify(memberRepository,times(1)).delete(any());
+        verify(familyRepository, times(1)).delete(any());
     }
+
+//    void init() {
+//        // given
+//        Member member = MemberFactory.createTestMember();
+//        Family family = FamilyFactory.createTestFamily();
+//        FamilyMember familyMember = FamilyMember.createFamilyMember(member, family);
+//        Pet pet = PetFactory.createTestPetWithFamilyAndPetKind(family, PetFactory.createTestPetKind());
+//        PetCareAlarm petCareAlarm = PetCareAlarm.from(CustomDayOfWeek.MON);
+//        PetCare petCare = PetCareFactory.createTestPetCareWithPetAndAlarm(pet, petCareAlarm);
+//        CareLog careLog = CareLog.of(member, pet, petCare, CareLogStatus.CHECK);
+//
+//        given(securityUtil.getMemberByUserDetails()).willReturn(member);
+//        given(memberQueryRepository.findFamilyByMemberId(any())).willReturn(List.of(familyMember));
+//
+//        // when
+//        memberService.deleteMember();
+//        // then
+//        assertThat(member.getAccountStatus()).isEqualTo(AccountStatus.DELETED);
+//        assertThat(family.getFamilyStatus()).isEqualTo(FamilyStatus.DELETED);
+//        assertThat(familyMember.getIsDeleted()).isEqualTo(IsDeleted.TRUE);
+//        assertThat(pet.getPetStatus()).isEqualTo(PetStatus.DELETED);
+//        assertThat(petCare.getIsDeleted()).isEqualTo(IsDeleted.TRUE);
+//        assertThat(careLog.getIsDeleted()).isEqualTo(IsDeleted.TRUE);
+//        assertThat(petCareAlarm.getIsDeleted()).isEqualTo(IsDeleted.TRUE);
+//        verify(memberRepository, times(1)).delete(any());
+//        verify(familyRepository, times(1)).delete(any());
+//    }
 }

@@ -1,5 +1,6 @@
 package org.retriever.server.dailypet.domain.common.factory;
 
+import org.retriever.server.dailypet.domain.family.entity.Family;
 import org.retriever.server.dailypet.domain.pet.dto.request.RegisterPetRequest;
 import org.retriever.server.dailypet.domain.pet.dto.request.ValidatePetNameInFamilyRequest;
 import org.retriever.server.dailypet.domain.pet.entity.Pet;
@@ -64,6 +65,22 @@ public class PetFactory {
                 .petType(PetType.DOG)
                 .petKindName("리트리버")
                 .information("리트리버")
+                .build();
+    }
+
+    public static Pet createTestPetWithFamilyAndPetKind(Family family, PetKind petKind) {
+        return Pet.builder()
+                .petId(1L)
+                .petName("petTest")
+                .profileImageUrl("testUrl")
+                .birthDate(LocalDate.of(2022, 8, 13))
+                .weight(5.8)
+                .registerNumber("12345678")
+                .isNeutered(Boolean.TRUE)
+                .gender(Gender.MALE)
+                .petStatus(PetStatus.ACTIVE)
+                .family(family)
+                .petKind(petKind)
                 .build();
     }
 }

@@ -7,6 +7,7 @@ import org.retriever.server.dailypet.domain.family.dto.request.ValidateFamilyRol
 import org.retriever.server.dailypet.domain.family.dto.response.CreateFamilyResponse;
 import org.retriever.server.dailypet.domain.family.dto.response.FindFamilyWithInvitationCodeResponse;
 import org.retriever.server.dailypet.domain.family.entity.Family;
+import org.retriever.server.dailypet.domain.family.entity.FamilyMember;
 import org.retriever.server.dailypet.domain.family.enums.FamilyStatus;
 import org.retriever.server.dailypet.domain.pet.entity.Pet;
 
@@ -75,6 +76,16 @@ public class FamilyFactory {
                 .invitationCode("1234567890")
                 .familyMemberList(new ArrayList<>())
                 .petList(new ArrayList<>(List.of(Pet.builder().petName(name1).build(), Pet.builder().petName(name2).build())))
+                .build();
+    }
+
+    public static Family createTestFamilyWithFamilyMember(FamilyMember familyMember) {
+        return Family.builder()
+                .familyName("testFamily")
+                .familyStatus(FamilyStatus.ACTIVE)
+                .invitationCode("1234567890")
+                .familyMemberList(List.of(familyMember))
+                .petList(new ArrayList<>())
                 .build();
     }
 }
