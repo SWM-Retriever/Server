@@ -28,6 +28,6 @@ class PetTest {
         assertThat(pet.getProfileImageUrl()).isEqualTo(imageUrl);
         assertThat(pet.getWeight()).isEqualTo(request.getWeight());
         assertThat(pet.getIsNeutered()).isEqualTo(request.getIsNeutered());
-        assertThat(pet.getStatus()).isEqualTo(PetStatus.ACTIVE);
+        assertThat(pet.getPetStatus()).isEqualTo(PetStatus.ACTIVE);
     }
 }

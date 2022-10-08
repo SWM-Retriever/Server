@@ -24,7 +24,7 @@ public class PetFactory {
                 .registerNumber("12345678")
                 .isNeutered(Boolean.TRUE)
                 .gender(Gender.MALE)
-                .status(PetStatus.ACTIVE)
+                .petStatus(PetStatus.ACTIVE)
                 .build();
     }
 
