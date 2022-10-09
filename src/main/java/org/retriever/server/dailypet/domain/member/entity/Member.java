@@ -97,7 +97,7 @@ public class Member extends BaseTimeEntity {
     public static Member createNewMember(SignUpRequest signUpRequest, String url) {
         return Member.builder()
                 .email(signUpRequest.getEmail())
-                .nickName(signUpRequest.getSnsNickName())
+                .nickName(signUpRequest.getNickName())
                 .profileImageUrl(url)
                 .providerType(signUpRequest.getProviderType())
                 .deviceToken(signUpRequest.getDeviceToken())
