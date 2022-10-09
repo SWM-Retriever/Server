@@ -8,11 +8,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.retriever.server.dailypet.domain.diary.dto.response.GetGroupDiaryResponse;
 import org.retriever.server.dailypet.domain.diary.service.DiaryService;
-import org.retriever.server.dailypet.domain.family.dto.request.ValidateFamilyNameRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,7 +27,7 @@ public class DiaryController {
             @ApiResponse(responseCode = "500", description = "내부 서버 에러")
     })
     @GetMapping("/families/{familyId}/diaries")
-    public ResponseEntity<GetGroupDiaryResponse> getGroupDiary(@PathVariable Long familyId) {
-        return ResponseEntity.ok(diaryService.getGroupDiary(familyId));
+    public ResponseEntity<GetGroupDiaryResponse> getGroupDiaries(@PathVariable Long familyId) {
+        return ResponseEntity.ok(diaryService.getGroupDiaries(familyId));
     }
 }

@@ -20,8 +20,13 @@ public class DiaryService {
 
     private final DiaryRepository diaryRepository;
 
-    public GetGroupDiaryResponse getGroupDiary(Long familyId) {
+    public GetGroupDiaryResponse getGroupDiaries(Long familyId) {
         List<Diary> diaryList = diaryRepository.findAllByFamily_FamilyId(familyId);
+
+        return GetGroupDiaryResponse.from(getDiaryResponse(diaryList));
+    }
+
+    private List<DiaryView> getDiaryResponse(List<Diary> diaryList) {
 
         TreeMap<LocalDate, List<Diary>> diariesPerPublishDate = diaryList.stream()
                 .collect(Collectors.groupingBy(
@@ -38,6 +43,6 @@ public class DiaryService {
                 diaryResponse.add(DiaryView.createContentView(diary));
             }
         }
-        return GetGroupDiaryResponse.from(diaryResponse);
+        return diaryResponse;
     }
 }
