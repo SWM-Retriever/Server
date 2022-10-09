@@ -53,4 +53,8 @@ public class Diary extends BaseTimeEntity {
                 .family(family)
                 .build();
     }
+
+    public void editText(String newText) {
+        this.diaryText = newText;
+    }
 }

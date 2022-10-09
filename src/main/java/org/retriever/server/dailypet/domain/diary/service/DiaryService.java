@@ -2,9 +2,11 @@ package org.retriever.server.dailypet.domain.diary.service;
 
 import lombok.RequiredArgsConstructor;
 import org.retriever.server.dailypet.domain.diary.dto.request.CreateDiaryRequest;
+import org.retriever.server.dailypet.domain.diary.dto.request.EditDiaryRequest;
 import org.retriever.server.dailypet.domain.diary.dto.response.DiaryView;
 import org.retriever.server.dailypet.domain.diary.dto.response.GetGroupDiaryResponse;
 import org.retriever.server.dailypet.domain.diary.entity.Diary;
+import org.retriever.server.dailypet.domain.diary.exception.DiaryNotFoundException;
 import org.retriever.server.dailypet.domain.diary.repository.DiaryRepository;
 import org.retriever.server.dailypet.domain.family.entity.Family;
 import org.retriever.server.dailypet.domain.family.exception.FamilyNotFoundException;
@@ -12,6 +14,7 @@ import org.retriever.server.dailypet.domain.family.repository.FamilyRepository;
 import org.retriever.server.dailypet.domain.member.entity.Member;
 import org.retriever.server.dailypet.global.utils.security.SecurityUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -22,12 +25,14 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class DiaryService {
 
     private final DiaryRepository diaryRepository;
     private final SecurityUtil securityUtil;
     private final FamilyRepository familyRepository;
 
+    @Transactional(readOnly = true)
     public GetGroupDiaryResponse getGroupDiaries(Long familyId) {
         List<Diary> diaryList = diaryRepository.findAllByFamily_FamilyId(familyId);
 
@@ -54,7 +59,6 @@ public class DiaryService {
         return diaryResponse;
     }
 
-
     public void createDiary(Long familyId, CreateDiaryRequest request) {
         Member author = securityUtil.getMemberByUserDetails();
         // TODO util로 id로 객체 조회하는 메서드들 따로 빼기 (매번 orElseThrow해야 함)
@@ -63,6 +67,11 @@ public class DiaryService {
         author.createDiary(newDiary);
         family.linkDiary(newDiary);
         diaryRepository.save(newDiary);
+    }
+
+    public void editDiary(Long familyId, Long diaryId, EditDiaryRequest request) {
+        Diary diary = diaryRepository.findById(diaryId).orElseThrow(DiaryNotFoundException::new);
+        diary.editText(request.getDiaryText());
     }
 
     public void deleteDiary(Long familyId, Long diaryId) {
