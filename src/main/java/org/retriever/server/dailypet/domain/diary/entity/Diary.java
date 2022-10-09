@@ -26,7 +26,7 @@ public class Diary extends BaseTimeEntity {
 
     private LocalDate publishDate;
 
-    private String contents;
+    private String diaryText;
 
     @Enumerated(EnumType.STRING)
     private IsDeleted isDeleted;
