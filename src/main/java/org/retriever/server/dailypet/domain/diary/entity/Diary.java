@@ -3,6 +3,7 @@ package org.retriever.server.dailypet.domain.diary.entity;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+import org.retriever.server.dailypet.domain.diary.dto.request.CreateDiaryRequest;
 import org.retriever.server.dailypet.domain.family.entity.Family;
 import org.retriever.server.dailypet.domain.member.entity.Member;
 import org.retriever.server.dailypet.domain.model.BaseTimeEntity;
@@ -42,4 +43,14 @@ public class Diary extends BaseTimeEntity {
 //    @OneToMany(mappedBy = "diaryLink", cascade = CascadeType.ALL, orphanRemoval = true)
 //    @Builder.Default
 //    private List<DiaryImage> imageList = new ArrayList<>();
+
+    public static Diary of(Member member, Family family, CreateDiaryRequest createDiaryRequest) {
+        return Diary.builder()
+                .diaryText(createDiaryRequest.getDiaryText())
+                .publishDate(LocalDate.now())
+                .isDeleted(IsDeleted.FALSE)
+                .author(member)
+                .family(family)
+                .build();
+    }
 }

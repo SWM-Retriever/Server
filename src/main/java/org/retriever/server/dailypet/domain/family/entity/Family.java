@@ -59,4 +59,8 @@ public class Family extends BaseTimeEntity {
     public void insertNewMember(FamilyMember familyMember) {
         familyMemberList.add(familyMember);
     }
+
+    public void linkDiary(Diary diary) {
+        this.diaryList.add(diary);
+    }
 }

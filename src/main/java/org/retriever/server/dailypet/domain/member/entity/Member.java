@@ -144,4 +144,8 @@ public class Member extends BaseTimeEntity {
     public void changeProgressStatusToPet() {
         this.accountProgressStatus = AccountProgressStatus.PET;
     }
+
+    public void createDiary(Diary diary) {
+        this.diaryList.add(diary);
+    }
 }
