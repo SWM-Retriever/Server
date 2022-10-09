@@ -3,6 +3,7 @@ package org.retriever.server.dailypet.domain.family.entity;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+import org.retriever.server.dailypet.domain.diary.entity.Diary;
 import org.retriever.server.dailypet.domain.family.dto.request.CreateFamilyRequest;
 import org.retriever.server.dailypet.domain.family.enums.FamilyStatus;
 import org.retriever.server.dailypet.domain.model.BaseTimeEntity;
@@ -41,6 +42,10 @@ public class Family extends BaseTimeEntity {
     @OneToMany(mappedBy = "family", cascade = CascadeType.REMOVE)
     @Builder.Default
     private List<Pet> petList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "family")
+    @Builder.Default
+    private List<Diary> diaryList = new ArrayList<>();
 
     public static Family createFamily(CreateFamilyRequest dto, String invitationCode) {
         return Family.builder()

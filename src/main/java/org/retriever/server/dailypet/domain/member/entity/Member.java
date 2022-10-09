@@ -3,6 +3,7 @@ package org.retriever.server.dailypet.domain.member.entity;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+import org.retriever.server.dailypet.domain.diary.entity.Diary;
 import org.retriever.server.dailypet.domain.family.entity.FamilyMember;
 import org.retriever.server.dailypet.domain.member.dto.request.SignUpRequest;
 import org.retriever.server.dailypet.domain.member.enums.AccountProgressStatus;
@@ -76,6 +77,10 @@ public class Member extends BaseTimeEntity {
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     @Builder.Default
     private List<CareLog> careLogList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
+    @Builder.Default
+    private List<Diary> diaryList = new ArrayList<>();
 
     @Builder
     public Member(String email, String nickName, String profileImageUrl, ProviderType type, String deviceToken, Boolean isPushAgree, Boolean isProfileInformationAgree) {
