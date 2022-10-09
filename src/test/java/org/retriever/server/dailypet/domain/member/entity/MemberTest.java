@@ -25,7 +25,7 @@ class MemberTest {
 
         // then
         assertThat(newMember.getId()).isNull();
-        assertThat(newMember.getNickName()).isEqualTo(signUpRequest.getSnsNickName());
+        assertThat(newMember.getNickName()).isEqualTo(signUpRequest.getNickName());
         assertThat(newMember.getEmail()).isEqualTo(signUpRequest.getEmail());
         assertThat(newMember.getProfileImageUrl()).isEqualTo(imageUrl);
         assertThat(newMember.getProviderType()).isEqualTo(signUpRequest.getProviderType());

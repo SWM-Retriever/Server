@@ -106,10 +106,12 @@ public class MemberFactory {
 
     public static SnsLoginResponse createSnsLoginResponse() {
         return SnsLoginResponse.builder()
-                .snsNickName("test")
+                .nickName("test")
                 .email("test@naver.com")
                 .jwtToken("testToken")
                 .familyId(-1L)
+                .familyName("testFamily")
+                .invitationCode("testCode")
                 .petIdList(List.of(-1L))
                 .build();
     }
@@ -127,7 +129,7 @@ public class MemberFactory {
     public static SignUpRequest createSignUpRequest() {
         return SignUpRequest.builder()
                 .email("test@naver.com")
-                .snsNickName("test")
+                .nickName("test")
                 .deviceToken("abcde12345")
                 .providerType(ProviderType.KAKAO)
                 .isPushAgree(Boolean.TRUE)

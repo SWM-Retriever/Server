@@ -14,7 +14,7 @@ public class SignUpRequest {
 
     @NotEmpty
     @Size(max = 20)
-    private String snsNickName;
+    private String nickName;
 
     @NotEmpty
     @Email

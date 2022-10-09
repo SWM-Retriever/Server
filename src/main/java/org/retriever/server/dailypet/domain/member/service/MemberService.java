@@ -54,8 +54,13 @@ public class MemberService {
         // TODO : familyId랑 petId 가져오기, 없으면 -1 반환
 
         List<FamilyMember> familyList = memberQueryRepository.findFamilyByMemberId(member.getId());
+        String familyName = "";
+        String invitationCode = "";
         if (!familyList.isEmpty()) {
-            familyId = familyList.get(0).getFamily().getFamilyId();
+            Family family = familyList.get(0).getFamily();
+            familyId = family.getFamilyId();
+            familyName = family.getFamilyName();
+            invitationCode = family.getInvitationCode();
         }
         List<Pet> petList = memberQueryRepository.findPetByFamilyId(familyId);
         if (!petList.isEmpty()) {
@@ -71,10 +76,12 @@ public class MemberService {
         String token = jwtTokenProvider.createToken(dto.getEmail());
 
         return SnsLoginResponse.builder()
-                .snsNickName(dto.getSnsNickName())
+                .nickName(member.getNickName())
                 .email(dto.getEmail())
                 .jwtToken(token)
                 .familyId(familyId)
+                .familyName(familyName)
+                .invitationCode(invitationCode)
                 .petIdList(petIdList)
                 .build();
     }

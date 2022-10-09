@@ -12,8 +12,8 @@ import java.util.List;
 @Getter
 public class SnsLoginResponse {
 
-    @Schema(description = "유저 SNS 프로필 이름")
-    private String snsNickName;
+    @Schema(description = "유저 프로필 이름")
+    private String nickName;
 
     @Schema(description = "유저 SNS email")
     private String email;
@@ -23,6 +23,10 @@ public class SnsLoginResponse {
 
     @Schema(description = "familyId")
     private Long familyId;
+
+    private String familyName;
+
+    private String invitationCode;
 
     @Schema(description = "petId List")
     private List<Long> petIdList = new ArrayList<>();

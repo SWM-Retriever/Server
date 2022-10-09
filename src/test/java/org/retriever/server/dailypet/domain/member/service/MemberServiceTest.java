@@ -74,7 +74,7 @@ class MemberServiceTest {
         // then
         assertAll(
                 () -> assertEquals(snsLoginResponse.getEmail(), member.getEmail()),
-                () -> assertEquals(snsLoginResponse.getSnsNickName(), member.getNickName()),
+                () -> assertEquals(snsLoginResponse.getNickName(), member.getNickName()),
                 () -> assertEquals(snsLoginResponse.getJwtToken(), testToken),
                 () -> assertEquals(snsLoginResponse.getFamilyId(), -1L),
                 () -> assertEquals(snsLoginResponse.getPetIdList(), List.of(-1L))
@@ -101,7 +101,7 @@ class MemberServiceTest {
         // then
         assertAll(
                 () -> assertEquals(snsLoginResponse.getEmail(), member.getEmail()),
-                () -> assertEquals(snsLoginResponse.getSnsNickName(), member.getNickName()),
+                () -> assertEquals(snsLoginResponse.getNickName(), member.getNickName()),
                 () -> assertEquals(snsLoginResponse.getJwtToken(), testToken),
                 () -> assertEquals(snsLoginResponse.getFamilyId(), testFamilyId),
                 () -> assertEquals(snsLoginResponse.getPetIdList(), List.of(-1L))
