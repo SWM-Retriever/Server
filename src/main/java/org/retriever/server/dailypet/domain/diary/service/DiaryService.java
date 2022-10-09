@@ -64,4 +64,8 @@ public class DiaryService {
         family.linkDiary(newDiary);
         diaryRepository.save(newDiary);
     }
+
+    public void deleteDiary(Long familyId, Long diaryId) {
+        diaryRepository.deleteById(diaryId);
+    }
 }

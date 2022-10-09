@@ -44,4 +44,17 @@ public class DiaryController {
         diaryService.createDiary(familyId, request);
         return ResponseEntity.ok().build();
     }
+
+    @Parameter(name = "X-AUTH-TOKEN", description = "로그인 성공 후 access_token", required = true)
+    @Operation(summary = "일기 삭제", description = "해당 그룹에 반려 일기를 삭제한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "반려 일기 삭제 성공"),
+            @ApiResponse(responseCode = "400", description = "삭제 실패"),
+            @ApiResponse(responseCode = "500", description = "내부 서버 에러")
+    })
+    @DeleteMapping("/families/{familyId}/diaries/{diaryId}")
+    public ResponseEntity<Void> deleteDiary(@PathVariable Long familyId, @PathVariable Long diaryId) {
+        diaryService.deleteDiary(familyId, diaryId);
+        return ResponseEntity.ok().build();
+    }
 }
