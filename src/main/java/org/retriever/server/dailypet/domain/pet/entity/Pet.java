@@ -1,6 +1,8 @@
 package org.retriever.server.dailypet.domain.pet.entity;
 
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.retriever.server.dailypet.domain.family.entity.Family;
 import org.retriever.server.dailypet.domain.model.BaseTimeEntity;
 import org.retriever.server.dailypet.domain.pet.dto.request.RegisterPetRequest;
@@ -19,6 +21,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Where(clause = "pet_status = 'ACTIVE'")
+@SQLDelete(sql = "UPDATE pet SET pet_status = 'DELETED' WHERE pet_id = ?")
 public class Pet extends BaseTimeEntity {
 
     @Id
@@ -44,7 +48,7 @@ public class Pet extends BaseTimeEntity {
     private Gender gender;
 
     @Enumerated(EnumType.STRING)
-    private PetStatus status;
+    private PetStatus petStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "petKindId", nullable = false)
@@ -54,7 +58,7 @@ public class Pet extends BaseTimeEntity {
     @JoinColumn(name = "familyId", nullable = false)
     private Family family;
 
-    @OneToMany(mappedBy = "pet")
+    @OneToMany(mappedBy = "pet", cascade = CascadeType.REMOVE)
     @Builder.Default
     private List<PetCare> petCareList = new ArrayList<>();
 
@@ -71,7 +75,7 @@ public class Pet extends BaseTimeEntity {
                 .registerNumber(dto.getRegisterNumber())
                 .isNeutered(dto.getIsNeutered())
                 .gender(dto.getGender())
-                .status(PetStatus.ACTIVE)
+                .petStatus(PetStatus.ACTIVE)
                 .build();
     }
 

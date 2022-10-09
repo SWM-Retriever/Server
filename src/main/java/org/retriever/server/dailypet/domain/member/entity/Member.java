@@ -1,14 +1,15 @@
 package org.retriever.server.dailypet.domain.member.entity;
 
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.retriever.server.dailypet.domain.family.entity.FamilyMember;
 import org.retriever.server.dailypet.domain.member.dto.request.SignUpRequest;
 import org.retriever.server.dailypet.domain.member.enums.AccountProgressStatus;
-import org.retriever.server.dailypet.domain.member.enums.RoleType;
 import org.retriever.server.dailypet.domain.member.enums.AccountStatus;
-import org.retriever.server.dailypet.domain.model.BaseTimeEntity;
 import org.retriever.server.dailypet.domain.member.enums.ProviderType;
+import org.retriever.server.dailypet.domain.member.enums.RoleType;
+import org.retriever.server.dailypet.domain.model.BaseTimeEntity;
 import org.retriever.server.dailypet.domain.petcare.entity.CareLog;
 
 import javax.persistence.*;
@@ -21,6 +22,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Where(clause = "account_status = 'ACTIVE'")
+@SQLDelete(sql = "UPDATE member SET account_status = 'DELETED' WHERE member_id = ?")
 public class Member extends BaseTimeEntity {
 
     @Id
@@ -67,11 +69,11 @@ public class Member extends BaseTimeEntity {
 
     private String password;
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     @Builder.Default
     private List<FamilyMember> familyMemberList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     @Builder.Default
     private List<CareLog> careLogList = new ArrayList<>();
 
@@ -123,6 +125,10 @@ public class Member extends BaseTimeEntity {
     }
 
     public void deleteMember() {
+        // TODO : 리더일 경우 따로 처리
+        if (this.roleType == RoleType.FAMILY_LEADER) {
+
+        }
         this.accountStatus = AccountStatus.DELETED;
     }
 

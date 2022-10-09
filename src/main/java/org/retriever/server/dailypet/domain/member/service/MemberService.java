@@ -1,8 +1,10 @@
 package org.retriever.server.dailypet.domain.member.service;
 
 import lombok.RequiredArgsConstructor;
+import org.retriever.server.dailypet.domain.family.entity.Family;
 import org.retriever.server.dailypet.domain.family.entity.FamilyMember;
 import org.retriever.server.dailypet.domain.family.exception.FamilyNotFoundException;
+import org.retriever.server.dailypet.domain.family.repository.FamilyRepository;
 import org.retriever.server.dailypet.domain.member.dto.request.SignUpRequest;
 import org.retriever.server.dailypet.domain.member.dto.request.SnsLoginRequest;
 import org.retriever.server.dailypet.domain.member.dto.request.ValidateMemberNicknameRequest;
@@ -35,6 +37,7 @@ import java.util.List;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final FamilyRepository familyRepository;
     private final PetRepository petRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final S3FileUploader s3FileUploader;
@@ -140,6 +143,13 @@ public class MemberService {
     @Transactional
     public void deleteMember() {
         Member member = securityUtil.getMemberByUserDetails();
-        member.deleteMember();
+        Family family = null;
+        List<FamilyMember> familyByMemberId = memberQueryRepository.findFamilyByMemberId(member.getId());
+        if (!familyByMemberId.isEmpty()) {
+            family = familyByMemberId.get(0).getFamily();
+        }
+        memberRepository.delete(member);
+        if(family != null)
+            familyRepository.delete(family);
     }
 }

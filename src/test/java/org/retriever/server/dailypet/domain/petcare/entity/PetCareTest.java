@@ -3,8 +3,8 @@ package org.retriever.server.dailypet.domain.petcare.entity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.retriever.server.dailypet.domain.common.factory.PetCareFactory;
+import org.retriever.server.dailypet.domain.model.IsDeleted;
 import org.retriever.server.dailypet.domain.petcare.dto.request.CreatePetCareRequest;
-import org.retriever.server.dailypet.domain.petcare.enums.PetCareStatus;
 import org.retriever.server.dailypet.domain.petcare.exception.CareCountExceededException;
 import org.retriever.server.dailypet.domain.petcare.exception.CareCountIsZeroException;
 
@@ -27,7 +27,7 @@ class PetCareTest {
         assertThat(petCare.getCareName()).isEqualTo(petCareRequest.getCareName());
         assertThat(petCare.getTotalCountPerDay()).isEqualTo(petCareRequest.getTotalCountPerDay());
         assertThat(petCare.getIsPushAgree()).isEqualTo(Boolean.FALSE);
-        assertThat(petCare.getPetCareStatus()).isEqualTo(PetCareStatus.ACTIVE);
+        assertThat(petCare.getIsDeleted()).isEqualTo(IsDeleted.FALSE);
     }
 
     @Test
