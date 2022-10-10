@@ -12,6 +12,7 @@ import org.retriever.server.dailypet.domain.family.entity.FamilyMember;
 import org.retriever.server.dailypet.domain.family.exception.DuplicateFamilyNameException;
 import org.retriever.server.dailypet.domain.family.exception.DuplicateFamilyRoleNameException;
 import org.retriever.server.dailypet.domain.family.exception.FamilyNotFoundException;
+import org.retriever.server.dailypet.domain.family.repository.FamilyQueryRepository;
 import org.retriever.server.dailypet.domain.family.repository.FamilyRepository;
 import org.retriever.server.dailypet.domain.member.entity.Member;
 import org.retriever.server.dailypet.global.utils.invitationcode.InvitationCodeUtil;
@@ -28,6 +29,7 @@ import java.util.List;
 public class FamilyService {
 
     private final FamilyRepository familyRepository;
+    private final FamilyQueryRepository familyQueryRepository;
     private final SecurityUtil securityUtil;
 
     public void validateFamilyName(ValidateFamilyNameRequest dto) {
@@ -72,8 +74,9 @@ public class FamilyService {
 
     public FindFamilyWithInvitationCodeResponse findFamilyWithInvitationCode(String code) {
         Family family = familyRepository.findByInvitationCode(code).orElseThrow(FamilyNotFoundException::new);
+        List<FamilyMember> familyMembers = familyQueryRepository.findMembersByFamilyId(family.getFamilyId());
 
-        return FindFamilyWithInvitationCodeResponse.from(family);
+        return FindFamilyWithInvitationCodeResponse.of(family, familyMembers);
     }
 
     @Transactional
