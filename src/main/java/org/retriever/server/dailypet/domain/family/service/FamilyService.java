@@ -56,9 +56,7 @@ public class FamilyService {
 
         // 멤버 조회 및 권한 지정
         Member member = securityUtil.getMemberByUserDetails();
-        member.setFamilyLeader();
-        member.changeFamilyRoleName(dto.getFamilyRoleName());
-        member.changeProgressStatusToGroup();
+        member.createGroup(dto.getFamilyRoleName());
 
         // 새로운 가족 그룹 생성 - 초대코드 생성
         String invitationCode = InvitationCodeUtil.createInvitationCode();
@@ -71,6 +69,22 @@ public class FamilyService {
 
         return CreateFamilyResponse.builder()
                 .familyId(newFamily.getFamilyId())
+                .build();
+    }
+    // TODO : 가족 그룹 생성 중복 로직 디자인패턴 적용해보기
+    @Transactional
+    public CreateFamilyResponse createFamilyAlone() {
+        Member member = securityUtil.getMemberByUserDetails();
+        member.createGroup(null);
+
+        Family familyAlone = Family.createFamilyAlone();
+        FamilyMember familyMember = FamilyMember.createFamilyMember(member, familyAlone);
+
+        familyAlone.insertNewMember(familyMember);
+        familyRepository.save(familyAlone);
+
+        return CreateFamilyResponse.builder()
+                .familyId(familyAlone.getFamilyId())
                 .build();
     }
 

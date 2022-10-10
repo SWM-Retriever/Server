@@ -66,6 +66,18 @@ public class FamilyController {
     }
 
     @Parameter(name = "X-AUTH-TOKEN", description = "로그인 성공 후 access_token", required = true)
+    @Operation(summary = "1인 가족 생성", description = "1인 가족을 생성하고 해당 멤버는 가족 리더가 된다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "1인 가족 생성"),
+            @ApiResponse(responseCode = "400", description = "가족 생성 오류"),
+            @ApiResponse(responseCode = "500", description = "내부 서버 에러")
+    })
+    @PostMapping("/family/alone")
+    public ResponseEntity<CreateFamilyResponse> createFamilyAlone() throws IOException {
+        return ResponseEntity.ok(familyService.createFamilyAlone());
+    }
+
+    @Parameter(name = "X-AUTH-TOKEN", description = "로그인 성공 후 access_token", required = true)
     @Operation(summary = "가족 초대 코드 입력", description = "가족을 찾기 위해 초대 코드를 입력하고 가족 정보를 반환한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "가족 검색 성공"),

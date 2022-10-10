@@ -117,6 +117,12 @@ public class Member extends BaseTimeEntity {
                 .build();
     }
 
+    public void createGroup(String familyRoleName) {
+        setFamilyLeader();
+        changeFamilyRoleName(familyRoleName);
+        changeProgressStatusToGroup();
+    }
+
     public void setFamilyLeader() {
         this.roleType = RoleType.FAMILY_LEADER;
     }
