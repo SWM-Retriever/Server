@@ -28,7 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -46,44 +45,22 @@ public class MemberService {
 
     public SnsLoginResponse checkMemberAndLogin(SnsLoginRequest dto) {
 
-        Long familyId = -1L;
-        List<Long> petIdList = new ArrayList<>();
-
         Member member = memberRepository.findByEmail(dto.getEmail())
                 .orElseThrow(MemberNotFoundException::new);
-        // TODO : familyId랑 petId 가져오기, 없으면 -1 반환
-
+        Family family = Family.builder().familyId(0L).build();
         List<FamilyMember> familyList = memberQueryRepository.findFamilyByMemberId(member.getId());
-        String familyName = "";
-        String invitationCode = "";
-        if (!familyList.isEmpty()) {
-            Family family = familyList.get(0).getFamily();
-            familyId = family.getFamilyId();
-            familyName = family.getFamilyName();
-            invitationCode = family.getInvitationCode();
-        }
-        List<Pet> petList = memberQueryRepository.findPetByFamilyId(familyId);
-        if (!petList.isEmpty()) {
-            petList.forEach(pet -> petIdList.add(pet.getPetId()));
-        } else{
-            petIdList.add(-1L);
-        }
 
+        if (!familyList.isEmpty()) {
+            family = familyList.get(0).getFamily();
+        }
+        List<Pet> petList = memberQueryRepository.findPetByFamilyId(family.getFamilyId());
 
         if (!member.getProviderType().equals(dto.getProviderType())) {
             throw new DifferentProviderTypeException();
         }
         String token = jwtTokenProvider.createToken(dto.getEmail());
 
-        return SnsLoginResponse.builder()
-                .nickName(member.getNickName())
-                .email(dto.getEmail())
-                .jwtToken(token)
-                .familyId(familyId)
-                .familyName(familyName)
-                .invitationCode(invitationCode)
-                .petIdList(petIdList)
-                .build();
+        return SnsLoginResponse.of(member, family, token, petList);
     }
 
     public void validateMemberNickName(ValidateMemberNicknameRequest dto) {

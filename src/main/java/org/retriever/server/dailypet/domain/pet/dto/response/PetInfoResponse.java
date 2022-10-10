@@ -13,7 +13,7 @@ public class PetInfoResponse {
 
     private String petName;
 
-    PetInfoResponse(Pet pet) {
+    public PetInfoResponse(Pet pet) {
         this.petId = pet.getPetId();
         this.petName = pet.getPetName();
     }

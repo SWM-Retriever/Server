@@ -9,6 +9,8 @@ import org.retriever.server.dailypet.domain.family.dto.response.FindFamilyWithIn
 import org.retriever.server.dailypet.domain.family.entity.Family;
 import org.retriever.server.dailypet.domain.family.entity.FamilyMember;
 import org.retriever.server.dailypet.domain.family.enums.FamilyStatus;
+import org.retriever.server.dailypet.domain.family.enums.GroupType;
+import org.retriever.server.dailypet.domain.member.entity.Member;
 import org.retriever.server.dailypet.domain.pet.entity.Pet;
 
 import java.util.ArrayList;
@@ -26,6 +28,7 @@ public class FamilyFactory {
                 .invitationCode("1234567890")
                 .familyMemberList(new ArrayList<>())
                 .petList(new ArrayList<>())
+                .groupType(GroupType.FAMILY)
                 .build();
     }
 
@@ -88,4 +91,17 @@ public class FamilyFactory {
                 .petList(new ArrayList<>())
                 .build();
     }
+
+    public static List<FamilyMember> createTestFamilyMember(Member member, Family family) {
+        return List.of(
+                FamilyMember.createFamilyMember(member, family)
+        );
+    }
+
+    public static List<FamilyMember> createTestDuplicateFamilyMember(String name1, String name2) {
+        return List.of(
+                FamilyMember.builder().member((MemberFactory.createTestFamilyRoleNameMember(name1))).build(),
+                FamilyMember.builder().member((MemberFactory.createTestFamilyRoleNameMember(name2))).build());
+    }
 }
+

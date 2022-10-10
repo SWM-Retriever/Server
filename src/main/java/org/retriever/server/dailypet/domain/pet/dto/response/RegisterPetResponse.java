@@ -2,6 +2,7 @@ package org.retriever.server.dailypet.domain.pet.dto.response;
 
 import lombok.*;
 import org.retriever.server.dailypet.domain.family.entity.Family;
+import org.retriever.server.dailypet.domain.family.enums.GroupType;
 import org.retriever.server.dailypet.domain.member.entity.Member;
 
 import java.util.List;
@@ -17,17 +18,23 @@ public class RegisterPetResponse {
 
     private String familyName;
 
-    private String familyRoleName;
-
-    private List<PetInfoResponse> petList;
+    private String nickName;
 
     private String invitationCode;
+
+    private GroupType groupType;
+
+    private String profileImageUrl;
+
+    private List<PetInfoResponse> petList;
 
     public static RegisterPetResponse of(Member member, Family family) {
         return RegisterPetResponse.builder()
                 .familyId(family.getFamilyId())
                 .familyName(family.getFamilyName())
-                .familyRoleName(member.getFamilyRoleName())
+                .nickName(member.getNickName())
+                .groupType(family.getGroupType())
+                .profileImageUrl(member.getProfileImageUrl())
                 .petList(family.getPetList().stream()
                         .map(PetInfoResponse::new)
                         .collect(Collectors.toList()))

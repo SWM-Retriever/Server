@@ -12,6 +12,7 @@ import org.retriever.server.dailypet.domain.family.entity.FamilyMember;
 import org.retriever.server.dailypet.domain.family.exception.DuplicateFamilyNameException;
 import org.retriever.server.dailypet.domain.family.exception.DuplicateFamilyRoleNameException;
 import org.retriever.server.dailypet.domain.family.exception.FamilyNotFoundException;
+import org.retriever.server.dailypet.domain.family.repository.FamilyQueryRepository;
 import org.retriever.server.dailypet.domain.family.repository.FamilyRepository;
 import org.retriever.server.dailypet.domain.member.entity.Member;
 import org.retriever.server.dailypet.global.utils.invitationcode.InvitationCodeUtil;
@@ -28,6 +29,7 @@ import java.util.List;
 public class FamilyService {
 
     private final FamilyRepository familyRepository;
+    private final FamilyQueryRepository familyQueryRepository;
     private final SecurityUtil securityUtil;
 
     public void validateFamilyName(ValidateFamilyNameRequest dto) {
@@ -36,13 +38,15 @@ public class FamilyService {
         }
     }
 
-    // TODO : 쿼리 직접 만들어서 한 번에 해당 가족에 속한 member 참조하기 (현재는 familyMember.getMember()로 가져옴)
-    public void validateFamilyRoleName(ValidateFamilyRoleNameRequest dto) {
-        Member member = securityUtil.getMemberByUserDetails();
-        List<FamilyMember> familyMemberList = member.getFamilyMemberList();
+    public void validateFamilyRoleName(Long familyId, ValidateFamilyRoleNameRequest dto) {
+        List<FamilyMember> familyMemberList = familyQueryRepository.findMembersByFamilyId(familyId);
 
         if (familyMemberList.stream()
-                .anyMatch(x -> x.getMember().getFamilyRoleName().equals(dto.getFamilyRoleName()))) {
+                .anyMatch(x -> x.getMember()
+                        .getFamilyRoleName()
+                        .equals(dto.getFamilyRoleName())
+                )
+        ) {
             throw new DuplicateFamilyRoleNameException();
         }
     }
@@ -52,9 +56,7 @@ public class FamilyService {
 
         // 멤버 조회 및 권한 지정
         Member member = securityUtil.getMemberByUserDetails();
-        member.setFamilyLeader();
-        member.changeFamilyRoleName(dto.getFamilyRoleName());
-        member.changeProgressStatusToGroup();
+        member.createGroup(dto.getFamilyRoleName());
 
         // 새로운 가족 그룹 생성 - 초대코드 생성
         String invitationCode = InvitationCodeUtil.createInvitationCode();
@@ -69,11 +71,28 @@ public class FamilyService {
                 .familyId(newFamily.getFamilyId())
                 .build();
     }
+    // TODO : 가족 그룹 생성 중복 로직 디자인패턴 적용해보기
+    @Transactional
+    public CreateFamilyResponse createFamilyAlone() {
+        Member member = securityUtil.getMemberByUserDetails();
+        member.createGroup(null);
+
+        Family familyAlone = Family.createFamilyAlone();
+        FamilyMember familyMember = FamilyMember.createFamilyMember(member, familyAlone);
+
+        familyAlone.insertNewMember(familyMember);
+        familyRepository.save(familyAlone);
+
+        return CreateFamilyResponse.builder()
+                .familyId(familyAlone.getFamilyId())
+                .build();
+    }
 
     public FindFamilyWithInvitationCodeResponse findFamilyWithInvitationCode(String code) {
         Family family = familyRepository.findByInvitationCode(code).orElseThrow(FamilyNotFoundException::new);
+        List<FamilyMember> familyMembers = familyQueryRepository.findMembersByFamilyId(family.getFamilyId());
 
-        return FindFamilyWithInvitationCodeResponse.from(family);
+        return FindFamilyWithInvitationCodeResponse.of(family, familyMembers);
     }
 
     @Transactional

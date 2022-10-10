@@ -6,6 +6,7 @@ import org.hibernate.annotations.Where;
 import org.retriever.server.dailypet.domain.diary.entity.Diary;
 import org.retriever.server.dailypet.domain.family.dto.request.CreateFamilyRequest;
 import org.retriever.server.dailypet.domain.family.enums.FamilyStatus;
+import org.retriever.server.dailypet.domain.family.enums.GroupType;
 import org.retriever.server.dailypet.domain.model.BaseTimeEntity;
 import org.retriever.server.dailypet.domain.pet.entity.Pet;
 
@@ -35,6 +36,9 @@ public class Family extends BaseTimeEntity {
     @Column(nullable = false, unique = true, length = 10)
     private String invitationCode;
 
+    @Enumerated(EnumType.STRING)
+    private GroupType groupType;
+
     @OneToMany(mappedBy = "family", cascade = CascadeType.PERSIST)
     @Builder.Default
     private List<FamilyMember> familyMemberList = new ArrayList<>();
@@ -53,6 +57,17 @@ public class Family extends BaseTimeEntity {
                 .familyStatus(FamilyStatus.ACTIVE)
                 .invitationCode(invitationCode)
                 .familyMemberList(new ArrayList<>())
+                .groupType(GroupType.FAMILY)
+                .build();
+    }
+
+    public static Family createFamilyAlone() {
+        return Family.builder()
+                .familyName(null)
+                .familyStatus(FamilyStatus.ACTIVE)
+                .invitationCode(null)
+                .familyMemberList(new ArrayList<>())
+                .groupType(GroupType.ALONE)
                 .build();
     }
 

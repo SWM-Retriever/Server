@@ -47,9 +47,9 @@ public class FamilyController {
             @ApiResponse(responseCode = "409", description = "사용 중인 중복 가족 이름"),
             @ApiResponse(responseCode = "500", description = "내부 서버 에러")
     })
-    @PostMapping("/validation/family-role-name")
-    public ResponseEntity<Void> validateFamilyRoleName(@RequestBody @Valid ValidateFamilyRoleNameRequest dto) {
-        familyService.validateFamilyRoleName(dto);
+    @PostMapping("/validation/families/{familyId}/family-role-name")
+    public ResponseEntity<Void> validateFamilyRoleName(@PathVariable Long familyId, @RequestBody @Valid ValidateFamilyRoleNameRequest dto) {
+        familyService.validateFamilyRoleName(familyId, dto);
         return ResponseEntity.ok().build();
     }
 
@@ -63,6 +63,18 @@ public class FamilyController {
     @PostMapping("/family")
     public ResponseEntity<CreateFamilyResponse> createFamily(@RequestBody @Valid CreateFamilyRequest dto) throws IOException {
         return ResponseEntity.ok(familyService.createFamily(dto));
+    }
+
+    @Parameter(name = "X-AUTH-TOKEN", description = "로그인 성공 후 access_token", required = true)
+    @Operation(summary = "1인 가족 생성", description = "1인 가족을 생성하고 해당 멤버는 가족 리더가 된다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "1인 가족 생성"),
+            @ApiResponse(responseCode = "400", description = "가족 생성 오류"),
+            @ApiResponse(responseCode = "500", description = "내부 서버 에러")
+    })
+    @PostMapping("/family/alone")
+    public ResponseEntity<CreateFamilyResponse> createFamilyAlone() throws IOException {
+        return ResponseEntity.ok(familyService.createFamilyAlone());
     }
 
     @Parameter(name = "X-AUTH-TOKEN", description = "로그인 성공 후 access_token", required = true)
