@@ -47,9 +47,9 @@ public class FamilyController {
             @ApiResponse(responseCode = "409", description = "사용 중인 중복 가족 이름"),
             @ApiResponse(responseCode = "500", description = "내부 서버 에러")
     })
-    @PostMapping("/validation/family-role-name")
-    public ResponseEntity<Void> validateFamilyRoleName(@RequestBody @Valid ValidateFamilyRoleNameRequest dto) {
-        familyService.validateFamilyRoleName(dto);
+    @PostMapping("/validation/families/{familyId}/family-role-name")
+    public ResponseEntity<Void> validateFamilyRoleName(@PathVariable Long familyId, @RequestBody @Valid ValidateFamilyRoleNameRequest dto) {
+        familyService.validateFamilyRoleName(familyId, dto);
         return ResponseEntity.ok().build();
     }
 

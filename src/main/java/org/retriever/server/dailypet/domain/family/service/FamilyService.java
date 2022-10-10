@@ -38,13 +38,15 @@ public class FamilyService {
         }
     }
 
-    // TODO : 쿼리 직접 만들어서 한 번에 해당 가족에 속한 member 참조하기 (현재는 familyMember.getMember()로 가져옴)
-    public void validateFamilyRoleName(ValidateFamilyRoleNameRequest dto) {
-        Member member = securityUtil.getMemberByUserDetails();
-        List<FamilyMember> familyMemberList = member.getFamilyMemberList();
+    public void validateFamilyRoleName(Long familyId, ValidateFamilyRoleNameRequest dto) {
+        List<FamilyMember> familyMemberList = familyQueryRepository.findMembersByFamilyId(familyId);
 
         if (familyMemberList.stream()
-                .anyMatch(x -> x.getMember().getFamilyRoleName().equals(dto.getFamilyRoleName()))) {
+                .anyMatch(x -> x.getMember()
+                        .getFamilyRoleName()
+                        .equals(dto.getFamilyRoleName())
+                )
+        ) {
             throw new DuplicateFamilyRoleNameException();
         }
     }
