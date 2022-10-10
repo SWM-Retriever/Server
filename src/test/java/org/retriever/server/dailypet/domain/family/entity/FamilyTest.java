@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.retriever.server.dailypet.domain.common.factory.FamilyFactory;
 import org.retriever.server.dailypet.domain.family.dto.request.CreateFamilyRequest;
 import org.retriever.server.dailypet.domain.family.enums.FamilyStatus;
+import org.retriever.server.dailypet.domain.family.enums.GroupType;
 import org.retriever.server.dailypet.global.utils.invitationcode.InvitationCodeUtil;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -26,5 +27,6 @@ class FamilyTest {
         assertThat(family.getFamilyName()).isEqualTo(familyRequest.getFamilyName());
         assertThat(family.getFamilyStatus()).isEqualTo(FamilyStatus.ACTIVE);
         assertThat(family.getInvitationCode()).isEqualTo(invitationCode);
+        assertThat(family.getGroupType()).isEqualTo(GroupType.FAMILY);
     }
 }
