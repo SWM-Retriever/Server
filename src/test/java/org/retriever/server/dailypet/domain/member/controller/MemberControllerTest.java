@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.retriever.server.dailypet.domain.common.ControllerTest;
 import org.retriever.server.dailypet.domain.common.factory.MemberFactory;
+import org.retriever.server.dailypet.domain.family.enums.GroupType;
 import org.retriever.server.dailypet.domain.member.dto.request.SnsLoginRequest;
 import org.retriever.server.dailypet.domain.member.dto.request.ValidateMemberNicknameRequest;
 import org.retriever.server.dailypet.domain.member.dto.response.CalculateDayResponse;
@@ -26,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WithMockUser
 class MemberControllerTest extends ControllerTest {
 
-    @DisplayName("로그인 시도 시 회원 확인 후 정상 로그인, familyId, petId는 모두 -1L")
+    @DisplayName("로그인 시도 시 회원 확인 후 정상 로그인, familyId, petId는 모두 Null")
     @Test
     void checkMemberAndLogin() throws Exception {
 
@@ -51,10 +52,12 @@ class MemberControllerTest extends ControllerTest {
                 .andExpect(jsonPath("email").value(snsLoginRequest.getEmail()))
                 .andExpect(jsonPath("nickName").value(snsLoginRequest.getSnsNickName()))
                 .andExpect(jsonPath("jwtToken").value(snsLoginResponse.getJwtToken()))
-                .andExpect(jsonPath("familyId").value(-1L))
+                .andExpect(jsonPath("familyId").value(isNull()))
                 .andExpect(jsonPath("familyName").value("testFamily"))
                 .andExpect(jsonPath("invitationCode").value("testCode"))
-                .andExpect(jsonPath("petIdList[0]").value(-1L))
+                .andExpect(jsonPath("groupType").value(GroupType.FAMILY))
+                .andExpect(jsonPath("profileImageUrl").value("testImageUrl"))
+                .andExpect(jsonPath("petList[0]").value(isNull()))
                 .andDo(print())
                 .andReturn()
                 .getResponse()

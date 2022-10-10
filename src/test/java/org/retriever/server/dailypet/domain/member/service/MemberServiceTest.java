@@ -57,7 +57,7 @@ class MemberServiceTest {
     @InjectMocks
     MemberService memberService;
 
-    @DisplayName("로그인 - 가입된 회원인 경우 JWT 토큰과 가족과 펫이 등록되어 있지 않으면 각각 -1이 리턴된다.")
+    @DisplayName("로그인 - 가입된 회원인 경우 JWT 토큰과 가족과 펫이 등록되어 있지 않으면 각각 0L과 빈 리스트가 리턴된다.")
     @Test
     void check_member_success_and_login_and_not_register_group_pet() {
 
@@ -76,20 +76,23 @@ class MemberServiceTest {
                 () -> assertEquals(snsLoginResponse.getEmail(), member.getEmail()),
                 () -> assertEquals(snsLoginResponse.getNickName(), member.getNickName()),
                 () -> assertEquals(snsLoginResponse.getJwtToken(), testToken),
-                () -> assertEquals(snsLoginResponse.getFamilyId(), -1L),
-                () -> assertEquals(snsLoginResponse.getPetIdList(), List.of(-1L))
+                () -> assertEquals(snsLoginResponse.getFamilyId(), 0L),
+                () -> assertNull(snsLoginResponse.getFamilyName()),
+                () -> assertEquals(snsLoginResponse.getProfileImageUrl(), member.getProfileImageUrl()),
+                () -> assertEquals(snsLoginResponse.getPetList().isEmpty(), Boolean.TRUE)
         );
     }
 
-    @DisplayName("로그인 - 가입된 회원인 경우 JWT 토큰과 가족이 등록되어 있는 경우 해당 familyId와 펫이 등록되어 있지 않으면 -1이 리턴된다.")
+    @DisplayName("로그인 - 가입된 회원인 경우 JWT 토큰과 가족이 등록되어 있는 경우 해당 familyId와 펫이 등록되어 있지 않으면 빈 리스트가 리턴된다.")
     @Test
     void check_member_success_and_login_and_register_family() {
 
         // given
         SnsLoginRequest snsLoginRequest = MemberFactory.createSnsLoginRequest();
         Long testFamilyId = 3L;
+        String testFamilyName = "testFamily";
         Member member = MemberFactory.createTestMember();
-        List<FamilyMember> testFamilyMember = MemberFactory.createTestFamilyMember(testFamilyId);
+        List<FamilyMember> testFamilyMember = MemberFactory.createTestFamilyMember(testFamilyId, testFamilyName);
         String testToken = "jwtToken";
         when(memberRepository.findByEmail(any())).thenReturn(Optional.of(member));
         when(memberQueryRepository.findFamilyByMemberId(member.getId())).thenReturn(testFamilyMember);
@@ -104,7 +107,9 @@ class MemberServiceTest {
                 () -> assertEquals(snsLoginResponse.getNickName(), member.getNickName()),
                 () -> assertEquals(snsLoginResponse.getJwtToken(), testToken),
                 () -> assertEquals(snsLoginResponse.getFamilyId(), testFamilyId),
-                () -> assertEquals(snsLoginResponse.getPetIdList(), List.of(-1L))
+                () -> assertNotNull(snsLoginResponse.getFamilyName()),
+                () -> assertEquals(snsLoginResponse.getProfileImageUrl(), member.getProfileImageUrl()),
+                () -> assertEquals(snsLoginResponse.getPetList().isEmpty(), Boolean.TRUE)
         );
     }
 

@@ -2,6 +2,7 @@ package org.retriever.server.dailypet.domain.common.factory;
 
 import org.retriever.server.dailypet.domain.family.entity.Family;
 import org.retriever.server.dailypet.domain.family.entity.FamilyMember;
+import org.retriever.server.dailypet.domain.family.enums.GroupType;
 import org.retriever.server.dailypet.domain.member.dto.request.SignUpRequest;
 import org.retriever.server.dailypet.domain.member.dto.request.SnsLoginRequest;
 import org.retriever.server.dailypet.domain.member.dto.request.ValidateMemberNicknameRequest;
@@ -11,6 +12,7 @@ import org.retriever.server.dailypet.domain.member.enums.AccountProgressStatus;
 import org.retriever.server.dailypet.domain.member.enums.AccountStatus;
 import org.retriever.server.dailypet.domain.member.enums.ProviderType;
 import org.retriever.server.dailypet.domain.member.enums.RoleType;
+import org.retriever.server.dailypet.domain.pet.dto.response.PetInfoResponse;
 import org.retriever.server.dailypet.global.config.security.CustomUserDetails;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
@@ -19,6 +21,7 @@ import org.springframework.security.core.Authentication;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MemberFactory {
 
@@ -90,10 +93,10 @@ public class MemberFactory {
                 .build();
     }
 
-    public static List<FamilyMember> createTestFamilyMember(Long familyId) {
+    public static List<FamilyMember> createTestFamilyMember(Long familyId, String familyName) {
         return List.of(FamilyMember.builder()
                 .member(Member.builder().build())
-                .family(Family.builder().familyId(familyId).build())
+                .family(Family.builder().familyId(familyId).familyName(familyName).build())
                 .build());
     }
 
@@ -110,10 +113,12 @@ public class MemberFactory {
                 .nickName("test")
                 .email("test@naver.com")
                 .jwtToken("testToken")
-                .familyId(-1L)
+                .familyId(null)
                 .familyName("testFamily")
                 .invitationCode("testCode")
-                .petIdList(List.of(-1L))
+                .groupType(GroupType.FAMILY)
+                .profileImageUrl("testImageUrl")
+                .petList(new ArrayList<>())
                 .build();
     }
 
