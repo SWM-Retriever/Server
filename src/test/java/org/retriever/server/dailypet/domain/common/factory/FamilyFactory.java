@@ -9,6 +9,7 @@ import org.retriever.server.dailypet.domain.family.dto.response.FindFamilyWithIn
 import org.retriever.server.dailypet.domain.family.entity.Family;
 import org.retriever.server.dailypet.domain.family.entity.FamilyMember;
 import org.retriever.server.dailypet.domain.family.enums.FamilyStatus;
+import org.retriever.server.dailypet.domain.member.entity.Member;
 import org.retriever.server.dailypet.domain.pet.entity.Pet;
 
 import java.util.ArrayList;
@@ -87,5 +88,11 @@ public class FamilyFactory {
                 .familyMemberList(List.of(familyMember))
                 .petList(new ArrayList<>())
                 .build();
+    }
+
+    public static List<FamilyMember> createTestFamilyMember(Member member, Family family) {
+        return List.of(
+                FamilyMember.createFamilyMember(member, family)
+        );
     }
 }

@@ -27,6 +27,7 @@ public class MemberFactory {
 
     public static Member createTestMember() {
         return Member.builder()
+                .id(1L)
                 .email("test@naver.com")
                 .nickName("test")
                 .profileImageUrl("abcdefghijk")

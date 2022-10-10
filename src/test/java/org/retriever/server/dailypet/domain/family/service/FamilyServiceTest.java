@@ -13,19 +13,22 @@ import org.retriever.server.dailypet.domain.family.dto.request.EnterFamilyReques
 import org.retriever.server.dailypet.domain.family.dto.request.ValidateFamilyNameRequest;
 import org.retriever.server.dailypet.domain.family.dto.request.ValidateFamilyRoleNameRequest;
 import org.retriever.server.dailypet.domain.family.dto.response.CreateFamilyResponse;
+import org.retriever.server.dailypet.domain.family.dto.response.FamilyMemberInfo;
 import org.retriever.server.dailypet.domain.family.dto.response.FindFamilyWithInvitationCodeResponse;
 import org.retriever.server.dailypet.domain.family.entity.Family;
+import org.retriever.server.dailypet.domain.family.entity.FamilyMember;
 import org.retriever.server.dailypet.domain.family.exception.DuplicateFamilyNameException;
 import org.retriever.server.dailypet.domain.family.exception.DuplicateFamilyRoleNameException;
 import org.retriever.server.dailypet.domain.family.exception.FamilyNotFoundException;
+import org.retriever.server.dailypet.domain.family.repository.FamilyQueryRepository;
 import org.retriever.server.dailypet.domain.family.repository.FamilyRepository;
 import org.retriever.server.dailypet.domain.member.entity.Member;
 import org.retriever.server.dailypet.domain.member.enums.AccountProgressStatus;
 import org.retriever.server.dailypet.domain.member.enums.RoleType;
-import org.retriever.server.dailypet.domain.member.repository.MemberRepository;
 import org.retriever.server.dailypet.global.utils.security.SecurityUtil;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -41,7 +44,7 @@ class FamilyServiceTest {
     FamilyRepository familyRepository;
 
     @Mock
-    MemberRepository memberRepository;
+    FamilyQueryRepository familyQueryRepository;
 
     @Mock
     SecurityUtil securityUtil;
@@ -68,17 +71,24 @@ class FamilyServiceTest {
     void find_family_with_invitation_code_success() {
 
         // given
+        Member member = MemberFactory.createTestMember();
         Family family = FamilyFactory.createTestFamily();
+        List<FamilyMember> testFamilyMemberList = FamilyFactory.createTestFamilyMember(member, family);
         String invitationCode = "1234567890";
         when(familyRepository.findByInvitationCode(any())).thenReturn(Optional.of(family));
+        when(familyQueryRepository.findMembersByFamilyId(any())).thenReturn(testFamilyMemberList);
 
         // when
         FindFamilyWithInvitationCodeResponse response = familyService.findFamilyWithInvitationCode(invitationCode);
+        FamilyMemberInfo familyMemberInfo = response.getFamilyMemberList().get(0);
 
         // then
         assertThat(response.getFamilyId()).isEqualTo(family.getFamilyId());
         assertThat(response.getFamilyName()).isEqualTo(family.getFamilyName());
-        assertThat(response.getFamilyMemberCount()).isEqualTo(family.getFamilyMemberList().size());
+        assertThat(response.getFamilyMemberCount()).isEqualTo(testFamilyMemberList.size());
+        assertThat(familyMemberInfo.getMemberId()).isEqualTo(member.getId());
+        assertThat(familyMemberInfo.getFamilyRoleName()).isEqualTo(member.getFamilyRoleName());
+        assertThat(familyMemberInfo.getProfileImageUrl()).isEqualTo(member.getProfileImageUrl());
     }
 
     @DisplayName("가족 조회 - 초대 코드와 일치하는 가족이 없을 경우 FamilyNotFoundException 발생")
