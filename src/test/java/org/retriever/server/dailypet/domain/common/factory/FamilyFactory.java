@@ -95,4 +95,11 @@ public class FamilyFactory {
                 FamilyMember.createFamilyMember(member, family)
         );
     }
+
+    public static List<FamilyMember> createTestDuplicateFamilyMember(String name1, String name2) {
+        return List.of(
+                FamilyMember.builder().member((MemberFactory.createTestFamilyRoleNameMember(name1))).build(),
+                FamilyMember.builder().member((MemberFactory.createTestFamilyRoleNameMember(name2))).build());
+    }
 }
+

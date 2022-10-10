@@ -113,12 +113,13 @@ class FamilyServiceTest {
         // given
         String name1 = "엄마";
         String name2 = "아빠";
-        Member member = MemberFactory.createTestMemberWithFamilyMemberList(name1, name2);
+        List<FamilyMember> familyMemberList = FamilyFactory.createTestDuplicateFamilyMember(name1, name2);
+
         ValidateFamilyRoleNameRequest request = FamilyFactory.createValidateFamilyRoleNameRequest(name1);
-        when(securityUtil.getMemberByUserDetails()).thenReturn(member);
+        when(familyQueryRepository.findMembersByFamilyId(any())).thenReturn(familyMemberList);
 
         // when, then
-        assertThrows(DuplicateFamilyRoleNameException.class, () -> familyService.validateFamilyRoleName(request));
+        assertThrows(DuplicateFamilyRoleNameException.class, () -> familyService.validateFamilyRoleName(any(), request));
     }
 
     @DisplayName("가족 생성 - 가족 정상 생성")

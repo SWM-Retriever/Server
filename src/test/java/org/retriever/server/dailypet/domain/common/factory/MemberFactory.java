@@ -179,4 +179,11 @@ public class MemberFactory {
                 .petIdList(List.of(1L, 2L, 3L))
                 .build();
     }
+
+    public static Member createTestFamilyRoleNameMember(String name) {
+        return Member
+                .builder()
+                .familyRoleName(name)
+                .build();
+    }
 }
