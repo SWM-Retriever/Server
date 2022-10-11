@@ -46,8 +46,6 @@ class MemberServiceTest {
     @Mock
     JwtTokenProvider jwtTokenProvider;
     @Mock
-    S3FileUploader s3FileUploader;
-    @Mock
     MemberQueryRepository memberQueryRepository;
     @Mock
     SecurityUtil securityUtil;
@@ -148,15 +146,12 @@ class MemberServiceTest {
         Member member = MemberFactory.createTestMember();
         SignUpRequest signUpRequest = MemberFactory.createSignUpRequest();
         String testToken = "jwtToken";
-        String imageURL = "testImageUrl";
-        MultipartFile image = MemberFactory.createMultipartFile();
         when(memberRepository.findByEmail(signUpRequest.getEmail())).thenReturn(Optional.empty());
         when(memberRepository.save(any())).thenReturn(member);
         when(jwtTokenProvider.createToken(any())).thenReturn(testToken);
-        when(s3FileUploader.upload(any(), any())).thenReturn(imageURL);
 
         // when
-        SignUpResponse signUpResponse = memberService.signUpAndRegisterProfile(signUpRequest, image);
+        SignUpResponse signUpResponse = memberService.signUpAndRegisterProfile(signUpRequest);
 
         // then
         assertAll(
@@ -173,11 +168,10 @@ class MemberServiceTest {
         // given
         Member member = MemberFactory.createTestMember();
         SignUpRequest signUpRequest = MemberFactory.createSignUpRequest();
-        MultipartFile image = MemberFactory.createMultipartFile();
         when(memberRepository.findByEmail(signUpRequest.getEmail())).thenReturn(Optional.of(member));
 
         // when, then
-        assertThrows(DuplicateMemberException.class, () -> memberService.signUpAndRegisterProfile(signUpRequest, image));
+        assertThrows(DuplicateMemberException.class, () -> memberService.signUpAndRegisterProfile(signUpRequest));
     }
 
     @DisplayName("회원 가입 - 회원 가입 도중 프로필 등록만 이탈한 회원일 경우 그룹이 존재하지 않고 FamilyNotFoundException 예외 발생")

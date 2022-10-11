@@ -140,6 +140,7 @@ public class MemberFactory {
                 .providerType(ProviderType.KAKAO)
                 .isPushAgree(Boolean.TRUE)
                 .isProfileInformationAgree(Boolean.TRUE)
+                .profileImageUrl("testProfileImage")
                 .build();
     }
 
