@@ -1,7 +1,9 @@
 package org.retriever.server.dailypet.domain.member.controller;
 
+import org.hamcrest.core.IsNull;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.internal.matchers.Null;
 import org.retriever.server.dailypet.domain.common.ControllerTest;
 import org.retriever.server.dailypet.domain.common.factory.MemberFactory;
 import org.retriever.server.dailypet.domain.family.enums.GroupType;
@@ -52,12 +54,12 @@ class MemberControllerTest extends ControllerTest {
                 .andExpect(jsonPath("email").value(snsLoginRequest.getEmail()))
                 .andExpect(jsonPath("nickName").value(snsLoginRequest.getSnsNickName()))
                 .andExpect(jsonPath("jwtToken").value(snsLoginResponse.getJwtToken()))
-                .andExpect(jsonPath("familyId").value(isNull()))
+                .andExpect(jsonPath("familyId").value(IsNull.nullValue()))
                 .andExpect(jsonPath("familyName").value("testFamily"))
                 .andExpect(jsonPath("invitationCode").value("testCode"))
-                .andExpect(jsonPath("groupType").value(GroupType.FAMILY))
+                .andExpect(jsonPath("groupType").value(GroupType.FAMILY.toString()))
                 .andExpect(jsonPath("profileImageUrl").value("testImageUrl"))
-                .andExpect(jsonPath("petList[0]").value(isNull()))
+                .andExpect(jsonPath("petList").isEmpty())
                 .andDo(print())
                 .andReturn()
                 .getResponse()
