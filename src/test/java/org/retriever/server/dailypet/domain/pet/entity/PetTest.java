@@ -18,14 +18,14 @@ class PetTest {
         RegisterPetRequest request = PetFactory.createRegisterPetRequest();
         String imageUrl = "testUrl";
         // when
-        Pet pet = Pet.createPet(request, imageUrl);
+        Pet pet = Pet.createPet(request);
 
         // then
         assertThat(pet.getPetName()).isEqualTo(request.getPetName());
         assertThat(pet.getBirthDate()).isEqualTo(request.getBirthDate());
         assertThat(pet.getGender()).isEqualTo(request.getGender());
         assertThat(pet.getRegisterNumber()).isEqualTo(request.getRegisterNumber());
-        assertThat(pet.getProfileImageUrl()).isEqualTo(imageUrl);
+        assertThat(pet.getProfileImageUrl()).isEqualTo(request.getProfileImageUrl());
         assertThat(pet.getWeight()).isEqualTo(request.getWeight());
         assertThat(pet.getIsNeutered()).isEqualTo(request.getIsNeutered());
         assertThat(pet.getPetStatus()).isEqualTo(PetStatus.ACTIVE);

@@ -59,9 +59,8 @@ public class MemberController {
             @ApiResponse(responseCode = "500", description = "내부 서버 에러")
     })
     @PostMapping("/auth/sign-up")
-    public ResponseEntity<SignUpResponse> signUpAndRegisterProfile(@RequestPart @Valid SignUpRequest dto,
-                                                                   @RequestPart MultipartFile image) throws IOException {
-        return ResponseEntity.ok(memberService.signUpAndRegisterProfile(dto, image));
+    public ResponseEntity<SignUpResponse> signUpAndRegisterProfile(@RequestBody @Valid SignUpRequest dto) throws IOException {
+        return ResponseEntity.ok(memberService.signUpAndRegisterProfile(dto));
     }
 
     @Parameter(name = "X-AUTH-TOKEN", description = "로그인 성공 후 access_token", required = true)
@@ -73,8 +72,8 @@ public class MemberController {
     })
     @PatchMapping("/member/mypage/profile-image")
     public ResponseEntity<EditProfileImageResponse> editProfileImage(
-            @RequestPart MultipartFile image) throws IOException {
-        return ResponseEntity.ok(memberService.editProfileImage(image));
+            @RequestBody String profileImageUrl) throws IOException {
+        return ResponseEntity.ok(memberService.editProfileImage(profileImageUrl));
     }
 
     @Parameter(name = "X-AUTH-TOKEN", description = "로그인 성공 후 access_token", required = true)

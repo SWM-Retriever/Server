@@ -13,7 +13,6 @@ import org.retriever.server.dailypet.domain.family.entity.Family;
 import org.retriever.server.dailypet.domain.family.repository.FamilyRepository;
 import org.retriever.server.dailypet.domain.member.entity.Member;
 import org.retriever.server.dailypet.domain.member.enums.AccountProgressStatus;
-import org.retriever.server.dailypet.domain.member.repository.MemberRepository;
 import org.retriever.server.dailypet.domain.pet.dto.request.RegisterPetRequest;
 import org.retriever.server.dailypet.domain.pet.dto.request.ValidatePetNameInFamilyRequest;
 import org.retriever.server.dailypet.domain.pet.dto.response.GetPetKindListResponse;
@@ -24,9 +23,7 @@ import org.retriever.server.dailypet.domain.pet.exception.DuplicatePetNameInFami
 import org.retriever.server.dailypet.domain.pet.exception.PetTypeNotFoundException;
 import org.retriever.server.dailypet.domain.pet.repository.PetKindRepository;
 import org.retriever.server.dailypet.domain.pet.repository.PetRepository;
-import org.retriever.server.dailypet.global.utils.s3.S3FileUploader;
 import org.retriever.server.dailypet.global.utils.security.SecurityUtil;
-import org.springframework.mock.web.MockMultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -50,12 +47,6 @@ class PetServiceTest {
 
     @Mock
     PetKindRepository petKindRepository;
-
-    @Mock
-    MemberRepository memberRepository;
-
-    @Mock
-    S3FileUploader s3FileUploader;
 
     @Mock
     SecurityUtil securityUtil;
@@ -114,19 +105,16 @@ class PetServiceTest {
 
         // given
         Member member = MemberFactory.createTestMember();
-        MockMultipartFile file = MemberFactory.createMultipartFile();
         Family family = FamilyFactory.createTestFamily();
         PetKind petKind = PetFactory.createTestPetKind();
         RegisterPetRequest request = PetFactory.createRegisterPetRequest();
-        String imageUrl = "testUrl";
 
         given(familyRepository.findById(any())).willReturn(Optional.of(family));
-        given(s3FileUploader.upload(any(), any())).willReturn(imageUrl);
         given(petKindRepository.findByPetKindId(any())).willReturn(Optional.of(petKind));
         given(securityUtil.getMemberByUserDetails()).willReturn(member);
 
         // when
-        RegisterPetResponse response = petService.registerPet(request, family.getFamilyId(), file);
+        RegisterPetResponse response = petService.registerPet(request, family.getFamilyId());
 
         // then
         verify(petRepository, times(1)).save(any());

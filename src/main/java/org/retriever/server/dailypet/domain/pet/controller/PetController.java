@@ -15,7 +15,6 @@ import org.retriever.server.dailypet.domain.pet.enums.PetType;
 import org.retriever.server.dailypet.domain.pet.service.PetService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -64,10 +63,8 @@ public class PetController {
             @ApiResponse(responseCode = "500", description = "내부 서버 에러")
     })
     @PostMapping("/families/{familyId}/pet")
-    public ResponseEntity<RegisterPetResponse> registerPet(@RequestPart @Valid RegisterPetRequest dto,
-                                                           @RequestPart MultipartFile image,
-                                                           @PathVariable Long familyId) throws IOException {
-        return ResponseEntity.ok(petService.registerPet(dto, familyId, image));
+    public ResponseEntity<RegisterPetResponse> registerPet(@RequestBody @Valid RegisterPetRequest dto, @PathVariable Long familyId) throws IOException {
+        return ResponseEntity.ok(petService.registerPet(dto, familyId));
     }
 
     @Parameter(name = "X-AUTH-TOKEN", description = "로그인 성공 후 access_token", required = true)

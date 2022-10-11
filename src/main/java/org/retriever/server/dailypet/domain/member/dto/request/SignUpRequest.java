@@ -27,4 +27,6 @@ public class SignUpRequest {
     private Boolean isPushAgree;
 
     private Boolean isProfileInformationAgree;
+
+    private String profileImageUrl;
 }

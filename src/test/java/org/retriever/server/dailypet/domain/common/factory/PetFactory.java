@@ -39,6 +39,7 @@ public class PetFactory {
                 .petType(PetType.DOG)
                 .weight(5.8)
                 .petKindId(1L)
+                .profileImageUrl("testProfile")
                 .build();
     }
 

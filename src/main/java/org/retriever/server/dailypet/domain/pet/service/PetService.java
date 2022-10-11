@@ -23,7 +23,6 @@ import org.retriever.server.dailypet.global.utils.s3.S3FileUploader;
 import org.retriever.server.dailypet.global.utils.security.SecurityUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -63,15 +62,14 @@ public class PetService {
     }
 
     @Transactional
-    public RegisterPetResponse registerPet(RegisterPetRequest dto, Long familyId, MultipartFile image) throws IOException {
+    public RegisterPetResponse registerPet(RegisterPetRequest dto, Long familyId) throws IOException {
 
         Member member = securityUtil.getMemberByUserDetails();
         member.changeProgressStatusToPet();
         Family family = familyRepository.findById(familyId).orElseThrow(FamilyNotFoundException::new);
         PetKind petKind = petKindRepository.findByPetKindId(dto.getPetKindId()).orElseThrow(PetTypeNotFoundException::new);
-        String profileImageUrl = s3FileUploader.upload(image, "test");
 
-        Pet newPet = Pet.createPet(dto, profileImageUrl);
+        Pet newPet = Pet.createPet(dto);
 
         newPet.setPetKind(petKind);
         newPet.setFamily(family);
