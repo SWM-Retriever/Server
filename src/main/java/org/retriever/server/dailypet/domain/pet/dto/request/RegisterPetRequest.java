@@ -27,4 +27,6 @@ public class RegisterPetRequest {
     private Boolean isNeutered;
 
     private String registerNumber;
+
+    private String profileImageUrl;
 }

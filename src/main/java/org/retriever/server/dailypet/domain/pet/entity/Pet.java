@@ -66,10 +66,10 @@ public class Pet extends BaseTimeEntity {
     @Builder.Default
     private List<CareLog> careLogList = new ArrayList<>();
 
-    public static Pet createPet(RegisterPetRequest dto, String profileImageUrl) {
+    public static Pet createPet(RegisterPetRequest dto) {
         return Pet.builder()
                 .petName(dto.getPetName())
-                .profileImageUrl(profileImageUrl)
+                .profileImageUrl(dto.getProfileImageUrl())
                 .birthDate(dto.getBirthDate())
                 .weight(dto.getWeight())
                 .registerNumber(dto.getRegisterNumber())
