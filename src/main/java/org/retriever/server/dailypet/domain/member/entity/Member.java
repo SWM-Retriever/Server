@@ -99,11 +99,11 @@ public class Member extends BaseTimeEntity {
         this.accountProgressStatus = AccountProgressStatus.PROFILE;
     }
 
-    public static Member createNewMember(SignUpRequest signUpRequest, String url) {
+    public static Member createNewMember(SignUpRequest signUpRequest) {
         return Member.builder()
                 .email(signUpRequest.getEmail())
                 .nickName(signUpRequest.getNickName())
-                .profileImageUrl(url)
+                .profileImageUrl(signUpRequest.getProfileImageUrl())
                 .providerType(signUpRequest.getProviderType())
                 .deviceToken(signUpRequest.getDeviceToken())
                 .isPushAgree((signUpRequest.getIsPushAgree()))

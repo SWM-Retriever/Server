@@ -25,7 +25,6 @@ import org.retriever.server.dailypet.global.utils.s3.S3FileUploader;
 import org.retriever.server.dailypet.global.utils.security.SecurityUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -70,12 +69,11 @@ public class MemberService {
     }
 
     @Transactional
-    public SignUpResponse signUpAndRegisterProfile(SignUpRequest dto, MultipartFile image) throws IOException {
+    public SignUpResponse signUpAndRegisterProfile(SignUpRequest dto) throws IOException {
         if (memberRepository.findByEmail(dto.getEmail()).isPresent()) {
             throw new DuplicateMemberException();
         }
-        String profileImageUrl = s3FileUploader.upload(image, "test");
-        Member signUpMember = Member.createNewMember(dto, profileImageUrl);
+        Member signUpMember = Member.createNewMember(dto);
 
         memberRepository.save(signUpMember);
 
@@ -87,10 +85,8 @@ public class MemberService {
     }
 
     @Transactional
-    public EditProfileImageResponse editProfileImage(MultipartFile image) throws IOException {
+    public EditProfileImageResponse editProfileImage(String profileImageUrl) throws IOException {
         Member member = securityUtil.getMemberByUserDetails();
-        String profileImageUrl = s3FileUploader.upload(image, "test");
-
         member.editProfileImageUrl(profileImageUrl);
 
         return EditProfileImageResponse.from(profileImageUrl);
