@@ -37,6 +37,19 @@ public class PetCareController {
     }
 
     @Parameter(name = "X-AUTH-TOKEN", description = "로그인 성공 후 access_token", required = true)
+    @Operation(summary = "챙겨주기 항목 삭제", description = "해당 반려동물 기준으로 챙겨주기 항목을 삭제한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "챙겨주기 항목 정상 등록"),
+            @ApiResponse(responseCode = "400", description = "챙겨주기 항목 등록 실패"),
+            @ApiResponse(responseCode = "500", description = "내부 서버 에러")
+    })
+    @DeleteMapping("/pets/{petId}/cares/{careId}")
+    public ResponseEntity<Void> deletePetCare(@PathVariable Long careId) {
+        petCareService.deletePetCare(careId);
+        return ResponseEntity.ok().build();
+    }
+
+    @Parameter(name = "X-AUTH-TOKEN", description = "로그인 성공 후 access_token", required = true)
     @Operation(summary = "챙겨주기 항목 1회 체크", description = "해당 반려동물의 챙겨주기 항목을 체크한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "챙겨주기 정상 체크"),

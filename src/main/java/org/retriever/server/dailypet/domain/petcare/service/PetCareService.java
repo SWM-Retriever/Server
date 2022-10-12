@@ -26,7 +26,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class PetCareService {
 
     private final PetRepository petRepository;
@@ -35,7 +35,6 @@ public class PetCareService {
     private final CareLogQueryRepository careLogQueryRepository;
     private final SecurityUtil securityUtil;
 
-    @Transactional
     public void registerPetCare(Long petId, CreatePetCareRequest dto) {
         Pet pet = petRepository.findById(petId)
                 .orElseThrow(PetNotFoundException::new);
@@ -55,8 +54,12 @@ public class PetCareService {
         petCareRepository.save(petCare);
     }
 
+    public void deletePetCare(Long careId) {
+        // cascadeType.All careAlarm 같이 삭제
+        petCareRepository.deleteById(careId);
+    }
+
     // TODO 1회 체크 동시성 이슈 해결 필요 (가족들 공동 접근)
-    @Transactional
     public CheckPetCareResponse checkPetCare(Long petId, Long petCareId) {
         Member member = securityUtil.getMemberByUserDetails();
 
@@ -76,7 +79,6 @@ public class PetCareService {
      * CareLog에서 내가 한 행동의 가장 최근을 조회하고, 없으면 취소 불가
      * 있으면 해당 CareLog의 status를 cancel로 바꾼다.
      */
-    @Transactional
     public CancelPetCareResponse cancelPetCare(Long petCareId) {
         Member member = securityUtil.getMemberByUserDetails();
 
