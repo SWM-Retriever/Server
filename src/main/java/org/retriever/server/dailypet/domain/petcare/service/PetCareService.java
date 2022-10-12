@@ -119,7 +119,7 @@ public class PetCareService {
         int afterCount = petCare.cancelCareCheckButton(currentCount);
         careLog.cancel();
 
-        return new CancelPetCareResponse(petCareId, afterCount);
+        return new CancelPetCareResponse(petCareId, afterCount, getCareLogHistory(petCareId));
     }
 
     private List<CareLogHistory> getCareLogHistory(Long petCareId) {

@@ -138,6 +138,7 @@ class PetCareServiceTest {
         Assertions.assertAll(
                 () -> verify(careLogQueryRepository, times(1)).findByMemberIdAndCareIdWithCurDateLatestLimit1(any(), any()),
                 () -> verify(careLogQueryRepository, times(1)).findTodayCountByCareId(any()),
+                () -> verify(careLogQueryRepository, times(1)).findByPetCareIdWithCurDateOrderByCreatedAt(any()),
                 () -> assertEquals(cancelPetCareResponse.getCurrentCount(), beforeCount - 1),
                 () -> assertEquals(testCareLog.getCareLogStatus(), CareLogStatus.CANCEL)
         );
