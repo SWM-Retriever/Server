@@ -94,11 +94,11 @@ public class PetCareService {
 
         PetCare petCare = petCareRepository.findById(petCareId).orElseThrow(PetCareNotFoundException::new);
         int currentCount = careLogQueryRepository.findTodayCountByCareId(petCareId);
-        int afterCount = petCare.pushCareCheckButton(currentCount);
+        petCare.pushCareCheckButton(currentCount);
 
         careLogRepository.save(CareLog.of(member, pet, petCare, CareLogStatus.CHECK));
 
-        return new CheckPetCareResponse(petCareId, afterCount, member.getFamilyRoleName());
+        return CheckPetCareResponse.of(petCareId, getCareLogHistory(petCareId));
     }
 
     /**

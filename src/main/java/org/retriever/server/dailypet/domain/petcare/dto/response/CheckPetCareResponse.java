@@ -1,6 +1,10 @@
 package org.retriever.server.dailypet.domain.petcare.dto.response;
 
 import lombok.*;
+import org.retriever.server.dailypet.domain.pet.dto.response.CareLogHistory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -12,5 +16,13 @@ public class CheckPetCareResponse {
 
     private int currentCount;
 
-    private String memberNameWhoChecked;
+    private List<CareLogHistory> checkList = new ArrayList<>();
+
+    public static CheckPetCareResponse of(Long petCareId, List<CareLogHistory> logHistoryList) {
+        return CheckPetCareResponse.builder()
+                .petCareId(petCareId)
+                .currentCount(logHistoryList.size())
+                .checkList(logHistoryList)
+                .build();
+    }
 }
