@@ -7,17 +7,16 @@ import org.retriever.server.dailypet.domain.family.repository.FamilyRepository;
 import org.retriever.server.dailypet.domain.member.entity.Member;
 import org.retriever.server.dailypet.domain.pet.dto.request.RegisterPetRequest;
 import org.retriever.server.dailypet.domain.pet.dto.request.ValidatePetNameInFamilyRequest;
-import org.retriever.server.dailypet.domain.pet.dto.response.*;
+import org.retriever.server.dailypet.domain.pet.dto.response.GetPetKindListResponse;
+import org.retriever.server.dailypet.domain.pet.dto.response.PetKindPair;
+import org.retriever.server.dailypet.domain.pet.dto.response.RegisterPetResponse;
 import org.retriever.server.dailypet.domain.pet.entity.Pet;
 import org.retriever.server.dailypet.domain.pet.entity.PetKind;
 import org.retriever.server.dailypet.domain.pet.enums.PetType;
 import org.retriever.server.dailypet.domain.pet.exception.DuplicatePetNameInFamilyException;
-import org.retriever.server.dailypet.domain.pet.exception.PetNotFoundException;
 import org.retriever.server.dailypet.domain.pet.exception.PetTypeNotFoundException;
 import org.retriever.server.dailypet.domain.pet.repository.PetKindRepository;
 import org.retriever.server.dailypet.domain.pet.repository.PetRepository;
-import org.retriever.server.dailypet.domain.petcare.entity.CareLog;
-import org.retriever.server.dailypet.domain.petcare.entity.PetCare;
 import org.retriever.server.dailypet.domain.petcare.repository.CareLogQueryRepository;
 import org.retriever.server.dailypet.global.utils.s3.S3FileUploader;
 import org.retriever.server.dailypet.global.utils.security.SecurityUtil;
@@ -25,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -79,35 +77,5 @@ public class PetService {
         petRepository.save(newPet);
 
         return RegisterPetResponse.of(member, family);
-    }
-
-    /**
-     *  // response : 이름, 횟수, 현재횟수, list
-     * // 케어 리스트 조회, 각 케어 리스트마다 챙겨주기 이름, 최대 횟수, 현재 횟수, 기록(이름 리스트)
-     * // 기록은 CareLogRepository에서 각 petCareId로 조회하되, 오늘 날짜만 뽑아오면 될듯. 그러면 petCare랑 careLog랑 fetchJoin해야할듯
-     * // 현재 러프하게 짜면 하나의 펫에 n개의 petcareList가 나오고, petCareList에서 이름 최대횟수 현재횟수를 꺼내면서 N+1문제가 발생
-     * // 이후 carelogRepository에서 petCareList만큼 꺼내면 역시 n번의 쿼리가 나올 것
-     * // 최종 1+N+N 쿼리가 나옴 (펫 한개 + 케어리스트 N개에서 필드 조회(N번) + 각 케어리스트마다 케어로그 조회(N번))
-     */
-    // TODO : N+1 문제 해결하기
-    public List<GetPetCaresDetailResponse> getPetCaresDetail(Long petId) {
-        Pet pet = petRepository.findById(petId).orElseThrow(PetNotFoundException::new);
-
-        List<GetPetCaresDetailResponse> responseList = new ArrayList<>();
-
-        List<PetCare> petCareList = pet.getPetCareList();
-        for (PetCare petCare : petCareList) {
-            Long petCareId = petCare.getPetCareId();
-            List<CareLog> careLogListWithCurDate = careLogRepository
-                    .findByPetCareIdWithCurDateOrderByCreatedAt(petCareId);
-            List<CareLogHistory> careLogHistoryList = careLogListWithCurDate.stream()
-                    .map(CareLogHistory::new)
-                    .collect(Collectors.toList());
-
-            GetPetCaresDetailResponse petCaresDetailResponse =
-                    GetPetCaresDetailResponse.of(petCare, careLogHistoryList);
-            responseList.add(petCaresDetailResponse);
-        }
-        return responseList;
     }
 }
