@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.retriever.server.dailypet.domain.pet.dto.response.GetPetCaresDetailResponse;
+import org.retriever.server.dailypet.domain.pet.dto.response.GetPetCaresResponse;
 import org.retriever.server.dailypet.domain.petcare.dto.request.CreatePetCareRequest;
 import org.retriever.server.dailypet.domain.petcare.dto.response.CancelPetCareResponse;
 import org.retriever.server.dailypet.domain.petcare.dto.response.CheckPetCareResponse;
@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -32,8 +31,8 @@ public class PetCareController {
             @ApiResponse(responseCode = "400", description = "챙겨주기 조회 실패"),
             @ApiResponse(responseCode = "500", description = "내부 서버 에러")
     })
-    @GetMapping("/pets/{petId}/cares/detail")
-    public ResponseEntity<List<GetPetCaresDetailResponse>> getPetCareDetails(@PathVariable Long petId) {
+    @GetMapping("/pets/{petId}/cares")
+    public ResponseEntity<GetPetCaresResponse> getPetCareDetails(@PathVariable Long petId) {
         return ResponseEntity.ok(petCareService.getPetCaresDetail(petId));
     }
 
