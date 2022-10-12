@@ -12,9 +12,9 @@ public class CalculateDayResponse {
 
     private String petName;
 
-    private int calculatedDay;
+    private long calculatedDay;
 
-    public static CalculateDayResponse of(String userName, String petName, int diff) {
+    public static CalculateDayResponse of(String userName, String petName, long diff) {
         return CalculateDayResponse.builder()
                 .userName(userName)
                 .petName(petName)

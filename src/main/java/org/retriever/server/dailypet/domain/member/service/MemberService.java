@@ -96,7 +96,7 @@ public class MemberService {
         Member member = securityUtil.getMemberByUserDetails();
         Pet pet = petRepository.findById(petId).orElseThrow(PetNotFoundException::new);
 
-        int calculatedDay = LocalDateTimeUtils.calculateDaysFromNow(pet.getBirthDate());
+        long calculatedDay = LocalDateTimeUtils.calculateDaysFromNow(pet.getBirthDate());
 
         return CalculateDayResponse.of(member.getNickName(), pet.getPetName(), calculatedDay);
     }

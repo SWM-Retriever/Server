@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.retriever.server.dailypet.domain.pet.dto.request.RegisterPetRequest;
 import org.retriever.server.dailypet.domain.pet.dto.request.ValidatePetNameInFamilyRequest;
-import org.retriever.server.dailypet.domain.pet.dto.response.GetPetCaresDetailResponse;
 import org.retriever.server.dailypet.domain.pet.dto.response.GetPetKindListResponse;
 import org.retriever.server.dailypet.domain.pet.dto.response.RegisterPetResponse;
 import org.retriever.server.dailypet.domain.pet.enums.PetType;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -65,17 +63,5 @@ public class PetController {
     @PostMapping("/families/{familyId}/pet")
     public ResponseEntity<RegisterPetResponse> registerPet(@RequestBody @Valid RegisterPetRequest dto, @PathVariable Long familyId) throws IOException {
         return ResponseEntity.ok(petService.registerPet(dto, familyId));
-    }
-
-    @Parameter(name = "X-AUTH-TOKEN", description = "로그인 성공 후 access_token", required = true)
-    @Operation(summary = "메인 페이지 - 반려동물 챙겨주기 탭 조회", description = "현재 반려동물의 챙겨주기 탭 항목과 현황을 조회한다.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "챙겨주기 조회 완료"),
-            @ApiResponse(responseCode = "400", description = "챙겨주기 조회 실패"),
-            @ApiResponse(responseCode = "500", description = "내부 서버 에러")
-    })
-    @GetMapping("/pets/{petId}/cares/detail")
-    public ResponseEntity<List<GetPetCaresDetailResponse>> getPetCareDetails(@PathVariable Long petId) {
-        return ResponseEntity.ok(petService.getPetCaresDetail(petId));
     }
 }

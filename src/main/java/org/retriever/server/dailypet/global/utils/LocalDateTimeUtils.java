@@ -1,15 +1,13 @@
 package org.retriever.server.dailypet.global.utils;
 
+import java.time.Duration;
 import java.time.LocalDate;
-import java.time.Period;
 
 public class LocalDateTimeUtils {
 
-    public static int calculateDaysFromNow(LocalDate date) {
+    public static long calculateDaysFromNow(LocalDate birthDate) {
         LocalDate now = LocalDate.now();
 
-        Period period = Period.between(date, now);
-
-        return Math.abs(period.getDays());
+        return Duration.between(birthDate.atStartOfDay(), now.atStartOfDay()).toDays();
     }
 }
