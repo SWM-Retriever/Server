@@ -18,10 +18,10 @@ public class CheckPetCareResponse {
 
     private List<CareLogHistory> checkList = new ArrayList<>();
 
-    public static CheckPetCareResponse of(Long petCareId, List<CareLogHistory> logHistoryList) {
+    public static CheckPetCareResponse of(Long petCareId, int afterCount, List<CareLogHistory> logHistoryList) {
         return CheckPetCareResponse.builder()
                 .petCareId(petCareId)
-                .currentCount(logHistoryList.size())
+                .currentCount(afterCount)
                 .checkList(logHistoryList)
                 .build();
     }
