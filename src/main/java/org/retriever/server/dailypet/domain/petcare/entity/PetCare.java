@@ -81,4 +81,8 @@ public class PetCare extends BaseTimeEntity {
         }
         return after;
     }
+
+    public void updateTotalCount(int totalCountPerDay) {
+        this.totalCountPerDay = totalCountPerDay;
+    }
 }

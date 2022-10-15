@@ -57,9 +57,9 @@ public class PetCareController {
             @ApiResponse(responseCode = "400", description = "챙겨주기 항목 수정 실패"),
             @ApiResponse(responseCode = "500", description = "내부 서버 에러")
     })
-    @PatchMapping("/pets/{petId}/cares/{cardId}")
-    public ResponseEntity<Void> updatePetCare(@PathVariable Long petId, @PathVariable Long careId, @RequestBody @Valid UpdatePetCareRequest dto) {
-        petCareService.updatePetCare(petId, careId, dto);
+    @PatchMapping("/pets/{petId}/cares/{careId}")
+    public ResponseEntity<Void> updatePetCare(@PathVariable Long careId, @RequestBody @Valid UpdatePetCareRequest dto) {
+        petCareService.updatePetCare(careId, dto);
         return ResponseEntity.ok().build();
     }
 

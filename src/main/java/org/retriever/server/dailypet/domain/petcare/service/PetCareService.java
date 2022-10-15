@@ -82,8 +82,9 @@ public class PetCareService {
         petCareRepository.save(petCare);
     }
 
-    public void updatePetCare(Long petId, Long careId, UpdatePetCareRequest dto) {
+    public void updatePetCare(Long careId, UpdatePetCareRequest dto) {
         PetCare petCare = petCareRepository.findById(careId).orElseThrow(PetCareNotFoundException::new);
+        petCare.updateTotalCount(dto.getTotalCountPerDay());
 
         List<PetCareAlarm> petCareAlarmList = petCare.getPetCareAlarmList();
 
