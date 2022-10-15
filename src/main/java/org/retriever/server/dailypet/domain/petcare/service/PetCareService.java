@@ -9,6 +9,7 @@ import org.retriever.server.dailypet.domain.pet.entity.Pet;
 import org.retriever.server.dailypet.domain.pet.exception.PetNotFoundException;
 import org.retriever.server.dailypet.domain.pet.repository.PetRepository;
 import org.retriever.server.dailypet.domain.petcare.dto.request.CreatePetCareRequest;
+import org.retriever.server.dailypet.domain.petcare.dto.request.UpdatePetCareRequest;
 import org.retriever.server.dailypet.domain.petcare.dto.response.CancelPetCareResponse;
 import org.retriever.server.dailypet.domain.petcare.dto.response.CheckPetCareResponse;
 import org.retriever.server.dailypet.domain.petcare.entity.CareLog;
@@ -79,6 +80,21 @@ public class PetCareService {
 
         // CascadeType.PERSIST를 통해 연관된 petCareAlarm 포함해서 저장
         petCareRepository.save(petCare);
+    }
+
+    public void updatePetCare(Long petId, Long careId, UpdatePetCareRequest dto) {
+        PetCare petCare = petCareRepository.findById(careId).orElseThrow(PetCareNotFoundException::new);
+
+        List<PetCareAlarm> petCareAlarmList = petCare.getPetCareAlarmList();
+
+        petCareAlarmList.clear();
+
+        List<CustomDayOfWeek> dayOfWeeks = dto.getDayOfWeeks();
+
+        for (CustomDayOfWeek dayOfWeek : dayOfWeeks) {
+            PetCareAlarm petCareAlarm = PetCareAlarm.from(dayOfWeek);
+            petCare.addPetCareAlarm(petCareAlarm);
+        }
     }
 
     public void deletePetCare(Long careId) {

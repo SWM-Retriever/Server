@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.retriever.server.dailypet.domain.pet.dto.response.GetPetCaresResponse;
 import org.retriever.server.dailypet.domain.petcare.dto.request.CreatePetCareRequest;
+import org.retriever.server.dailypet.domain.petcare.dto.request.UpdatePetCareRequest;
 import org.retriever.server.dailypet.domain.petcare.dto.response.CancelPetCareResponse;
 import org.retriever.server.dailypet.domain.petcare.dto.response.CheckPetCareResponse;
 import org.retriever.server.dailypet.domain.petcare.service.PetCareService;
@@ -46,6 +47,19 @@ public class PetCareController {
     @PostMapping("/pets/{petId}/care")
     public ResponseEntity<Void> registerPetCare(@PathVariable Long petId, @RequestBody @Valid CreatePetCareRequest dto) {
         petCareService.registerPetCare(petId, dto);
+        return ResponseEntity.ok().build();
+    }
+
+    @Parameter(name = "X-AUTH-TOKEN", description = "로그인 성공 후 access_token", required = true)
+    @Operation(summary = "챙겨주기 항목 수정", description = "해당 반려동물 기준으로 챙겨주기 항목을 수정한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "챙겨주기 항목 정상 수정"),
+            @ApiResponse(responseCode = "400", description = "챙겨주기 항목 수정 실패"),
+            @ApiResponse(responseCode = "500", description = "내부 서버 에러")
+    })
+    @PatchMapping("/pets/{petId}/cares/{cardId}")
+    public ResponseEntity<Void> updatePetCare(@PathVariable Long petId, @PathVariable Long careId, @RequestBody @Valid UpdatePetCareRequest dto) {
+        petCareService.updatePetCare(petId, careId, dto);
         return ResponseEntity.ok().build();
     }
 
