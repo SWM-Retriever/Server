@@ -40,7 +40,7 @@ public class PetCare extends BaseTimeEntity {
     @JoinColumn(name = "petId", nullable = false)
     private Pet pet;
 
-    @OneToMany(mappedBy = "petCare", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "petCare", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<PetCareAlarm> petCareAlarmList = new ArrayList<>();
 
@@ -80,5 +80,9 @@ public class PetCare extends BaseTimeEntity {
             throw new CareCountIsZeroException();
         }
         return after;
+    }
+
+    public void updateTotalCount(int totalCountPerDay) {
+        this.totalCountPerDay = totalCountPerDay;
     }
 }

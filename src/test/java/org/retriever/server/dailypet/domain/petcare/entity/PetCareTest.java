@@ -79,4 +79,18 @@ class PetCareTest {
         // when, then
         assertThrows(CareCountIsZeroException.class, () -> testPetCare.cancelCareCheckButton(beforeCount));
     }
+
+    @Test
+    @DisplayName("챙겨주기 횟수 수정")
+    void update_total_count() {
+        // given
+        PetCare testPetCare = PetCareFactory.createTestPetCare();
+        int updateCount = testPetCare.getTotalCountPerDay() - 3;
+
+        // WHEN
+        testPetCare.updateTotalCount(updateCount);
+
+        assertThat(testPetCare.getTotalCountPerDay()).isEqualTo(updateCount);
+
+    }
 }
