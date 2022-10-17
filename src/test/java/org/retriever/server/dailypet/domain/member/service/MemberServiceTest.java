@@ -24,6 +24,7 @@ import org.retriever.server.dailypet.domain.member.exception.MemberNotFoundExcep
 import org.retriever.server.dailypet.domain.member.repository.MemberQueryRepository;
 import org.retriever.server.dailypet.domain.member.repository.MemberRepository;
 import org.retriever.server.dailypet.domain.pet.exception.PetNotFoundException;
+import org.retriever.server.dailypet.domain.pet.repository.PetQueryRepository;
 import org.retriever.server.dailypet.global.config.jwt.JwtTokenProvider;
 import org.retriever.server.dailypet.global.utils.s3.S3FileUploader;
 import org.retriever.server.dailypet.global.utils.security.SecurityUtil;
@@ -51,6 +52,8 @@ class MemberServiceTest {
     SecurityUtil securityUtil;
     @Mock
     FamilyRepository familyRepository;
+    @Mock
+    PetQueryRepository petQueryRepository;
 
     @InjectMocks
     MemberService memberService;
@@ -191,7 +194,7 @@ class MemberServiceTest {
     void check_pet_fail_and_throw_exception() {
 
         // given
-        given(memberQueryRepository.findPetByFamilyId(any())).willReturn(new ArrayList<>());
+        given(petQueryRepository.findPetsByFamilyId(any())).willReturn(new ArrayList<>());
 
         // when, then
         assertThrows(PetNotFoundException.class, () -> memberService.checkPet(any()));
