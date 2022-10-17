@@ -7,18 +7,15 @@ import org.retriever.server.dailypet.domain.family.repository.FamilyRepository;
 import org.retriever.server.dailypet.domain.member.entity.Member;
 import org.retriever.server.dailypet.domain.pet.dto.request.RegisterPetRequest;
 import org.retriever.server.dailypet.domain.pet.dto.request.ValidatePetNameInFamilyRequest;
-import org.retriever.server.dailypet.domain.pet.dto.response.GetPetKindListResponse;
-import org.retriever.server.dailypet.domain.pet.dto.response.PetKindPair;
-import org.retriever.server.dailypet.domain.pet.dto.response.RegisterPetResponse;
+import org.retriever.server.dailypet.domain.pet.dto.response.*;
 import org.retriever.server.dailypet.domain.pet.entity.Pet;
 import org.retriever.server.dailypet.domain.pet.entity.PetKind;
 import org.retriever.server.dailypet.domain.pet.enums.PetType;
 import org.retriever.server.dailypet.domain.pet.exception.DuplicatePetNameInFamilyException;
 import org.retriever.server.dailypet.domain.pet.exception.PetTypeNotFoundException;
 import org.retriever.server.dailypet.domain.pet.repository.PetKindRepository;
+import org.retriever.server.dailypet.domain.pet.repository.PetQueryRepository;
 import org.retriever.server.dailypet.domain.pet.repository.PetRepository;
-import org.retriever.server.dailypet.domain.petcare.repository.CareLogQueryRepository;
-import org.retriever.server.dailypet.global.utils.s3.S3FileUploader;
 import org.retriever.server.dailypet.global.utils.security.SecurityUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,9 +32,8 @@ public class PetService {
     private final FamilyRepository familyRepository;
     private final PetKindRepository petKindRepository;
     private final PetRepository petRepository;
-    private final CareLogQueryRepository careLogRepository;
-    private final S3FileUploader s3FileUploader;
     private final SecurityUtil securityUtil;
+    private final PetQueryRepository petQueryRepository;
 
     // TODO : 멤버 정보를 이용해서 속한 가족 정보를 바로 참조하는 쿼리 작성 (현재는 familyMember를 거쳐야함)
     public void validatePetNameInFamily(ValidatePetNameInFamilyRequest dto, Long familyId) {
@@ -77,5 +73,15 @@ public class PetService {
         petRepository.save(newPet);
 
         return RegisterPetResponse.of(member, family);
+    }
+
+    public GetPetsResponse getPetsByFamilyId(Long familyId) {
+
+        List<Pet> petList = petQueryRepository.findPetsByFamilyId(familyId);
+
+        return GetPetsResponse.from(petList.stream()
+                .map(PetInfoDetail::new)
+                .collect(Collectors.toList())
+        );
     }
 }
