@@ -18,6 +18,7 @@ import org.retriever.server.dailypet.domain.member.repository.MemberQueryReposit
 import org.retriever.server.dailypet.domain.member.repository.MemberRepository;
 import org.retriever.server.dailypet.domain.pet.entity.Pet;
 import org.retriever.server.dailypet.domain.pet.exception.PetNotFoundException;
+import org.retriever.server.dailypet.domain.pet.repository.PetQueryRepository;
 import org.retriever.server.dailypet.domain.pet.repository.PetRepository;
 import org.retriever.server.dailypet.global.config.jwt.JwtTokenProvider;
 import org.retriever.server.dailypet.global.utils.LocalDateTimeUtils;
@@ -38,7 +39,7 @@ public class MemberService {
     private final FamilyRepository familyRepository;
     private final PetRepository petRepository;
     private final JwtTokenProvider jwtTokenProvider;
-    private final S3FileUploader s3FileUploader;
+    private final PetQueryRepository petQueryRepository;
     private final MemberQueryRepository memberQueryRepository;
     private final SecurityUtil securityUtil;
 
@@ -52,7 +53,7 @@ public class MemberService {
         if (!familyList.isEmpty()) {
             family = familyList.get(0).getFamily();
         }
-        List<Pet> petList = memberQueryRepository.findPetByFamilyId(family.getFamilyId());
+        List<Pet> petList = petQueryRepository.findPetsByFamilyId(family.getFamilyId());
 
         if (!member.getProviderType().equals(dto.getProviderType())) {
             throw new DifferentProviderTypeException();
@@ -113,7 +114,7 @@ public class MemberService {
     }
 
     public CheckPetResponse checkPet(Long familyId) {
-        List<Pet> petByFamilyId = memberQueryRepository.findPetByFamilyId(familyId);
+        List<Pet> petByFamilyId = petQueryRepository.findPetsByFamilyId(familyId);
         if (petByFamilyId.isEmpty()) {
             throw new PetNotFoundException();
         }

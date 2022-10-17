@@ -2,7 +2,6 @@ package org.retriever.server.dailypet.domain.member.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.retriever.server.dailypet.domain.family.entity.FamilyMember;
-import org.retriever.server.dailypet.domain.pet.entity.Pet;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -19,12 +18,6 @@ public class MemberQueryRepository {
                         " join fetch f.family" +
                         " where f.member.id = :memberId", FamilyMember.class)
                 .setParameter("memberId", memberId)
-                .getResultList();
-    }
-
-    public List<Pet> findPetByFamilyId(Long familyId) {
-        return entityManager.createQuery("select p from Pet p where p.family.familyId = :familyId", Pet.class)
-                .setParameter("familyId", familyId)
                 .getResultList();
     }
 }
