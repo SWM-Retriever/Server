@@ -10,6 +10,7 @@ import org.retriever.server.dailypet.domain.pet.dto.request.RegisterPetRequest;
 import org.retriever.server.dailypet.domain.pet.dto.request.ValidatePetNameInFamilyRequest;
 import org.retriever.server.dailypet.domain.pet.dto.response.GetPetKindListResponse;
 import org.retriever.server.dailypet.domain.pet.dto.response.GetPetsResponse;
+import org.retriever.server.dailypet.domain.pet.dto.response.PetInfoDetail;
 import org.retriever.server.dailypet.domain.pet.dto.response.RegisterPetResponse;
 import org.retriever.server.dailypet.domain.pet.enums.PetType;
 import org.retriever.server.dailypet.domain.pet.service.PetService;
@@ -76,5 +77,17 @@ public class PetController {
     @GetMapping("/families/{familyId}/pets")
     public ResponseEntity<GetPetsResponse> getPetsByFamilyId(@PathVariable Long familyId) throws IOException {
         return ResponseEntity.ok(petService.getPetsByFamilyId(familyId));
+    }
+
+    @Parameter(name = "X-AUTH-TOKEN", description = "로그인 성공 후 access_token", required = true)
+    @Operation(summary = "반려 동물 단일 조회", description = "가족에서 관리하는 반려동물을 조회한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "반려동물 조회 완료"),
+            @ApiResponse(responseCode = "400", description = "반려동물 조회 실패"),
+            @ApiResponse(responseCode = "500", description = "내부 서버 에러")
+    })
+    @GetMapping("/families/{familyId}/pets/{petId}")
+    public ResponseEntity<PetInfoDetail> getPetInfo(@PathVariable Long petId) throws IOException {
+        return ResponseEntity.ok(petService.getPetInfo(petId));
     }
 }

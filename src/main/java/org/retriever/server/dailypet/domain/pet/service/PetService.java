@@ -84,4 +84,8 @@ public class PetService {
                 .collect(Collectors.toList())
         );
     }
+
+    public PetInfoDetail getPetInfo(Long petId) {
+        return PetInfoDetail.from(petQueryRepository.findPetByPetId(petId));
+    }
 }
