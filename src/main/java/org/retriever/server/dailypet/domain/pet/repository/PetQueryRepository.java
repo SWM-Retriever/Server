@@ -15,7 +15,9 @@ public class PetQueryRepository {
 
     public List<Pet> findPetsByFamilyId(Long familyId) {
         return entityManager.createQuery(
-                        "select p from Pet p where p.family.familyId = :familyId"
+                        "select p from Pet p" +
+                                " join fetch p.petKind pk" +
+                                " where p.family.familyId = :familyId"
                         , Pet.class)
                 .setParameter("familyId", familyId)
                 .getResultList();
