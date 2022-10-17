@@ -90,4 +90,17 @@ public class PetController {
     public ResponseEntity<PetInfoDetail> getPetInfo(@PathVariable Long petId) throws IOException {
         return ResponseEntity.ok(petService.getPetInfo(petId));
     }
+
+    @Parameter(name = "X-AUTH-TOKEN", description = "로그인 성공 후 access_token", required = true)
+    @Operation(summary = "반려 동물 삭제", description = "가족에서 관리하는 반려동물을 삭제한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "반려동물 삭제 완료"),
+            @ApiResponse(responseCode = "400", description = "반려동물 삭제 실패"),
+            @ApiResponse(responseCode = "500", description = "내부 서버 에러")
+    })
+    @DeleteMapping("/families/{familyId}/pets/{petId}")
+    public ResponseEntity<Void> deletePetInfo(@PathVariable Long petId) throws IOException {
+        petService.deletePetInfo(petId);
+        return ResponseEntity.ok().build();
+    }
 }

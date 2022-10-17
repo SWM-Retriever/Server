@@ -51,6 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .accessDeniedHandler(jwtAccessDeniedHandler)
                 .and()
                     .authorizeRequests()
+                    .antMatchers(HttpMethod.DELETE, "/api/v1/families/{familyId}/pets/{petId}").hasAuthority("FAMILY_LEADER")
                     .antMatchers(HttpMethod.POST, "/api/v1/auth/login",
                             "/api/v1/validation/nickname", "/api/v1/auth/sign-up").permitAll()
                     .antMatchers(HttpMethod.GET, "/api/v1/test").permitAll()

@@ -88,4 +88,9 @@ public class PetService {
     public PetInfoDetail getPetInfo(Long petId) {
         return PetInfoDetail.from(petQueryRepository.findPetByPetId(petId));
     }
+
+    @Transactional
+    public void deletePetInfo(Long petId) {
+        petRepository.deleteById(petId);
+    }
 }
