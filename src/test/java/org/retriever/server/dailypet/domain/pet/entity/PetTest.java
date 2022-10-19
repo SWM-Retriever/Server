@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.retriever.server.dailypet.domain.common.factory.PetFactory;
 import org.retriever.server.dailypet.domain.pet.dto.request.RegisterPetRequest;
 import org.retriever.server.dailypet.domain.pet.enums.PetStatus;
+import org.retriever.server.dailypet.domain.pet.enums.PetType;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -29,5 +30,6 @@ class PetTest {
         assertThat(pet.getWeight()).isEqualTo(request.getWeight());
         assertThat(pet.getIsNeutered()).isEqualTo(request.getIsNeutered());
         assertThat(pet.getPetStatus()).isEqualTo(PetStatus.ACTIVE);
+        assertThat(pet.getPetType()).isEqualTo(PetType.DOG);
     }
 }
