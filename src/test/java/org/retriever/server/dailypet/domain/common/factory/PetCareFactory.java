@@ -38,4 +38,14 @@ public class PetCareFactory {
                 .petCareAlarmList(List.of(petCareAlarm))
                 .build();
     }
+
+    public static PetCare createTestPetCareForThread(Long id, int cnt, Pet pet) {
+        return PetCare.builder()
+                .petCareId(id)
+                .careName("testCare")
+                .totalCountPerDay(cnt)
+                .pet(pet)
+                .isDeleted(IsDeleted.FALSE)
+                .build();
+    }
 }
