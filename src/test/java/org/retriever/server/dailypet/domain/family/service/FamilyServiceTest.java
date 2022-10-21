@@ -13,6 +13,7 @@ import org.retriever.server.dailypet.domain.family.dto.request.EnterFamilyReques
 import org.retriever.server.dailypet.domain.family.dto.request.ValidateFamilyNameRequest;
 import org.retriever.server.dailypet.domain.family.dto.request.ValidateFamilyRoleNameRequest;
 import org.retriever.server.dailypet.domain.family.dto.response.CreateFamilyResponse;
+import org.retriever.server.dailypet.domain.family.dto.response.EnterFamilyResponse;
 import org.retriever.server.dailypet.domain.family.dto.response.FamilyMemberInfo;
 import org.retriever.server.dailypet.domain.family.dto.response.FindFamilyWithInvitationCodeResponse;
 import org.retriever.server.dailypet.domain.family.entity.Family;
@@ -157,10 +158,16 @@ class FamilyServiceTest {
         when(securityUtil.getMemberByUserDetails()).thenReturn(member);
 
         // when
-        familyService.enterFamily(family.getFamilyId(), request);
+        EnterFamilyResponse enterFamilyResponse = familyService.enterFamily(family.getFamilyId(), request);
 
         // then
         assertThat(member.getFamilyRoleName()).isEqualTo(request.getFamilyRoleName());
         assertThat(family.getFamilyMemberList().size()).isEqualTo(size+1);
+        assertThat(enterFamilyResponse.getFamilyId()).isEqualTo(family.getFamilyId());
+        assertThat(enterFamilyResponse.getFamilyName()).isEqualTo(family.getFamilyName());
+        assertThat(enterFamilyResponse.getGroupType()).isEqualTo(family.getGroupType());
+        assertThat(enterFamilyResponse.getInvitationCode()).isEqualTo(family.getInvitationCode());
+        assertThat(enterFamilyResponse.getProfileImageUrl()).isEqualTo(member.getProfileImageUrl());
+        assertThat(enterFamilyResponse.getProfileImageUrl()).isEqualTo(member.getProfileImageUrl());
     }
 }

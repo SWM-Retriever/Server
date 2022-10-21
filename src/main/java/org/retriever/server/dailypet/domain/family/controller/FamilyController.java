@@ -11,6 +11,7 @@ import org.retriever.server.dailypet.domain.family.dto.request.EnterFamilyReques
 import org.retriever.server.dailypet.domain.family.dto.request.ValidateFamilyNameRequest;
 import org.retriever.server.dailypet.domain.family.dto.request.ValidateFamilyRoleNameRequest;
 import org.retriever.server.dailypet.domain.family.dto.response.CreateFamilyResponse;
+import org.retriever.server.dailypet.domain.family.dto.response.EnterFamilyResponse;
 import org.retriever.server.dailypet.domain.family.dto.response.FindFamilyWithInvitationCodeResponse;
 import org.retriever.server.dailypet.domain.family.service.FamilyService;
 import org.springframework.http.ResponseEntity;
@@ -97,9 +98,8 @@ public class FamilyController {
             @ApiResponse(responseCode = "500", description = "내부 서버 에러")
     })
     @PostMapping("/families/{familyId}")
-    public ResponseEntity<Void> enterFamily(
+    public ResponseEntity<EnterFamilyResponse> enterFamily(
             @PathVariable Long familyId, @RequestBody @Valid EnterFamilyRequest dto) {
-        familyService.enterFamily(familyId, dto);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(familyService.enterFamily(familyId, dto));
     }
 }
