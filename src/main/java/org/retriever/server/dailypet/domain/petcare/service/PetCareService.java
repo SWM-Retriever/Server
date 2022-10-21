@@ -115,7 +115,7 @@ public class PetCareService {
 
         careLogRepository.save(CareLog.of(member, pet, petCare, CareLogStatus.CHECK));
 
-        return CheckPetCareResponse.of(petCareId, afterCount, getCareLogHistory(petCareId));
+        return CheckPetCareResponse.of(petCare, afterCount, getCareLogHistory(petCareId));
     }
 
     /**
@@ -136,7 +136,7 @@ public class PetCareService {
         int afterCount = petCare.cancelCareCheckButton(currentCount);
         careLog.cancel();
 
-        return new CancelPetCareResponse(petCareId, afterCount, getCareLogHistory(petCareId));
+        return CancelPetCareResponse.of(petCare, afterCount, getCareLogHistory(petCareId));
     }
 
     private List<CareLogHistory> getCareLogHistory(Long petCareId) {
