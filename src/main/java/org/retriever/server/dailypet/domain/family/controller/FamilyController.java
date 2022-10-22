@@ -7,10 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.retriever.server.dailypet.domain.family.dto.request.*;
-import org.retriever.server.dailypet.domain.family.dto.response.ChangeGroupTypeResponse;
-import org.retriever.server.dailypet.domain.family.dto.response.CreateFamilyResponse;
-import org.retriever.server.dailypet.domain.family.dto.response.EnterFamilyResponse;
-import org.retriever.server.dailypet.domain.family.dto.response.FindFamilyWithInvitationCodeResponse;
+import org.retriever.server.dailypet.domain.family.dto.response.*;
 import org.retriever.server.dailypet.domain.family.service.FamilyService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -112,5 +109,17 @@ public class FamilyController {
     public ResponseEntity<ChangeGroupTypeResponse> changeGroupType(
             @PathVariable Long familyId, @RequestBody ChangeGroupTypeRequest dto) {
         return ResponseEntity.ok(familyService.changeGroupType(familyId, dto));
+    }
+
+    @Parameter(name = "X-AUTH-TOKEN", description = "로그인 성공 후 access_token", required = true)
+    @Operation(summary = "그룹 조회", description = "그룹 정보 조회")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "그룹 정보 조회 성공"),
+            @ApiResponse(responseCode = "400", description = "조회 실패"),
+            @ApiResponse(responseCode = "500", description = "내부 서버 에러")
+    })
+    @GetMapping("/families/{familyId}")
+    public ResponseEntity<GetGroupResponse> getGroupInfo(@PathVariable Long familyId) {
+        return ResponseEntity.ok(familyService.getGroupInfo(familyId));
     }
 }

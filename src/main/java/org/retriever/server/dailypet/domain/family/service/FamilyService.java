@@ -2,10 +2,7 @@ package org.retriever.server.dailypet.domain.family.service;
 
 import lombok.RequiredArgsConstructor;
 import org.retriever.server.dailypet.domain.family.dto.request.*;
-import org.retriever.server.dailypet.domain.family.dto.response.ChangeGroupTypeResponse;
-import org.retriever.server.dailypet.domain.family.dto.response.CreateFamilyResponse;
-import org.retriever.server.dailypet.domain.family.dto.response.EnterFamilyResponse;
-import org.retriever.server.dailypet.domain.family.dto.response.FindFamilyWithInvitationCodeResponse;
+import org.retriever.server.dailypet.domain.family.dto.response.*;
 import org.retriever.server.dailypet.domain.family.entity.Family;
 import org.retriever.server.dailypet.domain.family.entity.FamilyMember;
 import org.retriever.server.dailypet.domain.family.exception.DuplicateFamilyNameException;
@@ -121,5 +118,12 @@ public class FamilyService {
         family.changeGroupType(dto, InvitationCodeUtil.createInvitationCode());
 
         return ChangeGroupTypeResponse.from(family);
+    }
+
+    public GetGroupResponse getGroupInfo(Long familyId) {
+        Family family = familyRepository.findById(familyId).orElseThrow(FamilyNotFoundException::new);
+        List<FamilyMember> familyMembers = familyQueryRepository.findMembersByFamilyId(familyId);
+
+        return GetGroupResponse.of(family, familyMembers);
     }
 }
