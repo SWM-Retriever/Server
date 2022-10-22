@@ -4,6 +4,7 @@ import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.retriever.server.dailypet.domain.diary.entity.Diary;
+import org.retriever.server.dailypet.domain.family.dto.request.ChangeGroupTypeRequest;
 import org.retriever.server.dailypet.domain.family.dto.request.CreateFamilyRequest;
 import org.retriever.server.dailypet.domain.family.enums.FamilyStatus;
 import org.retriever.server.dailypet.domain.family.enums.GroupType;
@@ -77,5 +78,11 @@ public class Family extends BaseTimeEntity {
 
     public void linkDiary(Diary diary) {
         this.diaryList.add(diary);
+    }
+
+    public void changeGroupType(ChangeGroupTypeRequest dto, String invitationCode) {
+        this.familyName = dto.getFamilyName();
+        this.invitationCode = invitationCode;
+        this.groupType = GroupType.FAMILY;
     }
 }

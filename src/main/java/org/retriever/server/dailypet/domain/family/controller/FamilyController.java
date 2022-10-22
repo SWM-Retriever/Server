@@ -6,10 +6,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.retriever.server.dailypet.domain.family.dto.request.CreateFamilyRequest;
-import org.retriever.server.dailypet.domain.family.dto.request.EnterFamilyRequest;
-import org.retriever.server.dailypet.domain.family.dto.request.ValidateFamilyNameRequest;
-import org.retriever.server.dailypet.domain.family.dto.request.ValidateFamilyRoleNameRequest;
+import org.retriever.server.dailypet.domain.family.dto.request.*;
+import org.retriever.server.dailypet.domain.family.dto.response.ChangeGroupTypeResponse;
 import org.retriever.server.dailypet.domain.family.dto.response.CreateFamilyResponse;
 import org.retriever.server.dailypet.domain.family.dto.response.EnterFamilyResponse;
 import org.retriever.server.dailypet.domain.family.dto.response.FindFamilyWithInvitationCodeResponse;
@@ -101,5 +99,18 @@ public class FamilyController {
     public ResponseEntity<EnterFamilyResponse> enterFamily(
             @PathVariable Long familyId, @RequestBody @Valid EnterFamilyRequest dto) {
         return ResponseEntity.ok(familyService.enterFamily(familyId, dto));
+    }
+
+    @Parameter(name = "X-AUTH-TOKEN", description = "로그인 성공 후 access_token", required = true)
+    @Operation(summary = "그룹 유형 변경", description = "혼자 키우던 유저가 그룹 단위로 키울 수 있도록 type을 변경한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "그룹으로 변경 성공"),
+            @ApiResponse(responseCode = "400", description = "변경 실패"),
+            @ApiResponse(responseCode = "500", description = "내부 서버 에러")
+    })
+    @PostMapping("/families/{familyId}/type/group")
+    public ResponseEntity<ChangeGroupTypeResponse> changeGroupType(
+            @PathVariable Long familyId, @RequestBody ChangeGroupTypeRequest dto) {
+        return ResponseEntity.ok(familyService.changeGroupType(familyId, dto));
     }
 }
