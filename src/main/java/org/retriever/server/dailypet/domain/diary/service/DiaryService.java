@@ -7,6 +7,7 @@ import org.retriever.server.dailypet.domain.diary.dto.response.DiaryView;
 import org.retriever.server.dailypet.domain.diary.dto.response.GetGroupDiaryResponse;
 import org.retriever.server.dailypet.domain.diary.entity.Diary;
 import org.retriever.server.dailypet.domain.diary.exception.DiaryNotFoundException;
+import org.retriever.server.dailypet.domain.diary.repository.DiaryQueryRepository;
 import org.retriever.server.dailypet.domain.diary.repository.DiaryRepository;
 import org.retriever.server.dailypet.domain.family.entity.Family;
 import org.retriever.server.dailypet.domain.family.exception.FamilyNotFoundException;
@@ -31,6 +32,7 @@ public class DiaryService {
     private final DiaryRepository diaryRepository;
     private final SecurityUtil securityUtil;
     private final FamilyRepository familyRepository;
+    private final DiaryQueryRepository diaryQueryRepository;
 
     @Transactional(readOnly = true)
     public GetGroupDiaryResponse getGroupDiaries(Long familyId) {
@@ -57,6 +59,14 @@ public class DiaryService {
             }
         }
         return diaryResponse;
+    }
+
+    public DiaryView getRecentDiary(Long familyId) {
+        Diary recentDiary = diaryQueryRepository.findRecentDiary(familyId);
+        if (recentDiary == null) {
+            throw new DiaryNotFoundException();
+        }
+        return DiaryView.createContentView(recentDiary);
     }
 
     public void createDiary(Long familyId, CreateDiaryRequest request) {

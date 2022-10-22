@@ -1,13 +1,8 @@
 package org.retriever.server.dailypet.domain.family.service;
 
 import lombok.RequiredArgsConstructor;
-import org.retriever.server.dailypet.domain.family.dto.request.CreateFamilyRequest;
-import org.retriever.server.dailypet.domain.family.dto.request.EnterFamilyRequest;
-import org.retriever.server.dailypet.domain.family.dto.request.ValidateFamilyNameRequest;
-import org.retriever.server.dailypet.domain.family.dto.request.ValidateFamilyRoleNameRequest;
-import org.retriever.server.dailypet.domain.family.dto.response.CreateFamilyResponse;
-import org.retriever.server.dailypet.domain.family.dto.response.EnterFamilyResponse;
-import org.retriever.server.dailypet.domain.family.dto.response.FindFamilyWithInvitationCodeResponse;
+import org.retriever.server.dailypet.domain.family.dto.request.*;
+import org.retriever.server.dailypet.domain.family.dto.response.*;
 import org.retriever.server.dailypet.domain.family.entity.Family;
 import org.retriever.server.dailypet.domain.family.entity.FamilyMember;
 import org.retriever.server.dailypet.domain.family.exception.DuplicateFamilyNameException;
@@ -109,5 +104,26 @@ public class FamilyService {
         family.insertNewMember(familyMember);
 
         return EnterFamilyResponse.of(member, family);
+    }
+
+    @Transactional
+    public ChangeGroupTypeResponse changeGroupType(Long familyId, ChangeGroupTypeRequest dto) {
+
+        // 멤버 조회 및 권한 지정
+        Member member = securityUtil.getMemberByUserDetails();
+        member.changeFamilyRoleName(dto.getFamilyRoleName());
+
+        Family family = familyRepository.findById(familyId).orElseThrow(FamilyNotFoundException::new);
+
+        family.changeGroupType(dto, InvitationCodeUtil.createInvitationCode());
+
+        return ChangeGroupTypeResponse.from(family);
+    }
+
+    public GetGroupResponse getGroupInfo(Long familyId) {
+        Family family = familyRepository.findById(familyId).orElseThrow(FamilyNotFoundException::new);
+        List<FamilyMember> familyMembers = familyQueryRepository.findMembersByFamilyId(familyId);
+
+        return GetGroupResponse.of(family, familyMembers);
     }
 }
