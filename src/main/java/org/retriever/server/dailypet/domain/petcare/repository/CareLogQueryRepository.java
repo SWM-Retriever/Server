@@ -35,8 +35,10 @@ public class CareLogQueryRepository {
                         " ", CareLog.class)
                 .setParameter("memberId", memberId)
                 .setParameter("petCareId", petCareId)
-                .setMaxResults(1)
-                .getSingleResult();
+                .getResultList()
+                .stream()
+                .findFirst()
+                .orElse(null);
     }
 
     // 오늘 해당 챙겨주기 항목에 대한 횟수 조회 쿼리

@@ -95,7 +95,7 @@ class PetCareServiceTest {
                 () -> verify(careLogQueryRepository, times(1)).findTodayCountByCareId(any()),
                 () -> assertEquals(checkPetCareResponse.getCurrentCount(), beforeCount+1),
                 () -> assertEquals(checkPetCareResponse.getCheckList().get(0).getFamilyRoleName(), testMember.getFamilyRoleName()),
-                () -> assertEquals(checkPetCareResponse.getPetCareId(), testPetCare.getPetCareId())
+                () -> assertEquals(checkPetCareResponse.getCareId(), testPetCare.getPetCareId())
         );
     }
 

@@ -23,6 +23,7 @@ public class FamilyFactory {
 
     public static Family createTestFamily() {
         return Family.builder()
+                .familyId(1L)
                 .familyName("testFamily")
                 .familyStatus(FamilyStatus.ACTIVE)
                 .invitationCode("1234567890")

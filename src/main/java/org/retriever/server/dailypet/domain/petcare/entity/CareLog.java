@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Where(clause = "is_deleted = 'FALSE'")
+@Where(clause = "is_deleted = 'FALSE' and care_log_status = 'CHECK'")
 @SQLDelete(sql = "UPDATE care_log SET is_deleted = 'TRUE' WHERE care_log_id = ?")
 public class CareLog extends BaseTimeEntity {
 

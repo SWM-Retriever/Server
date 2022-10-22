@@ -6,6 +6,7 @@ import org.retriever.server.dailypet.domain.family.dto.request.EnterFamilyReques
 import org.retriever.server.dailypet.domain.family.dto.request.ValidateFamilyNameRequest;
 import org.retriever.server.dailypet.domain.family.dto.request.ValidateFamilyRoleNameRequest;
 import org.retriever.server.dailypet.domain.family.dto.response.CreateFamilyResponse;
+import org.retriever.server.dailypet.domain.family.dto.response.EnterFamilyResponse;
 import org.retriever.server.dailypet.domain.family.dto.response.FindFamilyWithInvitationCodeResponse;
 import org.retriever.server.dailypet.domain.family.entity.Family;
 import org.retriever.server.dailypet.domain.family.entity.FamilyMember;
@@ -96,7 +97,7 @@ public class FamilyService {
     }
 
     @Transactional
-    public void enterFamily(Long familyId, EnterFamilyRequest dto) {
+    public EnterFamilyResponse enterFamily(Long familyId, EnterFamilyRequest dto) {
         Member member = securityUtil.getMemberByUserDetails();
 
         Family family = familyRepository.findById(familyId).orElseThrow(FamilyNotFoundException::new);
@@ -106,5 +107,7 @@ public class FamilyService {
         FamilyMember familyMember = FamilyMember.createFamilyMember(member, family);
 
         family.insertNewMember(familyMember);
+
+        return EnterFamilyResponse.of(member, family);
     }
 }

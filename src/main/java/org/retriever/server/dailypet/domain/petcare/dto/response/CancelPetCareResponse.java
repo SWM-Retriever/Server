@@ -2,6 +2,7 @@ package org.retriever.server.dailypet.domain.petcare.dto.response;
 
 import lombok.*;
 import org.retriever.server.dailypet.domain.pet.dto.response.CareLogHistory;
+import org.retriever.server.dailypet.domain.petcare.entity.PetCare;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,15 +13,20 @@ import java.util.List;
 @Getter
 public class CancelPetCareResponse {
 
-    private Long petCareId;
+    private Long careId;
+
+    private String careName;
+
+    private int totalCareCount;
 
     private int currentCount;
 
     private List<CareLogHistory> checkList = new ArrayList<>();
 
-    public static CancelPetCareResponse of(Long petCareId, int afterCount, List<CareLogHistory> logHistoryList) {
+    public static CancelPetCareResponse of(PetCare petCare, int afterCount, List<CareLogHistory> logHistoryList) {
         return CancelPetCareResponse.builder()
-                .petCareId(petCareId)
+                .careId(petCare.getPetCareId())
+                .careName(petCare.getCareName())
                 .currentCount(afterCount)
                 .checkList(logHistoryList)
                 .build();

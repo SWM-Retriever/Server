@@ -8,6 +8,7 @@ import org.retriever.server.dailypet.domain.model.BaseTimeEntity;
 import org.retriever.server.dailypet.domain.pet.dto.request.RegisterPetRequest;
 import org.retriever.server.dailypet.domain.pet.enums.Gender;
 import org.retriever.server.dailypet.domain.pet.enums.PetStatus;
+import org.retriever.server.dailypet.domain.pet.enums.PetType;
 import org.retriever.server.dailypet.domain.petcare.entity.CareLog;
 import org.retriever.server.dailypet.domain.petcare.entity.PetCare;
 
@@ -50,6 +51,9 @@ public class Pet extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private PetStatus petStatus;
 
+    @Enumerated(EnumType.STRING)
+    private PetType petType;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "petKindId", nullable = false)
     private PetKind petKind;
@@ -76,6 +80,7 @@ public class Pet extends BaseTimeEntity {
                 .isNeutered(dto.getIsNeutered())
                 .gender(dto.getGender())
                 .petStatus(PetStatus.ACTIVE)
+                .petType(dto.getPetType())
                 .build();
     }
 
