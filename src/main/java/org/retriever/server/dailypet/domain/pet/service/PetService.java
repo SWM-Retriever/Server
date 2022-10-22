@@ -6,6 +6,7 @@ import org.retriever.server.dailypet.domain.family.exception.FamilyNotFoundExcep
 import org.retriever.server.dailypet.domain.family.repository.FamilyRepository;
 import org.retriever.server.dailypet.domain.member.entity.Member;
 import org.retriever.server.dailypet.domain.pet.dto.request.RegisterPetRequest;
+import org.retriever.server.dailypet.domain.pet.dto.request.UpdatePetInfoRequest;
 import org.retriever.server.dailypet.domain.pet.dto.request.ValidatePetNameInFamilyRequest;
 import org.retriever.server.dailypet.domain.pet.dto.response.*;
 import org.retriever.server.dailypet.domain.pet.entity.Pet;
@@ -92,5 +93,12 @@ public class PetService {
     @Transactional
     public void deletePetInfo(Long petId) {
         petRepository.deleteById(petId);
+    }
+
+    @Transactional
+    public PetInfoDetail updatePetInfo(UpdatePetInfoRequest updatePetInfoRequest, Long petId) {
+        Pet pet = petQueryRepository.findPetByPetId(petId);
+        pet.updatePetInfo(updatePetInfoRequest);
+        return PetInfoDetail.from(pet);
     }
 }

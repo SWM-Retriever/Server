@@ -6,6 +6,7 @@ import org.hibernate.annotations.Where;
 import org.retriever.server.dailypet.domain.family.entity.Family;
 import org.retriever.server.dailypet.domain.model.BaseTimeEntity;
 import org.retriever.server.dailypet.domain.pet.dto.request.RegisterPetRequest;
+import org.retriever.server.dailypet.domain.pet.dto.request.UpdatePetInfoRequest;
 import org.retriever.server.dailypet.domain.pet.enums.Gender;
 import org.retriever.server.dailypet.domain.pet.enums.PetStatus;
 import org.retriever.server.dailypet.domain.pet.enums.PetType;
@@ -96,5 +97,14 @@ public class Pet extends BaseTimeEntity {
     public void registerPetCare(PetCare petCare) {
         this.petCareList.add(petCare);
         petCare.addPet(this);
+    }
+
+    public void updatePetInfo(UpdatePetInfoRequest request) {
+        this.petName = request.getPetName();
+        this.birthDate = request.getBirthDate();
+        this.weight = request.getWeight();
+        this.isNeutered = request.getIsNeutered();
+        this.registerNumber = request.getRegisterNumber();
+        this.profileImageUrl = request.getProfileImageUrl();
     }
 }
