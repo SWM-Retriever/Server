@@ -118,7 +118,7 @@ public class FamilyController {
             @ApiResponse(responseCode = "400", description = "조회 실패"),
             @ApiResponse(responseCode = "500", description = "내부 서버 에러")
     })
-    @GetMapping("/families/{familyId}")
+    @GetMapping("/families/{familyId}/detail")
     public ResponseEntity<GetGroupResponse> getGroupInfo(@PathVariable Long familyId) {
         return ResponseEntity.ok(familyService.getGroupInfo(familyId));
     }

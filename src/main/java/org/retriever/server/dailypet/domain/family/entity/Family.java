@@ -31,10 +31,10 @@ public class Family extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private FamilyStatus familyStatus;
 
-    @Column(nullable = false, unique = true, length = 50)
+    @Column(unique = true, length = 50)
     private String familyName;
 
-    @Column(nullable = false, unique = true, length = 10)
+    @Column(unique = true, length = 10)
     private String invitationCode;
 
     @Enumerated(EnumType.STRING)
