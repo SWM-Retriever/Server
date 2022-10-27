@@ -4,10 +4,6 @@ import lombok.*;
 import org.retriever.server.dailypet.domain.family.entity.Family;
 import org.retriever.server.dailypet.domain.family.enums.GroupType;
 import org.retriever.server.dailypet.domain.member.entity.Member;
-import org.retriever.server.dailypet.domain.pet.dto.response.PetInfoResponse;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Builder
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -27,8 +23,6 @@ public class EnterFamilyResponse {
 
     private String profileImageUrl;
 
-    private List<PetInfoResponse> petList;
-
     public static EnterFamilyResponse of(Member member, Family family) {
         return EnterFamilyResponse.builder()
                 .familyId(family.getFamilyId())
@@ -36,9 +30,6 @@ public class EnterFamilyResponse {
                 .nickName(member.getNickName())
                 .groupType(family.getGroupType())
                 .profileImageUrl(member.getProfileImageUrl())
-                .petList(family.getPetList().stream()
-                        .map(PetInfoResponse::new)
-                        .collect(Collectors.toList()))
                 .invitationCode(family.getInvitationCode())
                 .build();
     }
