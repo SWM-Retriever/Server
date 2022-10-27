@@ -124,8 +124,6 @@ class PetServiceTest {
         assertThat(response.getGroupType()).isEqualTo(family.getGroupType());
         assertThat(response.getProfileImageUrl()).isEqualTo(member.getProfileImageUrl());
         assertThat(response.getInvitationCode()).isEqualTo(family.getInvitationCode());
-        assertThat(response.getPetList()).isNotNull();
-        assertThat(response.getPetList().get(0).getPetName()).isEqualTo(request.getPetName());
         assertThat(family.getPetList()).isNotNull();
         assertThat(member.getAccountProgressStatus()).isEqualTo(AccountProgressStatus.PET);
     }

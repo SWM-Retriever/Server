@@ -118,7 +118,6 @@ public class MemberFactory {
                 .invitationCode("testCode")
                 .groupType(GroupType.FAMILY)
                 .profileImageUrl("testImageUrl")
-                .petList(new ArrayList<>())
                 .build();
     }
 
