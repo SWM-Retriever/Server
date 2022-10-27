@@ -25,6 +25,7 @@ import org.retriever.server.dailypet.domain.petcare.exception.CareCountIsZeroExc
 import org.retriever.server.dailypet.domain.petcare.exception.NotCancelCareLogException;
 import org.retriever.server.dailypet.domain.petcare.repository.CareLogQueryRepository;
 import org.retriever.server.dailypet.domain.petcare.repository.CareLogRepository;
+import org.retriever.server.dailypet.domain.petcare.repository.PetCareQueryRepository;
 import org.retriever.server.dailypet.domain.petcare.repository.PetCareRepository;
 import org.retriever.server.dailypet.global.utils.security.SecurityUtil;
 
@@ -43,6 +44,8 @@ class PetCareServiceTest {
     PetRepository petRepository;
     @Mock
     PetCareRepository petCareRepository;
+    @Mock
+    PetCareQueryRepository petCareQueryRepository;
     @Mock
     CareLogRepository careLogRepository;
     @Mock
@@ -71,7 +74,7 @@ class PetCareServiceTest {
     }
 
     @Test
-    @DisplayName("챙겨주기 1회 등록 성공")
+    @DisplayName("챙겨주기 1회 체크 성공")
     void check_care_success() {
 
         // given
@@ -82,7 +85,7 @@ class PetCareServiceTest {
         int beforeCount = 1;
         given(securityUtil.getMemberByUserDetails()).willReturn(testMember);
         given(petRepository.findById(any())).willReturn(Optional.of(testPet));
-        given(petCareRepository.findById(any())).willReturn(Optional.of(testPetCare));
+        given(petCareQueryRepository.findPetCareFetchJoinCareAlarm(any())).willReturn(testPetCare);
         given(careLogQueryRepository.findTodayCountByCareId(any())).willReturn(beforeCount);
         given(careLogQueryRepository.findByPetCareIdWithCurDateOrderByCreatedAt(any())).willReturn(careLogList);
 
@@ -100,7 +103,7 @@ class PetCareServiceTest {
     }
 
     @Test
-    @DisplayName("챙겨주기 1회 등록 실패 - 일일 할당량 초과")
+    @DisplayName("챙겨주기 1회 체크 실패 - 일일 할당량 초과")
     void check_care_fail() {
 
         // given
@@ -110,7 +113,7 @@ class PetCareServiceTest {
         int beforeCount = testPetCare.getTotalCountPerDay();
         given(securityUtil.getMemberByUserDetails()).willReturn(testMember);
         given(petRepository.findById(any())).willReturn(Optional.of(testPet));
-        given(petCareRepository.findById(any())).willReturn(Optional.of(testPetCare));
+        given(petCareQueryRepository.findPetCareFetchJoinCareAlarm(any())).willReturn(testPetCare);
         given(careLogQueryRepository.findTodayCountByCareId(any())).willReturn(beforeCount);
 
         // when, then
@@ -127,7 +130,7 @@ class PetCareServiceTest {
         CareLog testCareLog = CareLogFactory.createTestCareLog();
         int beforeCount = 3;
         given(securityUtil.getMemberByUserDetails()).willReturn(testMember);
-        given(petCareRepository.findById(any())).willReturn(Optional.of(testPetCare));
+        given(petCareQueryRepository.findPetCareFetchJoinCareAlarm(any())).willReturn(testPetCare);
         given(careLogQueryRepository.findByMemberIdAndCareIdWithCurDateLatestLimit1(any(), any())).willReturn(testCareLog);
         given(careLogQueryRepository.findTodayCountByCareId(any())).willReturn(beforeCount);
 
@@ -154,7 +157,7 @@ class PetCareServiceTest {
         CareLog testCareLog = CareLogFactory.createTestCareLog();
         int beforeCount = 0;
         given(securityUtil.getMemberByUserDetails()).willReturn(testMember);
-        given(petCareRepository.findById(any())).willReturn(Optional.of(testPetCare));
+        given(petCareQueryRepository.findPetCareFetchJoinCareAlarm(any())).willReturn(testPetCare);
         given(careLogQueryRepository.findByMemberIdAndCareIdWithCurDateLatestLimit1(any(), any())).willReturn(testCareLog);
         given(careLogQueryRepository.findTodayCountByCareId(any())).willReturn(beforeCount);
 
@@ -170,7 +173,7 @@ class PetCareServiceTest {
         Member testMember = MemberFactory.createTestMember();
         PetCare testPetCare = PetCareFactory.createTestPetCare();
         given(securityUtil.getMemberByUserDetails()).willReturn(testMember);
-        given(petCareRepository.findById(any())).willReturn(Optional.of(testPetCare));
+        given(petCareQueryRepository.findPetCareFetchJoinCareAlarm(any())).willReturn(testPetCare);
         given(careLogQueryRepository.findByMemberIdAndCareIdWithCurDateLatestLimit1(any(), any())).willReturn(null);
 
         // when, then
