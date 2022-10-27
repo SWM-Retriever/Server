@@ -109,13 +109,17 @@ public class PetCareService {
 
         Pet pet = petRepository.findById(petId).orElseThrow(PetNotFoundException::new);
 
-        PetCare petCare = petCareRepository.findById(petCareId).orElseThrow(PetCareNotFoundException::new);
+        PetCare petCare = petCareQueryRepository.findPetCareFetchJoinCareAlarm(petCareId);
+        List<CustomDayOfWeek> dayOfWeeks = petCare.getPetCareAlarmList()
+                .stream()
+                .map(PetCareAlarm::getDayOfWeek)
+                .collect(Collectors.toList());
         int currentCount = careLogQueryRepository.findTodayCountByCareId(petCareId);
         int afterCount = petCare.pushCareCheckButton(currentCount);
 
         careLogRepository.save(CareLog.of(member, pet, petCare, CareLogStatus.CHECK));
 
-        return CheckPetCareResponse.of(petCare, afterCount, getCareLogHistory(petCareId));
+        return CheckPetCareResponse.of(petCare, afterCount, getCareLogHistory(petCareId), dayOfWeeks);
     }
 
     /**
@@ -126,7 +130,7 @@ public class PetCareService {
     public CancelPetCareResponse cancelPetCare(Long petCareId) {
         Member member = securityUtil.getMemberByUserDetails();
 
-        PetCare petCare = petCareRepository.findById(petCareId).orElseThrow(PetCareNotFoundException::new);
+        PetCare petCare = petCareQueryRepository.findPetCareFetchJoinCareAlarm(petCareId);
         CareLog careLog = careLogQueryRepository.findByMemberIdAndCareIdWithCurDateLatestLimit1(member.getId(), petCareId);
 
         if (careLog == null) {
@@ -136,7 +140,12 @@ public class PetCareService {
         int afterCount = petCare.cancelCareCheckButton(currentCount);
         careLog.cancel();
 
-        return CancelPetCareResponse.of(petCare, afterCount, getCareLogHistory(petCareId));
+        List<CustomDayOfWeek> dayOfWeeks = petCare.getPetCareAlarmList()
+                .stream()
+                .map(PetCareAlarm::getDayOfWeek)
+                .collect(Collectors.toList());
+
+        return CancelPetCareResponse.of(petCare, afterCount, getCareLogHistory(petCareId), dayOfWeeks);
     }
 
     private List<CareLogHistory> getCareLogHistory(Long petCareId) {

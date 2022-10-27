@@ -22,4 +22,14 @@ public class PetCareQueryRepository {
                 .setParameter("petId", petId)
                 .getResultList();
     }
+
+    public PetCare findPetCareFetchJoinCareAlarm(Long petCareId) {
+        return entityManager.createQuery(
+                        "select pc from PetCare pc" +
+                                " join fetch pc.petCareAlarmList" +
+                                " where pc.petCareId = :petCareId", PetCare.class)
+                .setParameter("petCareId", petCareId)
+                .getResultList()
+                .get(0);
+    }
 }
