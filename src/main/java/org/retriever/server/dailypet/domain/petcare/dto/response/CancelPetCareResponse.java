@@ -3,6 +3,7 @@ package org.retriever.server.dailypet.domain.petcare.dto.response;
 import lombok.*;
 import org.retriever.server.dailypet.domain.pet.dto.response.CareLogHistory;
 import org.retriever.server.dailypet.domain.petcare.entity.PetCare;
+import org.retriever.server.dailypet.domain.petcare.enums.CustomDayOfWeek;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,12 +24,15 @@ public class CancelPetCareResponse {
 
     private List<CareLogHistory> checkList = new ArrayList<>();
 
-    public static CancelPetCareResponse of(PetCare petCare, int afterCount, List<CareLogHistory> logHistoryList) {
+    private List<CustomDayOfWeek> dayOfWeeks = new ArrayList<>();
+
+    public static CancelPetCareResponse of(PetCare petCare, int afterCount, List<CareLogHistory> logHistoryList, List<CustomDayOfWeek> dayOfWeeks) {
         return CancelPetCareResponse.builder()
                 .careId(petCare.getPetCareId())
                 .careName(petCare.getCareName())
                 .currentCount(afterCount)
                 .checkList(logHistoryList)
+                .dayOfWeeks(dayOfWeeks)
                 .build();
     }
 }
