@@ -26,9 +26,7 @@ import org.retriever.server.dailypet.domain.member.repository.MemberRepository;
 import org.retriever.server.dailypet.domain.pet.exception.PetNotFoundException;
 import org.retriever.server.dailypet.domain.pet.repository.PetQueryRepository;
 import org.retriever.server.dailypet.global.config.jwt.JwtTokenProvider;
-import org.retriever.server.dailypet.global.utils.s3.S3FileUploader;
 import org.retriever.server.dailypet.global.utils.security.SecurityUtil;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -79,8 +77,7 @@ class MemberServiceTest {
                 () -> assertEquals(snsLoginResponse.getJwtToken(), testToken),
                 () -> assertEquals(snsLoginResponse.getFamilyId(), 0L),
                 () -> assertNull(snsLoginResponse.getFamilyName()),
-                () -> assertEquals(snsLoginResponse.getProfileImageUrl(), member.getProfileImageUrl()),
-                () -> assertEquals(snsLoginResponse.getPetList().isEmpty(), Boolean.TRUE)
+                () -> assertEquals(snsLoginResponse.getProfileImageUrl(), member.getProfileImageUrl())
         );
     }
 
@@ -109,8 +106,7 @@ class MemberServiceTest {
                 () -> assertEquals(snsLoginResponse.getJwtToken(), testToken),
                 () -> assertEquals(snsLoginResponse.getFamilyId(), testFamilyId),
                 () -> assertNotNull(snsLoginResponse.getFamilyName()),
-                () -> assertEquals(snsLoginResponse.getProfileImageUrl(), member.getProfileImageUrl()),
-                () -> assertEquals(snsLoginResponse.getPetList().isEmpty(), Boolean.TRUE)
+                () -> assertEquals(snsLoginResponse.getProfileImageUrl(), member.getProfileImageUrl())
         );
     }
 
