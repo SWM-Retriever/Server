@@ -59,7 +59,6 @@ class MemberControllerTest extends ControllerTest {
                 .andExpect(jsonPath("invitationCode").value("testCode"))
                 .andExpect(jsonPath("groupType").value(GroupType.FAMILY.toString()))
                 .andExpect(jsonPath("profileImageUrl").value("testImageUrl"))
-                .andExpect(jsonPath("petList").isEmpty())
                 .andDo(print())
                 .andReturn()
                 .getResponse()

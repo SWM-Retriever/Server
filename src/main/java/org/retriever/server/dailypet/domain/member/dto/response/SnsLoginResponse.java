@@ -33,9 +33,7 @@ public class SnsLoginResponse {
 
     private String profileImageUrl;
 
-    private List<PetInfoResponse> petList = new ArrayList<>();
-
-    public static SnsLoginResponse of(Member member, Family family, String token, List<Pet> petList) {
+    public static SnsLoginResponse of(Member member, Family family, String token) {
         return SnsLoginResponse.builder()
                 .nickName(member.getNickName())
                 .email(member.getEmail())
@@ -45,9 +43,6 @@ public class SnsLoginResponse {
                 .invitationCode(family.getInvitationCode())
                 .groupType(family.getGroupType())
                 .profileImageUrl(member.getProfileImageUrl())
-                .petList(petList.stream()
-                        .map(PetInfoResponse::new)
-                        .collect(Collectors.toList()))
                 .build();
     }
 }

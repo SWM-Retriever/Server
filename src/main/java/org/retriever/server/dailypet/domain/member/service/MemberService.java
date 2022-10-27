@@ -53,14 +53,13 @@ public class MemberService {
         if (!familyList.isEmpty()) {
             family = familyList.get(0).getFamily();
         }
-        List<Pet> petList = petQueryRepository.findPetsByFamilyId(family.getFamilyId());
 
         if (!member.getProviderType().equals(dto.getProviderType())) {
             throw new DifferentProviderTypeException();
         }
         String token = jwtTokenProvider.createToken(dto.getEmail());
 
-        return SnsLoginResponse.of(member, family, token, petList);
+        return SnsLoginResponse.of(member, family, token);
     }
 
     public void validateMemberNickName(ValidateMemberNicknameRequest dto) {

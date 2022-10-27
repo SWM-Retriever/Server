@@ -54,6 +54,7 @@ public class DiaryService {
 
         for (Map.Entry<LocalDate, List<Diary>> diaryEntry : diariesPerPublishDate.entrySet()) {
             diaryResponse.add(DiaryView.createDataView(diaryEntry.getKey()));
+            diaryEntry.getValue().sort((o1, o2) -> o2.getCreatedAt().compareTo(o1.getCreatedAt()));
             for (Diary diary : diaryEntry.getValue()) {
                 diaryResponse.add(DiaryView.createContentView(diary));
             }
