@@ -5,6 +5,7 @@ import org.retriever.server.dailypet.domain.petcare.entity.CareLog;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -50,5 +51,16 @@ public class CareLogQueryRepository {
                         " c.logDate = current_date", CareLog.class)
                 .setParameter("petCareId", petCareId)
                 .getResultList().size();
+    }
+
+    // 기간 동안 챙겨주기 횟수 조회 (항목 무관, 'CHECK'만)
+    public List<CareLog> findCareLogBetweenDate(LocalDate startDate, LocalDate endDate) {
+        return entityManager.createQuery(
+                        "select c from CareLog c" +
+                                " join fetch c.member" +
+                                " where c.logDate between :startDate and :endDate", CareLog.class)
+                .setParameter("startDate", startDate)
+                .setParameter("endDate", endDate)
+                .getResultList();
     }
 }
