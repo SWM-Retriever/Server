@@ -30,6 +30,7 @@ public class CheckPetCareResponse {
         return CheckPetCareResponse.builder()
                 .careId(petCare.getPetCareId())
                 .careName(petCare.getCareName())
+                .totalCareCount(petCare.getTotalCountPerDay())
                 .currentCount(afterCount)
                 .checkList(logHistoryList)
                 .dayOfWeeks(dayOfWeeks)
