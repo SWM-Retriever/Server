@@ -18,7 +18,7 @@ public class ReportService {
     private final SecurityUtil securityUtil;
     private final CareLogQueryRepository careLogQueryRepository;
 
-    public GetMyContributionResponse getMyContribution(Long petId, LocalDate startDate, LocalDate endDate) {
+    public GetMyContributionResponse getMyContribution(LocalDate startDate, LocalDate endDate) {
         Member member = securityUtil.getMemberByUserDetails();
 
         // 일주일 동안  기여한 횟수

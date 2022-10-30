@@ -28,11 +28,10 @@ public class ReportController {
             @ApiResponse(responseCode = "400", description = "기여도 조회 실패"),
             @ApiResponse(responseCode = "500", description = "내부 서버 에러")
     })
-    @GetMapping("/main/pets/{petId}/contribution")
+    @GetMapping("/main/contribution")
     public ResponseEntity<GetMyContributionResponse> getMyContribution(
-            @PathVariable Long petId,
             @RequestParam LocalDate startDate,
             @RequestParam LocalDate endDate) {
-        return ResponseEntity.ok(reportService.getMyContribution(petId, startDate, endDate));
+        return ResponseEntity.ok(reportService.getMyContribution(startDate, endDate));
     }
 }
