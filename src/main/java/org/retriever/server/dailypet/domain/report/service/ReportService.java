@@ -77,6 +77,9 @@ public class ReportService {
 
     private float getPercentByMemberId(List<CareLog> careLogList, Long memberId) {
         int totalCount = careLogList.size();
+        if (totalCount == 0) {
+            return 0;
+        }
         int myCount = getCountByMemberId(careLogList, memberId);
         return (float) myCount / totalCount * 100;
     }
