@@ -8,10 +8,7 @@ import org.retriever.server.dailypet.domain.petcare.entity.CareLog;
 import org.retriever.server.dailypet.domain.petcare.entity.PetCare;
 import org.retriever.server.dailypet.domain.petcare.repository.CareLogQueryRepository;
 import org.retriever.server.dailypet.domain.petcare.repository.PetCareQueryRepository;
-import org.retriever.server.dailypet.domain.report.dto.response.CareInfoDetail;
-import org.retriever.server.dailypet.domain.report.dto.response.GetContributionsDetailResponse;
-import org.retriever.server.dailypet.domain.report.dto.response.GetMyContributionResponse;
-import org.retriever.server.dailypet.domain.report.dto.response.MemberContributionDetail;
+import org.retriever.server.dailypet.domain.report.dto.response.*;
 import org.retriever.server.dailypet.global.utils.security.SecurityUtil;
 import org.springframework.stereotype.Service;
 
@@ -58,6 +55,24 @@ public class ReportService {
         }
 
         return GetContributionsDetailResponse.from(contributionDetails);
+    }
+
+    public GetContributionGraphResponse getMemberCountPerPetCare(Long familyId, Long petId, LocalDate startDate, LocalDate endDate) {
+        List<GraphView> graphViewList = new ArrayList<>();
+        List<FamilyMember> members = familyQueryRepository.findMembersByFamilyId(familyId);
+        List<CareLog> careLogList = careLogQueryRepository.findCareLogFetchJoinPetCareAndMemberBetweenDate(startDate, endDate);
+        List<PetCare> petCareList = petCareQueryRepository.findByPetIdFetchJoinCareAlarm(petId);
+
+        for (PetCare petCare : petCareList) {
+            graphViewList.add(GraphView.createTitleView(petCare.getCareName()));
+            List<CareCountInfo> careCountInfoList = new ArrayList<>();
+            for (FamilyMember familyMember : members) {
+                Member member = familyMember.getMember();
+                careCountInfoList.add(CareCountInfo.of(member.getFamilyRoleName(), getCountByMemberIdAndCareId(careLogList, member, petCare)));
+            }
+            graphViewList.add(GraphView.createContentView(petCare.getCareName(), careCountInfoList));
+        }
+        return GetContributionGraphResponse.from(graphViewList);
     }
 
     private float getPercentByMemberId(List<CareLog> careLogList, Long memberId) {
