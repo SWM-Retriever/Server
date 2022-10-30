@@ -31,7 +31,7 @@ public class Family extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private FamilyStatus familyStatus;
 
-    @Column(unique = true, length = 50)
+    @Column(length = 50)
     private String familyName;
 
     @Column(unique = true, length = 10)

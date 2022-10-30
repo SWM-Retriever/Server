@@ -30,6 +30,7 @@ public class CancelPetCareResponse {
         return CancelPetCareResponse.builder()
                 .careId(petCare.getPetCareId())
                 .careName(petCare.getCareName())
+                .totalCareCount(petCare.getTotalCountPerDay())
                 .currentCount(afterCount)
                 .checkList(logHistoryList)
                 .dayOfWeeks(dayOfWeeks)
