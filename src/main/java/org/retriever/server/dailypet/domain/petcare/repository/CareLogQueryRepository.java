@@ -63,4 +63,15 @@ public class CareLogQueryRepository {
                 .setParameter("endDate", endDate)
                 .getResultList();
     }
+
+    public List<CareLog> findCareLogFetchJoinPetCareAndMemberBetweenDate(LocalDate startDate, LocalDate endDate) {
+        return entityManager.createQuery(
+                        "select c from CareLog c" +
+                                " join fetch c.member" +
+                                " join fetch c.petCare" +
+                                " where c.logDate between :startDate and :endDate", CareLog.class)
+                .setParameter("startDate", startDate)
+                .setParameter("endDate", endDate)
+                .getResultList();
+    }
 }

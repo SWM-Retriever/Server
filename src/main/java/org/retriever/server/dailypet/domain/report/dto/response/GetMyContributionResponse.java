@@ -10,10 +10,9 @@ public class GetMyContributionResponse {
 
     private float contributionPercent;
 
-    public static GetMyContributionResponse of(int careCount, int totalCount) {
-        float contributionPercent = (float) careCount / totalCount;
+    public static GetMyContributionResponse from(float contributionPercent) {
         return GetMyContributionResponse.builder()
-                .contributionPercent(contributionPercent * 100)
+                .contributionPercent(contributionPercent)
                 .build();
     }
 }
