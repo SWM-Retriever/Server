@@ -10,7 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 public class GetGroupDiaryResponse {
 
-    List<DiaryView> diaryList;
+    private List<DiaryView> diaryList;
 
     public static GetGroupDiaryResponse from(List<DiaryView> list) {
         return GetGroupDiaryResponse.builder()
