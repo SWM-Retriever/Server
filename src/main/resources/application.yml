@@ -51,7 +51,7 @@ cloud:
       secret-key: ${AWS_SECRET_KEY}
       instance-profile: true
     s3:
-      bucket: dailypet-test-bucket
+      bucket: ${AWS_BUCKET_NAME}
 
 decorator:
   datasource:

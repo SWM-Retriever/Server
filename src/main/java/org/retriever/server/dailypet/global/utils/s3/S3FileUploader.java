@@ -7,6 +7,7 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.retriever.server.dailypet.domain.s3.dto.PresignedUrlResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -23,13 +24,11 @@ public class S3FileUploader {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    public String getPreSignedUrl(String dirName, String fileName) {
-        if (!dirName.equals("")) {
-            fileName = dirName + "/" + fileName;
-        }
+    public PresignedUrlResponse getPreSignedUrl(S3Path s3Path, String fileName) {
+        fileName = s3Path.getFilePath() + fileName;
         GeneratePresignedUrlRequest generatePresignedUrlRequest = getGeneratePreSignedUrlRequest(fileName);
         URL url = amazonS3Client.generatePresignedUrl(generatePresignedUrlRequest);
-        return url.toString();
+        return PresignedUrlResponse.from(url.toString());
     }
 
     private GeneratePresignedUrlRequest getGeneratePreSignedUrlRequest(String fileName) {
