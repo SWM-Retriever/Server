@@ -54,7 +54,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers(HttpMethod.DELETE, "/api/v1/families/{familyId}/pets/{petId}").hasAuthority("FAMILY_LEADER")
                     .antMatchers(HttpMethod.POST, "/api/v1/auth/login",
                             "/api/v1/validation/nickname", "/api/v1/auth/sign-up").permitAll()
-                    .antMatchers(HttpMethod.GET, "/api/v1/test").permitAll()
+                    .antMatchers(HttpMethod.GET, "/api/v1/presigned-url/{S3Path}/{fileName}").permitAll()
                     .anyRequest().authenticated();
     }
 
