@@ -9,10 +9,10 @@ import org.retriever.server.dailypet.domain.s3.dto.PresignedUrlResponse;
 import org.retriever.server.dailypet.global.utils.s3.S3FileUploader;
 import org.retriever.server.dailypet.global.utils.s3.S3Path;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -31,5 +31,16 @@ public class S3Controller {
     @GetMapping("/presigned-url/{S3Path}/{fileName}")
     public ResponseEntity<PresignedUrlResponse> getPresignedUrl(@PathVariable S3Path S3Path, @PathVariable String fileName) {
         return ResponseEntity.ok(s3FileUploader.getPreSignedUrl(S3Path, fileName));
+    }
+
+    @Operation(summary = "이미지 Multipart 업로드", description = "멀티 파트 파일과 종류에 맞는 enum type(MEMBER, PET, DIARY)을 넘겨서 저장한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "정상 요청 완료"),
+            @ApiResponse(responseCode = "400", description = "요청 실패"),
+            @ApiResponse(responseCode = "500", description = "내부 서버 에러")
+    })
+    @PostMapping("/{S3Path}/image")
+    public ResponseEntity<String> getS3Url(@RequestParam MultipartFile image, @PathVariable S3Path S3Path) throws IOException {
+        return ResponseEntity.ok(s3FileUploader.uploadMultipartFileToS3(image, S3Path));
     }
 }
