@@ -1,1 +1,59 @@
+spring:
+  h2:
+    console:
+      enabled: true
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
 
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+    defer-datasource-initialization: true
+
+  sql:
+    init:
+      mode: always
+  redis:
+    port: 6379
+    host: localhost
+  cache:
+    type: redis
+
+jwt:
+  secret: c2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQtc2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQK
+
+logging:
+  slack:
+    webhook-uri: ${SLACK_WEBHOOK_URI}
+  config: classpath:logback-slack.xml
+
+cloud:
+  aws:
+    stack:
+      auto: false
+    region:
+      static: ap-northeast-2
+    credentials:
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
+      instance-profile: true
+    s3:
+      bucket: ${AWS_BUCKET_NAME}
+
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: true
