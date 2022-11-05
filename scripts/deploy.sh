@@ -22,4 +22,4 @@ sudo docker rmi miki308/dailypet:latest
 sudo docker pull miki308/dailypet:latest
 
 # 도커 run
-docker run -d -p 8080:8080 -v /home/ec2-user:/config --name dailypet
+docker run -d -p 8080:8080 -v /home/ec2-user/config:/config --name dailypet miki308/dailypet:latest
