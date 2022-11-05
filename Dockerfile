@@ -2,9 +2,9 @@ FROM openjdk:11-jdk
 
 VOLUME /tmp
 
-ARG JAR_FILE=./build/libs/dailypet-1.0.jar
+ARG JAR_FILE=./build/libs/*.jar
 
-COPY ${JAR_FILE} app.jar
+COPY ${JAR_FILE} dailypet.jar
 
 # 운영
-ENTRYPOINT ["nohup","java","-jar","-Dspring.profiles.active=prod","app.jar","2>&1","&"]
+ENTRYPOINT ["nohup","java","-jar","-Dspring.profiles.active=prod","dailypet.jar","2>&1","&"]
