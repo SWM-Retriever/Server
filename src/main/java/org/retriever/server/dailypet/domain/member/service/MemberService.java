@@ -22,7 +22,6 @@ import org.retriever.server.dailypet.domain.pet.repository.PetQueryRepository;
 import org.retriever.server.dailypet.domain.pet.repository.PetRepository;
 import org.retriever.server.dailypet.global.config.jwt.JwtTokenProvider;
 import org.retriever.server.dailypet.global.utils.LocalDateTimeUtils;
-import org.retriever.server.dailypet.global.utils.s3.S3FileUploader;
 import org.retriever.server.dailypet.global.utils.security.SecurityUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -123,13 +122,19 @@ public class MemberService {
     @Transactional
     public void deleteMember() {
         Member member = securityUtil.getMemberByUserDetails();
-        Family family = null;
+        Family family = getFamily(member);
+        memberRepository.delete(member);
+        if(family == null) return;
+        if (member.isFamilyLeader()) {
+            familyRepository.delete(family);
+        }
+    }
+
+    private Family getFamily(Member member) {
         List<FamilyMember> familyByMemberId = memberQueryRepository.findFamilyByMemberId(member.getId());
         if (!familyByMemberId.isEmpty()) {
-            family = familyByMemberId.get(0).getFamily();
+            return familyByMemberId.get(0).getFamily();
         }
-        memberRepository.delete(member);
-        if(family != null)
-            familyRepository.delete(family);
+        return null;
     }
 }
