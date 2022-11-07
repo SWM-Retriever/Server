@@ -154,4 +154,8 @@ public class Member extends BaseTimeEntity {
     public void createDiary(Diary diary) {
         this.diaryList.add(diary);
     }
+
+    public boolean isFamilyLeader() {
+        return this.roleType == RoleType.FAMILY_LEADER;
+    }
 }
