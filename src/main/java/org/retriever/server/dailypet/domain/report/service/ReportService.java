@@ -35,7 +35,7 @@ public class ReportService {
     public GetContributionsDetailResponse getContributionsDetail(Long familyId, Long petId, LocalDate startDate, LocalDate endDate) {
         ArrayList<MemberContributionDetail> contributionDetails = new ArrayList<>();
         List<FamilyMember> members = familyQueryRepository.findMembersByFamilyId(familyId);
-        List<CareLog> careLogList = careLogQueryRepository.findCareLogFetchJoinPetCareAndMemberBetweenDate(startDate, endDate);
+        List<CareLog> careLogList = careLogQueryRepository.findCareLogPerPetFetchJoinPetCareAndMemberBetweenDate(startDate, endDate, petId);
         List<PetCare> petCareList = petCareQueryRepository.findByPetIdFetchJoinCareAlarm(petId);
 
         for (FamilyMember familyMember : members) {
@@ -60,7 +60,7 @@ public class ReportService {
     public GetContributionGraphResponse getMemberCountPerPetCare(Long familyId, Long petId, LocalDate startDate, LocalDate endDate) {
         List<GraphView> graphViewList = new ArrayList<>();
         List<FamilyMember> members = familyQueryRepository.findMembersByFamilyId(familyId);
-        List<CareLog> careLogList = careLogQueryRepository.findCareLogFetchJoinPetCareAndMemberBetweenDate(startDate, endDate);
+        List<CareLog> careLogList = careLogQueryRepository.findCareLogPerPetFetchJoinPetCareAndMemberBetweenDate(startDate, endDate, petId);
         List<PetCare> petCareList = petCareQueryRepository.findByPetIdFetchJoinCareAlarm(petId);
 
         for (PetCare petCare : petCareList) {
