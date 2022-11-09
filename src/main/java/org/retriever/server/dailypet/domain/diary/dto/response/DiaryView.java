@@ -40,7 +40,7 @@ public class DiaryView {
                 .date(diary.getPublishDate())
                 .diaryId(diary.getDiaryId())
                 .diaryText(diary.getDiaryText())
-                .authorNickName(diary.getAuthor().getNickName())
+                .authorNickName(diary.getAuthor().getFamilyRoleName())
                 .authorImageUrl(diary.getAuthor().getProfileImageUrl())
                 .build();
     }
