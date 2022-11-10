@@ -25,9 +25,9 @@ public class ReportService {
     private final FamilyQueryRepository familyQueryRepository;
     private final PetCareQueryRepository petCareQueryRepository;
 
-    public GetMyContributionResponse getMyContribution(LocalDate startDate, LocalDate endDate) {
+    public GetMyContributionResponse getMyContribution(LocalDate startDate, LocalDate endDate, Long petId) {
         Member member = securityUtil.getMemberByUserDetails();
-        List<CareLog> careLogListBetweenDate = careLogQueryRepository.findCareLogBetweenDate(startDate, endDate);
+        List<CareLog> careLogListBetweenDate = careLogQueryRepository.findCareLogPerPetBetweenDate(startDate, endDate, petId);
 
         return GetMyContributionResponse.from(getPercentByMemberId(careLogListBetweenDate, member.getId()));
     }
