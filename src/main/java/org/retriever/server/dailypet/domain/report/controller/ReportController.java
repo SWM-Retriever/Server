@@ -30,11 +30,12 @@ public class ReportController {
             @ApiResponse(responseCode = "400", description = "기여도 조회 실패"),
             @ApiResponse(responseCode = "500", description = "내부 서버 에러")
     })
-    @GetMapping("/main/contribution")
+    @GetMapping("/main/pets/{petId}/contribution")
     public ResponseEntity<GetMyContributionResponse> getMyContribution(
             @RequestParam LocalDate startDate,
-            @RequestParam LocalDate endDate) {
-        return ResponseEntity.ok(reportService.getMyContribution(startDate, endDate));
+            @RequestParam LocalDate endDate,
+            @PathVariable Long petId) {
+        return ResponseEntity.ok(reportService.getMyContribution(startDate, endDate, petId));
     }
 
     @Parameter(name = "X-AUTH-TOKEN", description = "로그인 성공 후 access_token", required = true)
