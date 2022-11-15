@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.retriever.server.dailypet.domain.s3.dto.MultipartUrlResponse;
 import org.retriever.server.dailypet.domain.s3.dto.PresignedUrlResponse;
 import org.retriever.server.dailypet.global.utils.s3.S3FileUploader;
 import org.retriever.server.dailypet.global.utils.s3.S3Path;
@@ -40,7 +41,7 @@ public class S3Controller {
             @ApiResponse(responseCode = "500", description = "내부 서버 에러")
     })
     @PostMapping("/{S3Path}/image")
-    public ResponseEntity<String> getS3Url(@RequestParam MultipartFile image, @PathVariable S3Path S3Path) throws IOException {
+    public ResponseEntity<MultipartUrlResponse> getS3Url(@RequestParam MultipartFile image, @PathVariable S3Path S3Path) throws IOException {
         return ResponseEntity.ok(s3FileUploader.uploadMultipartFileToS3(image, S3Path));
     }
 }
