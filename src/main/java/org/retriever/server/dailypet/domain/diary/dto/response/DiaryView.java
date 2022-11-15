@@ -5,7 +5,6 @@ import org.retriever.server.dailypet.domain.diary.entity.Diary;
 import org.retriever.server.dailypet.domain.diary.enums.ViewType;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Getter
 @Builder
@@ -23,7 +22,7 @@ public class DiaryView {
 
     private String authorNickName;
 
-    private List<String> diaryImageUrlList;
+    private String diaryImageUrl;
 
     private String diaryText;
 
@@ -42,6 +41,7 @@ public class DiaryView {
                 .diaryText(diary.getDiaryText())
                 .authorNickName(diary.getAuthor().getFamilyRoleName())
                 .authorImageUrl(diary.getAuthor().getProfileImageUrl())
+                .diaryImageUrl(diary.getDiaryImageUrl())
                 .build();
     }
 }
