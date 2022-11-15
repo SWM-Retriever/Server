@@ -81,7 +81,7 @@ public class ReportService {
             return 0;
         }
         int myCount = getCountByMemberId(careLogList, memberId);
-        return (float) myCount / totalCount * 100;
+        return Math.round( (float)myCount / totalCount * 100);
     }
 
     private int getCountByMemberId(List<CareLog> careLogList, Long memberId) {
