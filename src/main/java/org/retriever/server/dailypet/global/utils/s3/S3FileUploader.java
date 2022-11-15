@@ -9,6 +9,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.retriever.server.dailypet.domain.s3.dto.MultipartUrlResponse;
 import org.retriever.server.dailypet.domain.s3.dto.PresignedUrlResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -56,7 +57,7 @@ public class S3FileUploader {
         return expiration;
     }
 
-    public String uploadMultipartFileToS3(MultipartFile multipartFile, S3Path s3Path) throws IOException {
+    public MultipartUrlResponse uploadMultipartFileToS3(MultipartFile multipartFile, S3Path s3Path) throws IOException {
         String fileName = s3Path.getFilePath() + multipartFile.getOriginalFilename();
         byte[] fileData = multipartFile.getBytes();
         ObjectMetadata metadata = new ObjectMetadata();
@@ -65,7 +66,7 @@ public class S3FileUploader {
         metadata.setContentLength(fileData.length);
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(fileData);
 
-        return putS3(fileName, byteArrayInputStream, metadata);
+        return MultipartUrlResponse.from(putS3(fileName, byteArrayInputStream, metadata));
     }
 
     private String putS3(String fileName, ByteArrayInputStream fileData, ObjectMetadata metadata) {
