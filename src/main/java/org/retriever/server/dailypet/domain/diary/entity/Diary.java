@@ -29,6 +29,8 @@ public class Diary extends BaseTimeEntity {
 
     private String diaryText;
 
+    private String diaryImageUrl;
+
     @Enumerated(EnumType.STRING)
     private IsDeleted isDeleted;
 
@@ -40,13 +42,10 @@ public class Diary extends BaseTimeEntity {
     @JoinColumn(name = "familyId", nullable = false)
     private Family family;
 
-//    @OneToMany(mappedBy = "diaryLink", cascade = CascadeType.ALL, orphanRemoval = true)
-//    @Builder.Default
-//    private List<DiaryImage> imageList = new ArrayList<>();
-
     public static Diary of(Member member, Family family, CreateDiaryRequest createDiaryRequest) {
         return Diary.builder()
                 .diaryText(createDiaryRequest.getDiaryText())
+                .diaryImageUrl(createDiaryRequest.getDiaryImageUrl())
                 .publishDate(LocalDate.now())
                 .isDeleted(IsDeleted.FALSE)
                 .author(member)

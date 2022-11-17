@@ -196,12 +196,32 @@ class MemberServiceTest {
         assertThrows(PetNotFoundException.class, () -> memberService.checkPet(any()));
     }
 
-    @DisplayName("회원 탈퇴 - 회원 탈퇴 진행 시 계정 status는 deleted로 변한다")
+    @DisplayName("회원 탈퇴 - 회원 탈퇴 진행 시 계정 status는 deleted로 변하고 그룹은 삭제되지 않는다.")
     @Test
-    void delete_member() {
+    void delete_member_with_role_member() {
 
         // given
         Member member = MemberFactory.createTestMember();
+        Family family = FamilyFactory.createTestFamily();
+        FamilyMember familyMember = FamilyMember.createFamilyMember(member, family);
+
+        given(securityUtil.getMemberByUserDetails()).willReturn(member);
+        given(memberQueryRepository.findFamilyByMemberId(any())).willReturn(List.of(familyMember));
+
+        // when
+        memberService.deleteMember();
+
+        // then
+        verify(memberRepository,times(1)).delete(any());
+    }
+
+    @DisplayName("회원 탈퇴 - 회원 탈퇴 진행 시 그룹 리더일 경우 모두 삭제된다.")
+    @Test
+    void delete_member_with_group_leader() {
+
+        // given
+        Member member = MemberFactory.createTestMember();
+        member.setFamilyLeader();
         Family family = FamilyFactory.createTestFamily();
         FamilyMember familyMember = FamilyMember.createFamilyMember(member, family);
 

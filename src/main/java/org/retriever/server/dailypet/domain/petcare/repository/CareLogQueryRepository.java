@@ -54,24 +54,28 @@ public class CareLogQueryRepository {
     }
 
     // 기간 동안 챙겨주기 횟수 조회 (항목 무관, 'CHECK'만)
-    public List<CareLog> findCareLogBetweenDate(LocalDate startDate, LocalDate endDate) {
+    public List<CareLog> findCareLogPerPetBetweenDate(LocalDate startDate, LocalDate endDate, Long petId) {
         return entityManager.createQuery(
                         "select c from CareLog c" +
                                 " join fetch c.member" +
-                                " where c.logDate between :startDate and :endDate", CareLog.class)
+                                " where c.logDate between :startDate and :endDate" +
+                                " and c.pet.petId = :petId", CareLog.class)
                 .setParameter("startDate", startDate)
                 .setParameter("endDate", endDate)
+                .setParameter("petId", petId)
                 .getResultList();
     }
 
-    public List<CareLog> findCareLogFetchJoinPetCareAndMemberBetweenDate(LocalDate startDate, LocalDate endDate) {
+    public List<CareLog> findCareLogPerPetFetchJoinPetCareAndMemberBetweenDate(LocalDate startDate, LocalDate endDate, Long petId) {
         return entityManager.createQuery(
                         "select c from CareLog c" +
                                 " join fetch c.member" +
                                 " join fetch c.petCare" +
-                                " where c.logDate between :startDate and :endDate", CareLog.class)
+                                " where c.logDate between :startDate and :endDate" +
+                                " and c.pet.petId = :petId", CareLog.class)
                 .setParameter("startDate", startDate)
                 .setParameter("endDate", endDate)
+                .setParameter("petId", petId)
                 .getResultList();
     }
 }

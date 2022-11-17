@@ -98,6 +98,7 @@ public class FamilyService {
         Family family = familyRepository.findById(familyId).orElseThrow(FamilyNotFoundException::new);
 
         member.changeFamilyRoleName(dto.getFamilyRoleName());
+        member.changeProgressStatusToPet();
 
         FamilyMember familyMember = FamilyMember.createFamilyMember(member, family);
 

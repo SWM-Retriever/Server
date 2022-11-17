@@ -2,7 +2,7 @@ FROM openjdk:11-jdk
 
 VOLUME /tmp
 
-ARG JAR_FILE=./build/libs/*.jar
+ARG JAR_FILE=build/libs/dailypet-0.0.1-SNAPSHOT.jar
 
 COPY ${JAR_FILE} dailypet.jar
 
