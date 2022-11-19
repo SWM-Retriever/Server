@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.retriever.server.dailypet.domain.family.entity.FamilyMember;
-import org.retriever.server.dailypet.domain.member.entity.Member;
 
 @Getter
 @AllArgsConstructor
@@ -14,13 +13,13 @@ public class FamilyMemberInfo {
 
     private Long memberId;
 
-    private String familyRoleName;
+    private String nickName;
 
     private String profileImageUrl;
 
     public FamilyMemberInfo(FamilyMember familyMember) {
         this.memberId = familyMember.getMember().getId();
-        this.familyRoleName = familyMember.getMember().getFamilyRoleName();
+        this.nickName = familyMember.getMember().getNickName();
         this.profileImageUrl = familyMember.getMember().getProfileImageUrl();
     }
 }
