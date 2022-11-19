@@ -116,7 +116,7 @@ public class MemberController {
     @Operation(summary = "회원 탈퇴", description = "회원 탈퇴를 진행한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "회원 탈퇴 정상 처리"),
-            @ApiResponse(responseCode = "400", description = "회원 탈퇴가 진행되지 않음"),
+            @ApiResponse(responseCode = "403", description = "그룹장인 경우 회원 탈퇴에 대한 권한이 없음"),
             @ApiResponse(responseCode = "500", description = "내부 서버 에러")
     })
     @DeleteMapping("/auth/member")
