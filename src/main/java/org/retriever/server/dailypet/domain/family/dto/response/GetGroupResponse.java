@@ -19,7 +19,7 @@ public class GetGroupResponse {
 
     private int familyMemberCount;
 
-    private List<FamilyMemberInfo> familyMemberList;
+    private List<MyPageMemberInfo> familyMemberList;
 
     public static GetGroupResponse of(Family family, List<FamilyMember> familyMembers) {
         return GetGroupResponse.builder()
@@ -27,7 +27,7 @@ public class GetGroupResponse {
                 .familyName(family.getFamilyName())
                 .familyMemberCount(familyMembers.size())
                 .familyMemberList(familyMembers.stream()
-                        .map(FamilyMemberInfo::new)
+                        .map(MyPageMemberInfo::new)
                         .collect(Collectors.toList()))
                 .build();
     }
