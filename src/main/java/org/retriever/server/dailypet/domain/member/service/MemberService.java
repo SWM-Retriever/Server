@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.retriever.server.dailypet.domain.family.entity.Family;
 import org.retriever.server.dailypet.domain.family.entity.FamilyMember;
 import org.retriever.server.dailypet.domain.family.exception.FamilyNotFoundException;
+import org.retriever.server.dailypet.domain.family.repository.FamilyQueryRepository;
 import org.retriever.server.dailypet.domain.family.repository.FamilyRepository;
 import org.retriever.server.dailypet.domain.member.dto.request.SignUpRequest;
 import org.retriever.server.dailypet.domain.member.dto.request.SnsLoginRequest;
@@ -37,6 +38,7 @@ public class MemberService {
     private final JwtTokenProvider jwtTokenProvider;
     private final PetQueryRepository petQueryRepository;
     private final MemberQueryRepository memberQueryRepository;
+    private final FamilyQueryRepository familyQueryRepository;
     private final SecurityUtil securityUtil;
 
     public SnsLoginResponse checkMemberAndLogin(SnsLoginRequest dto) {
@@ -121,24 +123,27 @@ public class MemberService {
         Member member = securityUtil.getMemberByUserDetails();
         Family family = getFamily(member);
 
-        if (canDeleteMember(member)) {
+        if (canDeleteMember(member, family)) {
             memberRepository.delete(member);
         }
 
-        if (canDeleteGroup(member) && family != null) {
+        if (canDeleteGroup(member, family)) {
             familyRepository.delete(family);
         }
     }
 
-    private Boolean canDeleteMember(Member member) {
-        if (member.isFamilyLeader() && getFamilyMembers(member).size() > 1) {
+    private Boolean canDeleteMember(Member member, Family family) {
+        if (member.isFamilyLeader() && getFamilyMembers(family).size() > 1) {
             throw new CannotDeleteMemberException();
         }
         return true;
     }
 
-    private Boolean canDeleteGroup(Member member) {
-        return member.isFamilyLeader() && getFamilyMembers(member).size() == 1;
+    private Boolean canDeleteGroup(Member member, Family family) {
+        if (family == null) {
+            return false;
+        }
+        return member.isFamilyLeader() && getFamilyMembers(family).size() == 1;
     }
 
     private Family getFamily(Member member) {
@@ -149,7 +154,7 @@ public class MemberService {
         return null;
     }
 
-    private List<FamilyMember> getFamilyMembers(Member member) {
-        return memberQueryRepository.findFamilyByMemberId(member.getId());
+    private List<FamilyMember> getFamilyMembers(Family family) {
+        return familyQueryRepository.findMembersByFamilyId(family.getFamilyId());
     }
 }
