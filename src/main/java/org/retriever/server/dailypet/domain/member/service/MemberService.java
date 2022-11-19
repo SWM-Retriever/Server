@@ -122,28 +122,26 @@ public class MemberService {
     public void deleteMember() {
         Member member = securityUtil.getMemberByUserDetails();
         Family family = getFamily(member);
+        int groupMembersCount = getFamilyMembers(family);
 
-        if (canDeleteMember(member, family)) {
+        if (canDeleteMember(member, groupMembersCount)) {
             memberRepository.delete(member);
         }
 
-        if (canDeleteGroup(member, family)) {
+        if (canDeleteGroup(member, groupMembersCount)) {
             familyRepository.delete(family);
         }
     }
 
-    private Boolean canDeleteMember(Member member, Family family) {
-        if (member.isFamilyLeader() && getFamilyMembers(family).size() > 1) {
+    private Boolean canDeleteMember(Member member, int groupMembersCount) {
+        if (member.isFamilyLeader() && groupMembersCount > 1) {
             throw new CannotDeleteMemberException();
         }
         return true;
     }
 
-    private Boolean canDeleteGroup(Member member, Family family) {
-        if (family == null) {
-            return false;
-        }
-        return member.isFamilyLeader() && getFamilyMembers(family).size() == 1;
+    private Boolean canDeleteGroup(Member member, int groupMemberCount) {
+        return member.isFamilyLeader() && groupMemberCount == 1;
     }
 
     private Family getFamily(Member member) {
@@ -154,7 +152,9 @@ public class MemberService {
         return null;
     }
 
-    private List<FamilyMember> getFamilyMembers(Family family) {
-        return familyQueryRepository.findMembersByFamilyId(family.getFamilyId());
+    private int getFamilyMembers(Family family) {
+        if(family == null)
+            return 0;
+        return familyQueryRepository.findMembersByFamilyId(family.getFamilyId()).size();
     }
 }
