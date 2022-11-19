@@ -23,7 +23,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class FamilyService {
 
     private final MemberRepository memberRepository;
@@ -31,12 +31,14 @@ public class FamilyService {
     private final FamilyQueryRepository familyQueryRepository;
     private final SecurityUtil securityUtil;
 
+    @Transactional(readOnly = true)
     public void validateFamilyName(ValidateFamilyNameRequest dto) {
         if (familyRepository.findByFamilyName(dto.getFamilyName()).isPresent()) {
             throw new DuplicateFamilyNameException();
         }
     }
 
+    @Transactional(readOnly = true)
     public void validateFamilyRoleName(Long familyId, ValidateFamilyRoleNameRequest dto) {
         List<FamilyMember> familyMemberList = familyQueryRepository.findMembersByFamilyId(familyId);
 
@@ -50,7 +52,6 @@ public class FamilyService {
         }
     }
 
-    @Transactional
     public CreateFamilyResponse createFamily(CreateFamilyRequest dto) throws IOException {
 
         // 멤버 조회 및 권한 지정
@@ -71,7 +72,6 @@ public class FamilyService {
                 .build();
     }
     // TODO : 가족 그룹 생성 중복 로직 디자인패턴 적용해보기
-    @Transactional
     public CreateFamilyResponse createFamilyAlone() {
         Member member = securityUtil.getMemberByUserDetails();
         member.createGroup(null);
@@ -87,6 +87,7 @@ public class FamilyService {
                 .build();
     }
 
+    @Transactional(readOnly = true)
     public FindFamilyWithInvitationCodeResponse findFamilyWithInvitationCode(String code) {
         Family family = familyRepository.findByInvitationCode(code).orElseThrow(FamilyNotFoundException::new);
         List<FamilyMember> familyMembers = familyQueryRepository.findMembersByFamilyId(family.getFamilyId());
@@ -94,7 +95,6 @@ public class FamilyService {
         return FindFamilyWithInvitationCodeResponse.of(family, familyMembers);
     }
 
-    @Transactional
     public EnterFamilyResponse enterFamily(Long familyId, EnterFamilyRequest dto) {
         Member member = securityUtil.getMemberByUserDetails();
 
@@ -110,7 +110,6 @@ public class FamilyService {
         return EnterFamilyResponse.of(member, family);
     }
 
-    @Transactional
     public ChangeGroupTypeResponse changeGroupType(Long familyId, ChangeGroupTypeRequest dto) {
 
         // 멤버 조회 및 권한 지정
