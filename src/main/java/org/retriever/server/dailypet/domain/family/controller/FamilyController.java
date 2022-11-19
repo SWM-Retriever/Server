@@ -122,4 +122,17 @@ public class FamilyController {
     public ResponseEntity<GetGroupResponse> getGroupInfo(@PathVariable Long familyId) {
         return ResponseEntity.ok(familyService.getGroupInfo(familyId));
     }
+
+    @Parameter(name = "X-AUTH-TOKEN", description = "로그인 성공 후 access_token", required = true)
+    @Operation(summary = "그룹장 위임", description = "해당 그룹원에게 그룹장을 위임한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "그룹 정보 조회 성공"),
+            @ApiResponse(responseCode = "403", description = "그룹장이 아닌 경우 위임 권한이 없음"),
+            @ApiResponse(responseCode = "500", description = "내부 서버 에러")
+    })
+    @PatchMapping("/families/{familyId}/group-leader/{memberId}")
+    public ResponseEntity<Void> delegateGroupLeader(@PathVariable Long memberId, @PathVariable Long familyId) {
+        familyService.delegateGroupLeader(memberId, familyId);
+        return ResponseEntity.ok().build();
+    }
 }

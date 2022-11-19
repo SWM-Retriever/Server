@@ -10,10 +10,7 @@ import org.retriever.server.dailypet.domain.member.dto.request.SnsLoginRequest;
 import org.retriever.server.dailypet.domain.member.dto.request.ValidateMemberNicknameRequest;
 import org.retriever.server.dailypet.domain.member.dto.response.*;
 import org.retriever.server.dailypet.domain.member.entity.Member;
-import org.retriever.server.dailypet.domain.member.exception.DifferentProviderTypeException;
-import org.retriever.server.dailypet.domain.member.exception.DuplicateMemberException;
-import org.retriever.server.dailypet.domain.member.exception.DuplicateMemberNicknameException;
-import org.retriever.server.dailypet.domain.member.exception.MemberNotFoundException;
+import org.retriever.server.dailypet.domain.member.exception.*;
 import org.retriever.server.dailypet.domain.member.repository.MemberQueryRepository;
 import org.retriever.server.dailypet.domain.member.repository.MemberRepository;
 import org.retriever.server.dailypet.domain.pet.entity.Pet;
@@ -123,11 +120,25 @@ public class MemberService {
     public void deleteMember() {
         Member member = securityUtil.getMemberByUserDetails();
         Family family = getFamily(member);
-        memberRepository.delete(member);
-        if(family == null) return;
-        if (member.isFamilyLeader()) {
+
+        if (canDeleteMember(member)) {
+            memberRepository.delete(member);
+        }
+
+        if (canDeleteGroup(member) && family != null) {
             familyRepository.delete(family);
         }
+    }
+
+    private Boolean canDeleteMember(Member member) {
+        if (member.isFamilyLeader() && getFamilyMembers(member).size() > 1) {
+            throw new CannotDeleteMemberException();
+        }
+        return true;
+    }
+
+    private Boolean canDeleteGroup(Member member) {
+        return member.isFamilyLeader() && getFamilyMembers(member).size() == 1;
     }
 
     private Family getFamily(Member member) {
@@ -136,5 +147,9 @@ public class MemberService {
             return familyByMemberId.get(0).getFamily();
         }
         return null;
+    }
+
+    private List<FamilyMember> getFamilyMembers(Member member) {
+        return memberQueryRepository.findFamilyByMemberId(member.getId());
     }
 }

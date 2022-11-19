@@ -88,7 +88,7 @@ class FamilyServiceTest {
         assertThat(response.getFamilyName()).isEqualTo(family.getFamilyName());
         assertThat(response.getFamilyMemberCount()).isEqualTo(testFamilyMemberList.size());
         assertThat(familyMemberInfo.getMemberId()).isEqualTo(member.getId());
-        assertThat(familyMemberInfo.getFamilyRoleName()).isEqualTo(member.getFamilyRoleName());
+        assertThat(familyMemberInfo.getNickName()).isEqualTo(member.getNickName());
         assertThat(familyMemberInfo.getProfileImageUrl()).isEqualTo(member.getProfileImageUrl());
     }
 

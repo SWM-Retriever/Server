@@ -11,6 +11,8 @@ import org.retriever.server.dailypet.domain.family.exception.FamilyNotFoundExcep
 import org.retriever.server.dailypet.domain.family.repository.FamilyQueryRepository;
 import org.retriever.server.dailypet.domain.family.repository.FamilyRepository;
 import org.retriever.server.dailypet.domain.member.entity.Member;
+import org.retriever.server.dailypet.domain.member.exception.MemberNotFoundException;
+import org.retriever.server.dailypet.domain.member.repository.MemberRepository;
 import org.retriever.server.dailypet.global.utils.invitationcode.InvitationCodeUtil;
 import org.retriever.server.dailypet.global.utils.security.SecurityUtil;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class FamilyService {
 
+    private final MemberRepository memberRepository;
     private final FamilyRepository familyRepository;
     private final FamilyQueryRepository familyQueryRepository;
     private final SecurityUtil securityUtil;
@@ -126,5 +129,12 @@ public class FamilyService {
         List<FamilyMember> familyMembers = familyQueryRepository.findMembersByFamilyId(familyId);
 
         return GetGroupResponse.of(family, familyMembers);
+    }
+
+    public void delegateGroupLeader(Long memberId, Long familyId) {
+        Member requestMember = securityUtil.getMemberByUserDetails();
+        Member targetMember = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
+        targetMember.setFamilyLeader();
+        requestMember.setGroupMember();
     }
 }

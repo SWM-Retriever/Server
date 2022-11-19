@@ -9,17 +9,20 @@ import org.retriever.server.dailypet.domain.family.entity.FamilyMember;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class FamilyMemberInfo {
+public class MyPageMemberInfo {
 
     private Long memberId;
 
-    private String nickName;
+    private String familyRoleName;
 
     private String profileImageUrl;
 
-    public FamilyMemberInfo(FamilyMember familyMember) {
+    private boolean isGroupLeader;
+
+    public MyPageMemberInfo(FamilyMember familyMember) {
         this.memberId = familyMember.getMember().getId();
-        this.nickName = familyMember.getMember().getNickName();
+        this.familyRoleName = familyMember.getMember().getFamilyRoleName();
         this.profileImageUrl = familyMember.getMember().getProfileImageUrl();
+        this.isGroupLeader = familyMember.getMember().isFamilyLeader();
     }
 }
