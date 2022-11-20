@@ -6,6 +6,7 @@ import org.retriever.server.dailypet.domain.family.entity.FamilyMember;
 import org.retriever.server.dailypet.domain.family.exception.FamilyNotFoundException;
 import org.retriever.server.dailypet.domain.family.repository.FamilyQueryRepository;
 import org.retriever.server.dailypet.domain.family.repository.FamilyRepository;
+import org.retriever.server.dailypet.domain.member.dto.request.EditMemberProfileRequest;
 import org.retriever.server.dailypet.domain.member.dto.request.SignUpRequest;
 import org.retriever.server.dailypet.domain.member.dto.request.SnsLoginRequest;
 import org.retriever.server.dailypet.domain.member.dto.request.ValidateMemberNicknameRequest;
@@ -83,11 +84,11 @@ public class MemberService {
     }
 
     @Transactional
-    public EditProfileImageResponse editProfileImage(String profileImageUrl) throws IOException {
+    public EditMemberProfileResponse editMemberProfile(EditMemberProfileRequest dto) throws IOException {
         Member member = securityUtil.getMemberByUserDetails();
-        member.editProfileImageUrl(profileImageUrl);
+        member.editMemberProfile(dto);
 
-        return EditProfileImageResponse.from(profileImageUrl);
+        return EditMemberProfileResponse.from(member);
     }
 
     public CalculateDayResponse calculateDayOfFirstMeet(Long petId) {

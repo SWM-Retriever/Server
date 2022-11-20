@@ -4,6 +4,7 @@ import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.retriever.server.dailypet.domain.diary.dto.request.CreateDiaryRequest;
+import org.retriever.server.dailypet.domain.diary.dto.request.EditDiaryRequest;
 import org.retriever.server.dailypet.domain.family.entity.Family;
 import org.retriever.server.dailypet.domain.member.entity.Member;
 import org.retriever.server.dailypet.domain.model.BaseTimeEntity;
@@ -53,7 +54,8 @@ public class Diary extends BaseTimeEntity {
                 .build();
     }
 
-    public void editText(String newText) {
-        this.diaryText = newText;
+    public void editDiary(EditDiaryRequest request) {
+        this.diaryText = request.getDiaryText();
+        this.diaryImageUrl = request.getDiaryImageUrl();
     }
 }

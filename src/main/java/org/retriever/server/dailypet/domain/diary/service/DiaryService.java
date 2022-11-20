@@ -79,7 +79,7 @@ public class DiaryService {
 
     public void editDiary(Long familyId, Long diaryId, EditDiaryRequest request) {
         Diary diary = diaryRepository.findById(diaryId).orElseThrow(DiaryNotFoundException::new);
-        diary.editText(request.getDiaryText());
+        diary.editDiary(request);
     }
 
     public void deleteDiary(Long familyId, Long diaryId) {
