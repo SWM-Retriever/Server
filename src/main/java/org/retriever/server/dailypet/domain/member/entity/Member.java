@@ -5,6 +5,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.retriever.server.dailypet.domain.diary.entity.Diary;
 import org.retriever.server.dailypet.domain.family.entity.FamilyMember;
+import org.retriever.server.dailypet.domain.member.dto.request.EditMemberProfileRequest;
 import org.retriever.server.dailypet.domain.member.dto.request.SignUpRequest;
 import org.retriever.server.dailypet.domain.member.enums.AccountProgressStatus;
 import org.retriever.server.dailypet.domain.member.enums.AccountStatus;
@@ -135,8 +136,9 @@ public class Member extends BaseTimeEntity {
         this.familyRoleName = familyRoleName;
     }
 
-    public void editProfileImageUrl(String profileImageUrl) {
-        this.profileImageUrl = profileImageUrl;
+    public void editMemberProfile(EditMemberProfileRequest request) {
+        this.nickName = request.getNickName();
+        this.profileImageUrl = request.getProfileImageUrl();
     }
 
     public void deleteMember() {

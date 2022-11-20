@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.retriever.server.dailypet.domain.member.dto.request.EditMemberProfileRequest;
 import org.retriever.server.dailypet.domain.member.dto.request.SignUpRequest;
 import org.retriever.server.dailypet.domain.member.dto.request.SnsLoginRequest;
 import org.retriever.server.dailypet.domain.member.dto.request.ValidateMemberNicknameRequest;
@@ -13,7 +14,6 @@ import org.retriever.server.dailypet.domain.member.dto.response.*;
 import org.retriever.server.dailypet.domain.member.service.MemberService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -64,16 +64,16 @@ public class MemberController {
     }
 
     @Parameter(name = "X-AUTH-TOKEN", description = "로그인 성공 후 access_token", required = true)
-    @Operation(summary = "회원 프로필 사진 수정", description = "회원의 프로필 사진을 수정한다")
+    @Operation(summary = "회원 프로필 수정", description = "회원의 닉네임과 프로필 사진을 수정한다")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "회원 프로필 사진 정상 수정"),
-            @ApiResponse(responseCode = "400", description = "회원 프로필 사진 수정 실패"),
+            @ApiResponse(responseCode = "200", description = "회원 프로필 정상 수정"),
+            @ApiResponse(responseCode = "400", description = "회원 프로필 수정 실패"),
             @ApiResponse(responseCode = "500", description = "내부 서버 에러")
     })
-    @PatchMapping("/member/mypage/profile-image")
-    public ResponseEntity<EditProfileImageResponse> editProfileImage(
-            @RequestBody String profileImageUrl) throws IOException {
-        return ResponseEntity.ok(memberService.editProfileImage(profileImageUrl));
+    @PatchMapping("/member/mypage/profile")
+    public ResponseEntity<EditMemberProfileResponse> editMemberProfile(
+            @RequestBody EditMemberProfileRequest dto) throws IOException {
+        return ResponseEntity.ok(memberService.editMemberProfile(dto));
     }
 
     @Parameter(name = "X-AUTH-TOKEN", description = "로그인 성공 후 access_token", required = true)
