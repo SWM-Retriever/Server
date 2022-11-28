@@ -22,9 +22,10 @@
 ### 1. Product 환경
 
 ### 2. AWS Cloud Infra
+<img src="https://user-images.githubusercontent.com/66156531/204345205-b262fa9a-01b1-4733-8601-172986609e23.png" width="850" alt="logo"/>
 
 ### 3. CI/CD Pipeline
-<img src="https://user-images.githubusercontent.com/66156531/204150012-5af3bac2-ccc6-4cc2-bd23-a67b1f4e315a.png" width="700" alt="logo"/>
+<img src="https://user-images.githubusercontent.com/66156531/204150012-5af3bac2-ccc6-4cc2-bd23-a67b1f4e315a.png" width="850" alt="logo"/>
 
 ## Members
 
