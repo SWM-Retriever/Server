@@ -9,6 +9,8 @@
 
 ### Android : <a href = "https://play.google.com/store/apps/details?id=org.retriever.dailypet"> Google PlayStore </a> 
 
+### ※ 서버 이전 문제로 인해 서비스 종료
+
 ## 기술 스택
 
 - Java 11, SpringBoot 2.7.2
